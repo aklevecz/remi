@@ -1,0 +1,74 @@
+---
+import Header from '../components/Header.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const isHome = new URL(Astro.request.url).pathname === '/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="/images/lambheads.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+	{!isHome && <Header/>}
+    <slot />
+  </body>
+</html>
+<style is:global>
+  :root {
+    --yellow: #f2eb03;
+    --green: #8bcf85;
+	--orange: #EA5001;
+
+	--primary-color: var(--green);
+	--secondary-color: var(--orange);
+
+    --accent: 136, 58, 234;
+    --accent-light: 224, 204, 250;
+    --accent-dark: 49, 10, 101;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%
+    );
+  }
+  html {
+    font-family: system-ui, sans-serif;
+	color: var(--secondary-color);
+    background: var(--primary-color);
+    background-size: 224px;
+	margin: 0px;
+	padding: 0px;
+	transition: color 0.5s, background 0.5s;
+  }
+  html.black {
+	background: black;
+  }
+  html.black a {
+	color: black;
+  }
+  li {
+	list-style-type: none;
+  }
+  a {
+	color: var(--secondary-color);
+	transition: filter 0.5s, color 0.5s;
+	text-decoration: none;
+	filter:invert(0);
+  }
+
+  a:hover {
+	filter:invert(1);
+  }
+</style>

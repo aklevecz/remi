@@ -1,0 +1,32 @@
+---
+const { fileName, y, x } = Astro.props;
+
+const orientation = Math.random() > 0.5 ? '-' : '';
+const offset = `${(Math.random() * 1).toFixed(2)}s`
+---
+
+<img class="hidden" data-floating-head style={`left:${x}%;top:${y}%;transform:rotate(${orientation}${Math.random()*20}deg)`} src={`/images/remis/${fileName}.png`} alt={fileName} />
+<style define:vars={{offset}}>
+  img {
+    position: absolute;
+    opacity: 1;
+    transition: opacity 0.5s;
+    animation: wiggle 2s infinite;
+    animation-delay: var(--offset);
+  }
+  img.hidden {
+    opacity: 0;
+  }
+  @keyframes wiggle {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+    
+  }
+</style>
