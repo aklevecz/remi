@@ -1,4 +1,9 @@
-<svg id="remi-logo" data-remi-logo xmlns="http://www.w3.org/2000/svg" viewBox="500 400 2000 1200">
+---
+const { default: innerHTML } = await import(`./remifrogologo.svg?raw`);
+---
+<Fragment set:html={innerHTML}>
+
+<!-- <svg id="remi-logo" data-remi-logo xmlns="http://www.w3.org/2000/svg" viewBox="500 400 2000 1200">
   <g>
     <path d="M1706.36,1126.9c-17.78.63-15.12-25.33.7-24.92,14.77-.11,14.43,25.83-.7,24.92Z" fill="#000" stroke-width="0"/>
     <path d="M947.8,1449.07c16.21.68,18.71,23.01,1.07,23.37-15.49,1.39-16.11-23.99-1.07-23.37Z" fill="#000" stroke-width="0"/>
@@ -2351,6 +2356,7 @@
     <path d="M2020.51,1252.89c.64,11.5-18.34,9.88-18.28-.12-1.33-11.83,18.75-11.63,18.28.12Z" fill="#000" stroke-width="0"/>
   </g>
 </svg>
+ -->
 <style>
   svg {
     width:100%;

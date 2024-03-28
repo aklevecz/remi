@@ -1,7 +1,29 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const { data } = await fetch("http://localhost:8055/items/remi").then(
+  (response) => response.json()
+);
+console.log(data);
 ---
 
 <Layout title="Art">
-<h1>art</h1>
+  <h1>art</h1>
+  <div>
+    {
+      data.map((d: any) => (
+        <div>
+          <h2>{d.name}</h2>
+          <img src={`http://localhost:8055/assets/${d.media}`} alt={d.title} />
+          <p>{d.description}</p>
+        </div>
+      ))
+    }
+  </div>
 </Layout>
+
+<style>
+    img {
+        width:100%;
+    }
+</style>
