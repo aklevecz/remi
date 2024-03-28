@@ -1,10 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const { data } = await fetch("http://localhost:8055/items/remi").then(
-  (response) => response.json()
-);
-console.log(data);
+// const { data } = await fetch("http://localhost:8055/items/remi").then(
+//   (response) => response.json()
+// );
+// console.log(data);
+const data = [
+  {
+    id: 2,
+    media: '64d0f868-efca-47b3-8e82-725c1a4d44b7',
+    name: 'Lamb City',
+    description: 'Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city '
+  }
+]
 ---
 
 <Layout title="Art">
@@ -14,7 +22,7 @@ console.log(data);
       data.map((d: any) => (
         <div>
           <h2>{d.name}</h2>
-          <img src={`http://localhost:8055/assets/${d.media}`} alt={d.title} />
+          <img src={`/images/lambcityoil.jpg`} alt={d.title} />
           <p>{d.description}</p>
         </div>
       ))
