@@ -1,13 +1,20 @@
 ---
-import RemiFrogoLogo from "./RemiFrogoLogo.astro";
+// import RemiFrogoLogo from "./RemiFrogoLogo.astro";
+const { isTats } = Astro.props;
+let LogoComponent = null;
+if (!isTats) {
+  LogoComponent = (await import("./RemiFrogoLogo.astro")).default;
+} else {
+  LogoComponent = (await import("./RemboTronLogo.astro")).default;
+}
 ---
 
 <nav>
-    <RemiFrogoLogo/>
+  <LogoComponent />
 </nav>
 
 <style>
-    nav {
-        height:50px;
-    }
+  nav {
+    height: 50px;
+  }
 </style>

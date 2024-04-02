@@ -14,8 +14,16 @@ const offset = `${(Math.random() * 1).toFixed(2)}s`
     animation: wiggle 2s infinite;
     animation-delay: var(--offset);
   }
+  
   img.hidden {
     opacity: 0;
+  }
+
+  @media screen and (min-width: 768px) {
+    img {
+      margin-left: 15%;
+    }
+    
   }
   @keyframes wiggle {
     0% {

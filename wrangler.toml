@@ -1,0 +1,11 @@
+[[d1_databases]]
+binding = "DB"
+database_name = "name"
+database_id = "12312312-1231-1231-1231-123123123123"
+# Ensures `wrangler d1` and `astro dev` use the same local sqlite file, which
+# includes a UUID based on the db name.
+preview_database_id = "DB" 
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "remi"

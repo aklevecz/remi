@@ -23,8 +23,6 @@ const positions = [
 	{x: '60', y: '75'},
 	{x: '0', y: '0'},
 	{x: '60', y: '0'}
-
-
 ]
 ---
 
@@ -32,7 +30,7 @@ const positions = [
   <main>
     <div>
       <RemiFrogoLogoFull />
-      <div style="overflow-x:hidden">
+      <div class="faces">
         {
           faces.map((face,i) => (
             <FloatingHead
@@ -53,6 +51,7 @@ const positions = [
     </div>
 	<button class="hide" data-hide-faces></button>
   </main>
+</Layout>
 <script>
 	document.documentElement.classList.add('black')
 	setTimeout(() => {
@@ -77,8 +76,10 @@ const positions = [
 
 	function toggleFaces() {
 		const faces = document.querySelectorAll('[data-floating-head]');
-		faces.forEach(face => {
+		faces.forEach((face) => {
 			face?.classList.toggle('hidden');
+			// @ts-ignore
+			// face!.style.marginLeft = "15%"
 		})
 	
 	}
@@ -109,11 +110,9 @@ const positions = [
       font-size: 20px;
       line-height: 1.6;
       height: 90vh;
-
       display: flex;
       flex-direction: column;
       justify-content: center;
-
       overflow-x: hidden;
     }
     ul {
@@ -132,5 +131,7 @@ const positions = [
 		height: 50px;
 		width:50px;
 	}
-  </style>
-</Layout>
+	li {
+		list-style-type: none;
+	}
+</style>

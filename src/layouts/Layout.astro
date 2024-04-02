@@ -7,6 +7,7 @@ interface Props {
 
 const { title } = Astro.props;
 const isHome = new URL(Astro.request.url).pathname === '/';
+const isTats = new URL(Astro.request.url).pathname === '/tattoos';
 ---
 
 <!doctype html>
@@ -19,8 +20,8 @@ const isHome = new URL(Astro.request.url).pathname === '/';
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
-	{!isHome && <Header/>}
+  <body>	
+	{!isHome && <Header isTats={isTats}/>}
     <slot />
   </body>
 </html>
@@ -58,9 +59,9 @@ const isHome = new URL(Astro.request.url).pathname === '/';
   html.black a {
 	color: black;
   }
-  li {
+  /* li {
 	list-style-type: none;
-  }
+  } */
   a {
 	color: var(--secondary-color);
 	transition: filter 0.5s, color 0.5s;
