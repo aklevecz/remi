@@ -11,8 +11,8 @@ const info = {
   pricing:
     "I have a minimum of $80. Most flash will be around $80-$250 depending on size and complexity. Custom pricing can be discussed beforehand. Please pay the full amount with either Zelle or cash on the day of the appointment",
 };
-const R2 = Astro.locals
-console.log(R2)
+// @ts-ignore
+const R2 = Astro.locals.runtime.env.R2;
 const errors = [];
 if (Astro.request.method === "POST") {
   try {
@@ -27,6 +27,7 @@ if (Astro.request.method === "POST") {
     const availability = data.get("availability");
     const miscellaneous = data.get("miscellaneous");
     const image = data.get("tattoo-image");
+    await R2.put('test.png', image)
     if (
       !name ||
       !pronouns ||
@@ -123,11 +124,14 @@ if (Astro.request.method === "POST") {
       e.preventDefault();
   
       // Create a new FormData object from the form
-    //   const formData = new FormData(e.target);
-    //     fetch('', {
-    //         method: 'POST',
-    //         body: formData
-    //     })
+      if (e.target) {
+        // @ts-ignore
+      const formData = new FormData(e.target);
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+    }
 
     });
   </script>
