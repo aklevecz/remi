@@ -13,7 +13,7 @@ export default defineConfig({
   }),
   vite: {
     ssr: {
-      noExternal: ["@astrojs/db"]
+      external: ["@astrojs/db"]
     }
   },
   integrations: [db()]
