@@ -53,7 +53,7 @@ const dbInstance = () => {
     }
     const createUser = async (user: User) => {
         const { name, email, instagram } = user;
-        db.insert(User).values([{ name, email, instagram, phoneNumber: "" }])
+        return db.insert(User).values([{ name, email, instagram, phoneNumber: "" }])
     }
 
     const getUserByEmail = async (email: string) => {

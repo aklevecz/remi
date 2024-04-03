@@ -99,7 +99,9 @@ if (Astro.request.method === "POST") {
       await R2.put(fileName, image, { contentType: image.type });
       const user = await dbInstance.getUserByEmail(email);
       let userId = null;
+      console.log(user)
       if (user.length > 0) {
+        console.log("found user")
         userId = user[0].id;
       } else {
         await dbInstance.createUser({name, email, instagram});
