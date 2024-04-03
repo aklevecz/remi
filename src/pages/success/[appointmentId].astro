@@ -1,13 +1,13 @@
 ---
-import { db, Appointment, eq } from "astro:db";
+import dbInstance from "../../lib/db"
 import Layout from "../../layouts/Layout.astro";
 
 const { appointmentId } = Astro.params;
 if (!appointmentId) {
   return Astro.redirect("/404");
 }
-const appointments = await db.select().from(Appointment).where(eq(Appointment.id, appointmentId));
-const appointment = appointments[0];
+const appointments = await dbInstance.getAppointmentById(appointmentId);
+const appointment = appointments[0] as any;
 ---
 
 <Layout title="success">

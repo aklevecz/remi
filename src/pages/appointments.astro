@@ -1,23 +1,9 @@
 ---
-import { db, Appointment, User } from "astro:db";
 import Layout from "../layouts/Layout.astro";
+import dbInstance from "../lib/db";
 
-/**
- *     userId: number;
-    name: string;
-    pronouns: string;
-    instagram: string;
-    email: string;
-    tattooDescription: string;
-    tattooPlacement: string;
-    tattooSize: string;
-    availability: string;
-    miscellaneous: string;
-    imageSrc: string;
-    createdAt: Date;
- */
-const appointments = await db.select().from(Appointment);
-const users = await db.select().from(User);
+const appointments = await dbInstance.getAllAppointments()
+const users = await dbInstance.getAllUsers()
 // console.log(users)
 // console.log(appointments)
 ---
@@ -27,7 +13,7 @@ const users = await db.select().from(User);
     <h1>Appointments</h1>
     <ul>
       {
-        appointments.map((a) => (
+        appointments.map((a:any) => (
           <div>
             <div>{a.name}</div>
             <div>{a.email}</div>

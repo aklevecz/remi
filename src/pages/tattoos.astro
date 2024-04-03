@@ -1,5 +1,5 @@
 ---
-import { db, Appointment, User, eq } from "astro:db";
+import dbInstance from "../lib/db";
 import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -97,33 +97,29 @@ if (Astro.request.method === "POST") {
       const fileExtension = image.type.split("/")[1];
       const fileName = `${instagram}`;
       await R2.put(fileName, image, { contentType: image.type });
-      const user = await db.select().from(User).where(eq(User.email, email));
+      const user = await dbInstance.getUserByEmail(email);
       let userId = null;
       if (user.length > 0) {
         userId = user[0].id;
       } else {
-        await db.insert(User).values([{ name, email, instagram, phoneNumber: "" }]);
-        const user = await db.select().from(User).where(eq(User.email, email));
+        await dbInstance.createUser({name, email, instagram});
+        const user = await dbInstance.getUserByEmail(email);
         userId = user[0].id;
       }
       const id = generateUUID();
-      await db.insert(Appointment).values([
-        {
-          id,
-          userId,
-          name,
-          pronouns,
-          instagram,
-          email,
-          tattooDescription,
-          tattooPlacement,
-          tattooSize,
-          availability,
-          miscellaneous,
-          imageSrc: instagram,
-          createdAt: new Date(),
-        },
-      ]);
+      await dbInstance.createAppointment({
+        id,
+        userId,
+        name,
+        email,
+        instagram,
+        pronouns,
+        tattooDescription,
+        tattooPlacement,
+        tattooSize,
+        availability,
+        miscellaneous,
+      })
       return Astro.redirect(`/success/${id}`);
     }
   } catch (e) {
