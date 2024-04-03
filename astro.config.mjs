@@ -11,5 +11,10 @@ export default defineConfig({
       enabled: true
     }
   }),
-  integrations: [db()]
+  integrations: [db()],
+  vite: {
+    ssr: {
+      external: ["url"]
+    }
+  }
 });
