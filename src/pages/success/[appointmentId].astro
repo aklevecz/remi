@@ -1,0 +1,31 @@
+---
+import { db, Appointment, eq } from "astro:db";
+import Layout from "../../layouts/Layout.astro";
+
+const { appointmentId } = Astro.params;
+if (!appointmentId) {
+  return Astro.redirect("/404");
+}
+const appointments = await db.select().from(Appointment).where(eq(Appointment.id, appointmentId));
+const appointment = appointments[0];
+---
+
+<Layout title="success">
+  <h1>You're all set!</h1>
+  <h2>You should receive an email confirmation shortly.</h2>
+  <div>{appointment.id}</div>
+  <div>{appointment.name}</div>
+  <div>{appointment.email}</div>
+  <div>{appointment.tattooDescription}</div>
+  <div>{appointment.tattooPlacement}</div>
+  <div>{appointment.tattooSize}</div>
+  <div>{appointment.availability}</div>
+  <div>{appointment.miscellaneous}</div>
+  <img src={`/img/${appointment.imageSrc}`} alt={`${appointment.name}'s tattoo`} />
+</Layout>
+<style>
+  img {
+    width: 100px;
+    height: 100px;
+  }
+</style>

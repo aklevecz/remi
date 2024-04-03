@@ -1,0 +1,231 @@
+---
+import LoadingSpinner from "./LoadingSpinner.astro";
+
+const { values } = Astro.props;
+// console.log(values)
+---
+
+<tattoo-form>
+  <form method="POST" enctype="multipart/form-data">
+    <label for="name"
+      >Name
+      <input autocomplete="name" id="name" name="name" placeholder="Name" value={values.name} />
+    </label>
+
+    <label for="pronouns"
+      >Pronouns
+      <input id="pronouns" name="pronouns" placeholder="Pronouns" value={values.pronouns} />
+    </label>
+
+    <label for="instagram"
+      >Instagram Handle
+      <input id="instagram" name="instagram" placeholder="Instagram Handle" value={values.instagram} />
+    </label>
+
+    <label for="email"
+      >Email
+      <input autocomplete="email" id="email" name="email" type="email" placeholder="Email" value={values.email} />
+    </label>
+
+    <label for="tattoo-description"
+      >Tattoo Description (for customs; or specify flash)
+      <input
+        id="tattoo-description"
+        name="tattoo-description"
+        placeholder="Tattoo Description"
+        value={values.tattooDescription}
+      />
+    </label>
+
+    <label for="tattoo-placement"
+      >Placement of tattoo ( could be potential placement or unsure)
+      <input
+        id="tattoo-placement"
+        name="tattoo-placement"
+        placeholder="Placement of tattoo"
+        value={values.tattooPlacement}
+      />
+    </label>
+
+    <label for="tattoo-size"
+      >Approximate size of tattoo
+      <input id="tattoo-size" name="tattoo-size" placeholder="Size of tattoo" value={values.tattooSize} />
+    </label>
+
+    <label for="tattoo-image">
+      Upload an image
+      <div class="custom-file-upload">
+        <img class="upload-preview hidden" src="" alt="" />
+        <span>Click here to upload</span><button class="hidden">Remove image</button>
+      </div>
+    </label>
+    <input id="tattoo-image" name="tattoo-image" type="file" accept="image/*" style="display: none;" />
+
+    <label for="availability"
+      >What is your availability? (e.g. typically weekends / after 2pm on tuesdays and thursdays)
+      <input id="availability" name="availability" placeholder="Availability" value={values.availability} />
+    </label>
+
+    <label for="miscellaneous"
+      >Anything else you'd like me to know?
+      <input id="miscellaneous" name="miscellaneous" placeholder="Miscellaneous" value={values.miscellaneous} />
+    </label>
+    <button type="submit">Submit <LoadingSpinner id="submit-tattoo" /></button>
+  </form>
+</tattoo-form>
+
+<script>
+  class TattooForm extends HTMLElement {
+    cta: HTMLSpanElement | null = null;
+    removeButton: HTMLButtonElement | null = null;
+    submitSpinner: HTMLDivElement | null = null;
+
+    imageInput: HTMLInputElement | null = null;
+
+    constructor() {
+      super();
+      this.submitSpinner = this.querySelector("#submit-tattoo") as HTMLDivElement;
+      this.cta = this.querySelector(".custom-file-upload > span") as HTMLSpanElement;
+      this.removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
+      this.imageInput = this.querySelector("#tattoo-image") as HTMLInputElement;
+      this.querySelector("#tattoo-image")!.addEventListener("change", this.uploadImage);
+      this.addEventListener("submit", this.submit);
+
+      const customFileUpload = this.querySelector(".custom-file-upload") as HTMLDivElement;
+
+      // Add event listeners for drag and drop
+      customFileUpload.addEventListener("dragover", this.dragOver);
+      customFileUpload.addEventListener("dragleave", this.dragLeave);
+      customFileUpload.addEventListener("drop", this.drop);
+    }
+
+    uploadImage = () => {
+      //   const input = event.target as HTMLInputElement;
+      const input = this.imageInput!;
+
+      //   const cta = this.querySelector(".custom-file-upload > span")! as HTMLSpanElement;
+      if (input.files!.length > 0) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = this.querySelector("img.upload-preview") as HTMLImageElement;
+          image.src = reader.result as string;
+          image.classList.remove("hidden");
+          this.cta!.innerText = "Change Image";
+          //   const removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
+          this.removeButton!.classList.remove("hidden");
+          this.removeButton!.addEventListener("click", () => {
+            image.classList.add("hidden");
+            input.value = "";
+            this.removeButton!.classList.add("hidden");
+            this.cta!.innerText = "Upload Image";
+          });
+        };
+        reader.readAsDataURL(input.files![0]);
+      }
+    };
+
+    toggleSpinner = () => {
+      this.submitSpinner!.classList.toggle("hidden");
+    };
+
+    submit = async (e: SubmitEvent) => {
+      // e.preventDefault();
+      this.toggleSpinner();
+      // Create a new FormData object from the form
+      //   if (e.target) {
+      //     // @ts-ignore
+      //     const formData = new FormData(e.target);
+      //     const res = await fetch("", {
+      //       method: "POST",
+      //       body: formData,
+      //     });
+      //     console.log(res);
+      //     this.toggleSpinner();
+      //   }
+    };
+
+    dragOver = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    dragLeave = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    drop = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Get the files from the drop event
+      const files = e.dataTransfer!.files;
+
+      // If there are any files, set the first one as the input's file
+      if (files.length > 0) {
+        this.imageInput!.files = files;
+        //   this.uploadImage({ target: input });
+        this.uploadImage();
+      }
+    };
+  }
+  customElements.define("tattoo-form", TattooForm);
+</script>
+<style>
+  .custom-file-upload {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #e0e0e0;
+  }
+
+  form {
+  }
+  label {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    max-width: 500px;
+  }
+  input {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 4px 6px;
+    font-size: 16px;
+    margin-top: 0.25rem;
+  }
+  input::placeholder {
+    color: white;
+    opacity: 0.5;
+  }
+  button {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 10px;
+    font-size: 1.25rem;
+    border-radius: 25%;
+
+    margin: auto;
+    display: block;
+  }
+  .upload-preview {
+    width: 200px;
+    height: 200px;
+  }
+  .hidden {
+    display: none;
+  }
+  .errors {
+    color: whitesmoke;
+    margin: 1rem auto;
+    text-align: center;
+  }
+</style>

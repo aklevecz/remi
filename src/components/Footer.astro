@@ -1,0 +1,32 @@
+---
+import RemiFrogoLogo from "./RemiFrogoLogo.astro";
+---
+
+<footer>
+    <div class="link-container">
+        <a>link1</a>
+        <a>link2</a>
+        <a>link3</a>
+    </div>
+  <div class="logo-container"><RemiFrogoLogo color="var(--primary-color)" /></div>
+</footer>
+
+<style>
+    footer {
+        display: flex;
+    }
+    .link-container {
+        flex:1 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    footer .link-container a {
+        font-size: 1rem;
+        color: var(--primary-color);
+    }
+    .logo-container {
+        padding: 1rem;
+        height: 50px;
+    }
+</style>

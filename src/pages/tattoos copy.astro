@@ -1,0 +1,240 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const info = {
+  dayOf:
+    "Please come hydated and well fed before the appointment. I would also prefer you not do drugs or drink heavily beforehand. The tattoo may take anywhere from 1-3 hours depending on the size and amount of detail. Plan your day accordingly <3",
+  designs:
+    "I have flash posted that you can look through on my instagram. If you have a custom request, pls make sure we discuss the idea before your appointment",
+  deposit:
+    "I ask that you send a $50 deposit to me through zelle (preferred): 714-808-7117 or Venmo: @remifrogo - if sending on venmo, please use an emoji for the description. Deposit goes towards total price of tattoo and is meant to secure your appointment spot. If you cancel the night before or day of, you will need to put down another deposit to reschedule.",
+  pricing:
+    "I have a minimum of $80. Most flash will be around $80-$250 depending on size and complexity. Custom pricing can be discussed beforehand. Please pay the full amount with either Zelle or cash on the day of the appointment",
+};
+
+const errors = [];
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const name = data.get("name");
+    const pronouns = data.get("pronouns");
+    const instagram = data.get("instagram");
+    const email = data.get("email");
+    const tattooDescription = data.get("tattoo-description");
+    const tattooPlacement = data.get("tattoo-placement");
+    const tattooSize = data.get("tattoo-size");
+    const availability = data.get("availability");
+    const miscellaneous = data.get("miscellaneous");
+    const image = data.get("tattoo-image");
+
+    const R2 = Astro.locals.runtime.env.R2;
+    await R2.put("test.png", image);
+    if (
+      !name ||
+      !pronouns ||
+      !instagram ||
+      !email ||
+      !tattooDescription ||
+      !tattooPlacement ||
+      !tattooSize ||
+      !availability ||
+      !image
+    ) {
+      errors.push("Please fill out all required fields");
+    }
+
+    console.log(image);
+  } catch (e) {
+    console.log(e);
+    errors.push("There was an error processing your request");
+  }
+}
+---
+
+<Layout title="Tats">
+  <h1>Tats</h1>
+  <h2>BOOKING POLICIES</h2>
+  <p>
+    $50 deposit is required to lock in the appointment - the deposit will go
+    toward the cost of the tattoo!
+  </p>
+  <ul>
+    <li>venmo: @remifrogo</li>
+    <li>zelle: 7148087117</li>
+  </ul>
+  <p>
+    feel free to contact me with any questions through DM @remb0tron on
+    instagram {"<3"}
+  </p>
+  <form method="POST">
+    <label for="name"
+      >Name
+      <input name="name" placeholder="Name" />
+    </label>
+
+    <label for="pronouns"
+      >Pronouns
+      <input name="pronouns" placeholder="Pronouns" />
+    </label>
+
+    <label for="instagram"
+      >Instagram Handle
+      <input name="instagram" placeholder="Instagram Handle" />
+    </label>
+
+    <label for="email"
+      >Email
+      <input name="email" type="email" placeholder="Email" />
+    </label>
+
+    <label for="tattoo-description"
+      >Tattoo Description (for customs; or specify flash)
+      <input name="tattoo-description" placeholder="Tattoo Description" />
+    </label>
+
+    <label for="tattoo-placement"
+      >Placement of tattoo ( could be potential placement or unsure)
+      <input name="tattoo-placement" placeholder="Placement of tattoo" />
+    </label>
+
+    <label for="tattoo-size"
+      >Approximate size of tattoo
+      <input name="tattoo-size" placeholder="Size of tattoo" />
+    </label>
+
+    <!-- <label for="tattoo-image"
+      >Upload Image
+      <img class="upload-preview hidden" src="" alt="" />
+      <input name="tattoo-image" type="file" accept="image/*" />
+    </label> -->
+
+    <label for="tattoo-image" class="custom-file-upload">
+      <img class="upload-preview hidden" src="" alt="" />
+      <span>Upload Image</span><button class="hidden">Remove image</button>
+    </label>
+    <input
+      id="tattoo-image"
+      name="tattoo-image"
+      type="file"
+      accept="image/*"
+      style="display: none;"
+    />
+
+    <label for="availability"
+      >What is your availability? (e.g. typically weekends / after 2pm on
+      tuesdays and thursdays)
+      <input name="availability" placeholder="Availability" />
+    </label>
+
+    <label for="miscellaneous"
+      >Anything else you'd like me to know?
+      <input name="miscellaneous" placeholder="Miscellaneous" />
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+</Layout>
+<script>
+  //   document
+  //     .querySelector('input[name="tattoo-image"]')!
+  //     .addEventListener("change", function (event) {
+  document
+    .querySelector("#tattoo-image")!
+    .addEventListener("change", function (event) {
+      const input = event.target as HTMLInputElement;
+      const cta = document.querySelector(".custom-file-upload")! as HTMLSpanElement
+      if (input.files!.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const image = document.querySelector(
+            "img.upload-preview"
+          ) as HTMLImageElement;
+          image.src = reader.result as string;
+          image.classList.remove("hidden");
+          cta.innerText =
+            "Change Image";
+
+          const removeButton = document.querySelector(
+            ".custom-file-upload > button"
+          ) as HTMLButtonElement;
+          removeButton.classList.remove("hidden");
+          removeButton.addEventListener("click", () => {
+            image.classList.add("hidden");
+            input.value = "";
+            removeButton.classList.add("hidden");
+            cta.innerText =
+              "Upload Image";
+          });
+        };
+        reader.readAsDataURL(input.files![0]);
+      }
+    });
+
+  document.querySelector("form")!.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Create a new FormData object from the form
+    if (e.target) {
+      // @ts-ignore
+      const formData = new FormData(e.target);
+      fetch("", {
+        method: "POST",
+        body: formData,
+      });
+    }
+  });
+</script>
+<style>
+  .custom-file-upload {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #e0e0e0;
+  }
+
+  form {
+  }
+  label {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    width: 90%;
+    max-width: 500px;
+  }
+  input {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 4px 6px;
+    font-size: 16px;
+    margin-top: 0.25rem;
+  }
+  input::placeholder {
+    color: white;
+    opacity: 0.5;
+  }
+  button {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 10px;
+    font-size: 1.25rem;
+    border-radius: 25%;
+
+    margin: auto;
+    display: block;
+  }
+  .upload-preview {
+    width: 200px;
+    height: 200px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>

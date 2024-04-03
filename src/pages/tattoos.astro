@@ -1,5 +1,9 @@
 ---
+import { db, Appointment, User, eq } from "astro:db";
+import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
+
+import { generateUUID } from "../lib/utils";
 
 const info = {
   dayOf:
@@ -11,23 +15,61 @@ const info = {
   pricing:
     "I have a minimum of $80. Most flash will be around $80-$250 depending on size and complexity. Custom pricing can be discussed beforehand. Please pay the full amount with either Zelle or cash on the day of the appointment",
 };
-// @ts-ignore
-const R2 = Astro.locals.runtime.env.R2;
+
+type Values = {
+  name: string;
+  pronouns: string;
+  instagram: string;
+  email: string;
+  tattooDescription: string;
+  tattooPlacement: string;
+  tattooSize: string;
+  availability: string;
+  miscellaneous: string;
+  image: File | null;
+};
+
+let values: Values = {
+  name: "",
+  pronouns: "",
+  instagram: "",
+  email: "",
+  tattooDescription: "",
+  tattooPlacement: "",
+  tattooSize: "",
+  availability: "",
+  miscellaneous: "",
+  image: null,
+};
+
 const errors = [];
+
 if (Astro.request.method === "POST") {
   try {
     const data = await Astro.request.formData();
-    const name = data.get("name");
-    const pronouns = data.get("pronouns");
-    const instagram = data.get("instagram");
-    const email = data.get("email");
-    const tattooDescription = data.get("tattoo-description");
-    const tattooPlacement = data.get("tattoo-placement");
-    const tattooSize = data.get("tattoo-size");
-    const availability = data.get("availability");
-    const miscellaneous = data.get("miscellaneous");
-    const image = data.get("tattoo-image");
-    await R2.put('test.png', image)
+    values.name = data.get("name") as string;
+    values.pronouns = data.get("pronouns") as string;
+    values.instagram = data.get("instagram") as string;
+    values.email = data.get("email") as string;
+    values.tattooDescription = data.get("tattoo-description") as string;
+    values.tattooPlacement = data.get("tattoo-placement") as string;
+    values.tattooSize = data.get("tattoo-size") as string;
+    values.availability = data.get("availability") as string;
+    values.miscellaneous = (data.get("miscellaneous") as string) || "";
+    values.image = data.get("tattoo-image") as File;
+
+    const {
+      name,
+      pronouns,
+      instagram,
+      email,
+      tattooDescription,
+      tattooPlacement,
+      tattooSize,
+      availability,
+      image,
+      miscellaneous,
+    } = values;
     if (
       !name ||
       !pronouns ||
@@ -37,12 +79,53 @@ if (Astro.request.method === "POST") {
       !tattooPlacement ||
       !tattooSize ||
       !availability ||
-      !image
+      !image ||
+      image.size === 0
     ) {
-      errors.push("Please fill out all required fields");
+      if (!name) errors.push("Name is required");
+      if (!pronouns) errors.push("Pronouns are required");
+      if (!instagram) errors.push("Instagram handle is required");
+      if (!email) errors.push("Email is required");
+      if (!tattooDescription) errors.push("Tattoo description is required");
+      if (!tattooPlacement) errors.push("Tattoo placement is required");
+      if (!tattooSize) errors.push("Tattoo size is required");
+      if (!availability) errors.push("Availability is required");
+      if (!image || image.size === 0) errors.push("Image is required");
+      console.log(errors);
+    } else {
+      const R2 = Astro.locals.runtime.env.R2;
+      const fileExtension = image.type.split("/")[1];
+      const fileName = `${instagram}`;
+      await R2.put(fileName, image, { contentType: image.type });
+      const user = await db.select().from(User).where(eq(User.email, email));
+      let userId = null;
+      if (user.length > 0) {
+        userId = user[0].id;
+      } else {
+        await db.insert(User).values([{ name, email, instagram, phoneNumber: "" }]);
+        const user = await db.select().from(User).where(eq(User.email, email));
+        userId = user[0].id;
+      }
+      const id = generateUUID();
+      await db.insert(Appointment).values([
+        {
+          id,
+          userId,
+          name,
+          pronouns,
+          instagram,
+          email,
+          tattooDescription,
+          tattooPlacement,
+          tattooSize,
+          availability,
+          miscellaneous,
+          imageSrc: instagram,
+          createdAt: new Date(),
+        },
+      ]);
+      return Astro.redirect(`/success/${id}`);
     }
-
-    console.log( image);
   } catch (e) {
     console.log(e);
     errors.push("There was an error processing your request");
@@ -53,92 +136,13 @@ if (Astro.request.method === "POST") {
 <Layout title="Tats">
   <h1>Tats</h1>
   <h2>BOOKING POLICIES</h2>
-  <p>
-    $50 deposit is required to lock in the appointment - the deposit will go
-    toward the cost of the tattoo!
-  </p>
+  <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
   <ul>
     <li>venmo: @remifrogo</li>
     <li>zelle: 7148087117</li>
   </ul>
   <p>
-    feel free to contact me with any questions through DM @remb0tron on
-    instagram {"<3"}
+    feel free to contact me with any questions through DM @remb0tron on instagram {"<3"}
   </p>
-  <form method="POST">
-    <label for="name"
-      >Name
-      <input name="name" placeholder="Name" />
-    </label>
-
-    <label for="pronouns"
-      >Pronouns
-      <input name="pronouns" placeholder="Pronouns" />
-    </label>
-
-    <label for="instagram"
-      >Instagram Handle
-      <input name="instagram" placeholder="Instagram Handle" />
-    </label>
-
-    <label for="email"
-      >Email
-      <input name="email" type="email" placeholder="Email" />
-    </label>
-
-    <label for="tattoo-description"
-      >Tattoo Description (for customs; or specify flash)
-      <input name="tattoo-description" placeholder="Tattoo Description" />
-    </label>
-
-    <label for="tattoo-placement"
-      >Placement of tattoo ( could be potential placement or unsure)
-      <input name="tattoo-placement" placeholder="Placement of tattoo" />
-    </label>
-
-    <label for="tattoo-size"
-      >Approximate size of tattoo
-      <input name="tattoo-size" placeholder="Size of tattoo" />
-    </label>
-
-    <label for="tattoo-image"
-      >Upload Image
-      <input name="tattoo-image" type="file" accept="image/*" />
-    </label>
-
-    <label for="availability"
-      >What is your availability? (e.g. typically weekends / after 2pm on
-      tuesdays and thursdays)
-      <input name="availability" placeholder="Availability" />
-    </label>
-
-    <label for="miscellaneous"
-      >Anything else you'd like me to know?
-      <input name="miscellaneous" placeholder="Miscellaneous" />
-    </label>
-    <button type="submit">Submit</button>
-  </form>
+  <TattooForm values={values} />
 </Layout>
-<script>
-    document.querySelector("form")!.addEventListener("submit", (e) => {
-      e.preventDefault();
-  
-      // Create a new FormData object from the form
-      if (e.target) {
-        // @ts-ignore
-      const formData = new FormData(e.target);
-        fetch('', {
-            method: 'POST',
-            body: formData
-        })
-    }
-
-    });
-  </script>
-<style>
-  label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-  }
-</style>

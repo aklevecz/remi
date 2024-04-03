@@ -1,0 +1,52 @@
+---
+import { db, Appointment, User } from "astro:db";
+import Layout from "../layouts/Layout.astro";
+
+/**
+ *     userId: number;
+    name: string;
+    pronouns: string;
+    instagram: string;
+    email: string;
+    tattooDescription: string;
+    tattooPlacement: string;
+    tattooSize: string;
+    availability: string;
+    miscellaneous: string;
+    imageSrc: string;
+    createdAt: Date;
+ */
+const appointments = await db.select().from(Appointment);
+const users = await db.select().from(User);
+// console.log(users)
+// console.log(appointments)
+---
+
+<Layout title="appointments">
+  <div>
+    <h1>Appointments</h1>
+    <ul>
+      {
+        appointments.map((a) => (
+          <div>
+            <div>{a.name}</div>
+            <div>{a.email}</div>
+            <div>{a.instagram}</div>
+            <div>{a.tattooDescription}</div>
+            <div>{a.tattooPlacement}</div>
+            <div>{a.tattooSize}</div>
+            <div>{a.availability}</div>
+            <div>{a.miscellaneous}</div>
+            <img src={`/img/${a.imageSrc}`}/>
+            <div>{a.createdAt}</div>
+
+          </div>
+        ))
+      }
+    </ul>
+  </div>
+</Layout>
+<style>
+    img {
+        width: 100px;}
+</style>
