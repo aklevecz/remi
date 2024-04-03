@@ -11,10 +11,4 @@ export default defineConfig({
       enabled: true
     }
   }),
-  vite: {
-    ssr: {
-      external: ["@astrojs/db"]
-    }
-  },
-  integrations: [db()]
 });
