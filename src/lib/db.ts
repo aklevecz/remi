@@ -1,16 +1,14 @@
 
-// import { db, eq,  Appointment, User } from "astro:db";
+import { db, eq,  Appointment, User } from "astro:db";
 
 const dbInstance = () => {
 
     const getAppointmentById = async (id: string) => {
-        //  return db.select().from(Appointment).where(eq(Appointment.id, appointmentId));
-        return [{id:"1"}]
+         return db.select().from(Appointment).where(eq(Appointment.id, id));
     }
 
     const getAllAppointments = async () => {
-        // return db.select().from(Appointment);
-        return [] as any
+        return db.select().from(Appointment);
     }
 
     type Appointment = {
@@ -29,23 +27,23 @@ const dbInstance = () => {
 
     const createAppointment = async (appointment: Appointment) => {
         const { id, userId, name, pronouns, instagram, email, tattooDescription, tattooPlacement, tattooSize, availability, miscellaneous } = appointment;
-        // return db.insert(Appointment).values([
-        //     {
-        //       id,
-        //       userId,
-        //       name,
-        //       pronouns,
-        //       instagram,
-        //       email,
-        //       tattooDescription,
-        //       tattooPlacement,
-        //       tattooSize,
-        //       availability,
-        //       miscellaneous,
-        //       imageSrc: instagram,
-        //       createdAt: new Date(),
-        //     },
-        //   ]);
+        return db.insert(Appointment).values([
+            {
+              id,
+              userId,
+              name,
+              pronouns,
+              instagram,
+              email,
+              tattooDescription,
+              tattooPlacement,
+              tattooSize,
+              availability,
+              miscellaneous,
+              imageSrc: instagram,
+              createdAt: new Date(),
+            },
+          ]);
     }
 
     type User = {
@@ -55,18 +53,16 @@ const dbInstance = () => {
     }
     const createUser = async (user: User) => {
         const { name, email, instagram } = user;
-        // db.insert(User).values([{ name, email, instagram, phoneNumber: "" }])
+        db.insert(User).values([{ name, email, instagram, phoneNumber: "" }])
     }
 
     const getUserByEmail = async (email: string) => {
-        // return db.select().from(User).where(eq(User.email, email));
-        return [{id:1}]
+        return db.select().from(User).where(eq(User.email, email));
     
     }
 
     const getAllUsers = async () => {
-        // return db.select().from(User);
-        return []
+        return db.select().from(User);
     }
 
     return {getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser}
