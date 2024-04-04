@@ -3,9 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import dbInstance from "../lib/db";
 
 const appointments = await dbInstance.getAllAppointments()
-const users = await dbInstance.getAllUsers()
-console.log('users:',users)
+// const appointments:any[] = []
+// const users = await dbInstance.getAllUsers()
+// console.log('users:',users)
 // console.log(appointments)
+console.log(appointments)
 ---
 
 <Layout title="appointments">
@@ -23,9 +25,7 @@ console.log('users:',users)
             <div>{a.tattooSize}</div>
             <div>{a.availability}</div>
             <div>{a.miscellaneous}</div>
-            <img src={`/img/${a.imageSrc}`}/>
             <div>{a.createdAt}</div>
-
           </div>
         ))
       }

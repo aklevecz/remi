@@ -1,5 +1,5 @@
 ---
-import dbInstance from "../../lib/db"
+import dbInstance from "../../lib/db";
 import Layout from "../../layouts/Layout.astro";
 
 const { appointmentId } = Astro.params;
@@ -13,19 +13,58 @@ const appointment = appointments[0] as any;
 <Layout title="success">
   <h1>You're all set!</h1>
   <h2>You should receive an email confirmation shortly.</h2>
-  <div>{appointment.id}</div>
-  <div>{appointment.name}</div>
-  <div>{appointment.email}</div>
-  <div>{appointment.tattooDescription}</div>
-  <div>{appointment.tattooPlacement}</div>
-  <div>{appointment.tattooSize}</div>
-  <div>{appointment.availability}</div>
-  <div>{appointment.miscellaneous}</div>
-  <img src={`/img/${appointment.imageSrc}`} alt={`${appointment.name}'s tattoo`} />
+  <div class="line-items">
+    <div>
+      <div>Order ID:</div>
+      <div>{appointment.id}</div>
+    </div>
+    <div>
+      <div>Name:</div>
+      <div>{appointment.name}</div>
+    </div>
+    <div>
+      <div>Email:</div>
+      <div>{appointment.email}</div>
+    </div>
+    <div>
+      <div>Tattoo Description:</div>
+      <div>{appointment.tattooDescription}</div>
+    </div>
+    <div>
+      <div>Tattoo Placement:</div>
+      <div>{appointment.tattooPlacement}</div>
+    </div>
+    <div>
+      <div>Tattoo Size:</div>
+      <div>{appointment.tattooSize}</div>
+    </div>
+    <div>
+      <div>Availability:</div>
+      <div>{appointment.availability}</div>
+    </div>
+    <div>
+      <div>Miscellaneous:</div>
+      <div>{appointment.miscellaneous}</div>
+    </div>
+    <img src={`/img/${appointment.imageSrc}`} alt={`${appointment.name}'s tattoo`} />
+  </div>
 </Layout>
 <style>
+  .line-items {
+    margin-top:1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .line-items div > div:first-child {
+    font-weight: bold;
+  }
+  .line-items div > div:last-child {
+    font-size: 1.5rem;
+  }
   img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: auto;
+    max-width: 600px;
   }
 </style>
