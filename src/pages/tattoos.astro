@@ -135,27 +135,57 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout title="Tats">
-  <div class="info-section">
+  <div class="container">
     <h1>Tattoos</h1>
-    <h2>BOOKING POLICIES</h2>
-    <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
-    <div class="flex flex-col gap-4">
-      <div class="flex items-center gap-4">
-        <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
+    <div class="content">
+      <div class="info-section">
+        <h2>BOOKING POLICIES</h2>
+        <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
+          </div>
+          <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
+        </div>
+        <p>
+          feel free to contact me with any questions through DM <a href="https://www.instagram.com/remb0tron"
+            >@remb0tron</a
+          >
+          on instagram <InstagramIcon />
+          {"<3"}
+        </p>
       </div>
-      <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
+      <div>
+        <h2>INFO</h2>
+        <TattooForm values={values} />
+      </div>
     </div>
-    <p>
-      feel free to contact me with any questions through DM <a href="https://www.instagram.com/remb0tron">@remb0tron</a>
-      on instagram <InstagramIcon/> {"<3"}
-    </p>
   </div>
-  <TattooForm values={values} />
 </Layout>
 <style>
+  .container {
+    max-width: 1000px;
+    margin: auto;
+
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .content {
+      flex-direction: row;
+      /* justify-content: space-between; */
+    }
+  }
   .info-section {
     max-width: 500px;
-    margin: auto;
+    /* margin: auto; */
+
   }
   div {
     font-size: 1.5rem;

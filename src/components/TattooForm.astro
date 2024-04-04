@@ -172,6 +172,9 @@ const { values } = Astro.props;
   customElements.define("tattoo-form", TattooForm);
 </script>
 <style>
+  form {
+    margin-top:2rem;
+  }
   .custom-file-upload {
     margin-top:.5rem;
     padding: 10px;
@@ -185,13 +188,11 @@ const { values } = Astro.props;
     background-color: #e0e0e0;
   }
 
-  form {
-  }
   label {
     display: flex;
     margin: auto;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     max-width: 500px;
     font-size:1.5rem;
   }

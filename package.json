@@ -13,7 +13,7 @@
   "dependencies": {
     "@astrojs/check": "^0.5.10",
     "@astrojs/cloudflare": "^10.0.2",
-    "@astrojs/db": "^0.10.0",
+    "@astrojs/db": "^0.10.1",
     "astro": "^4.5.15",
     "typescript": "^5.4.3"
   }
