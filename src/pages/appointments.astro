@@ -2,37 +2,96 @@
 import Layout from "../layouts/Layout.astro";
 import dbInstance from "../lib/db";
 
-const appointments = await dbInstance.getAllAppointments()
-// const appointments:any[] = []
-// const users = await dbInstance.getAllUsers()
-// console.log('users:',users)
-// console.log(appointments)
-console.log(appointments)
+const appointments = await dbInstance.getAllAppointments();
 ---
 
 <Layout title="appointments">
   <div>
-    <h1>Appointments</h1>
-    <ul>
+    <h2>Appointments</h2>
+    <div class="line-items">
+      <div class="headers line-item-identifiers">
+        <div>NAME</div>
+        <div>EMAIL</div>
+        <div>DATE</div>
+      </div>
       {
-        appointments.map((a:any) => (
-          <div>
-            <div>{a.name}</div>
-            <div>{a.email}</div>
-            <div>{a.instagram}</div>
-            <div>{a.tattooDescription}</div>
-            <div>{a.tattooPlacement}</div>
-            <div>{a.tattooSize}</div>
-            <div>{a.availability}</div>
-            <div>{a.miscellaneous}</div>
-            <div>{a.createdAt}</div>
+        appointments.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).map((a) => (
+          <div class="line-item">
+            <div class="line-item-identifiers">
+              <div>{a.name}</div>
+              <div>{a.email}</div>
+              <div>
+                {a.createdAt.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", hour12: true })}
+              </div>
+            </div>
+            <div class="line-item-info hidden">
+              <div>
+                <strong>Name:</strong> {a.name}
+              </div>
+              <div>
+                <strong>Email:</strong> {a.email}
+              </div>
+              <div>
+                <strong>Tattoo Placement:</strong> {a.tattooPlacement}
+              </div>
+              <div>
+                <strong>Tattoo Size:</strong> {a.tattooSize}
+              </div>
+              <div>
+                <strong>Availability:</strong> {a.availability}
+              </div>
+              <div>
+                <strong>Miscellaneous:</strong> {a.miscellaneous}
+              </div>
+              {/*<img src={`/img/${a.imageSrc}`} alt={a.name} />*/}
+            </div>
           </div>
         ))
       }
-    </ul>
+    </div>
   </div>
 </Layout>
+<script>
+  const lineItems = document.querySelectorAll(".line-item");
+  lineItems.forEach((item) => {
+    console.log(item);
+    item.addEventListener("click", () => {
+      const info = item.querySelector(".line-item-info") as HTMLDivElement;
+      console.log(info);
+      info.classList.toggle("hidden");
+    });
+  });
+</script>
 <style>
-    img {
-        width: 100px;}
+  .headers.line-item-identifiers {
+    text-decoration: underline;
+    font-size: 0.75rem;
+  }
+  .line-items {
+    margin: 2rem 0rem;
+  }
+  .line-item {
+    margin: .5rem 0rem;
+  }
+  .line-item-identifiers {
+    display: flex;
+    /* justify-content: space-between; */
+    font-size: .75rem;
+  }
+  .line-item-identifiers div {
+    flex: 0 0 30%;
+  }
+  .line-item-info {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    padding: .75rem;
+    border-radius: 1rem;
+  }
+  img {
+    width: 100%;
+    max-width: 600px;
+  }
+  .hidden {
+    display: none;
+  }
 </style>

@@ -17,7 +17,7 @@ export default async function seed() {
       {
 		id: generateUUID(),
         userId: 1,
-        name: "Alice",
+        name: "Alice Klevecz",
         pronouns: "she/her",
         instagram: "alice",
         email: "alice@gmail.com",

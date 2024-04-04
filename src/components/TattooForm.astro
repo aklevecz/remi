@@ -56,7 +56,7 @@ const { values } = Astro.props;
       Upload an image
       <div class="custom-file-upload">
         <img class="upload-preview hidden" src="" alt="" />
-        <span>Click here to upload</span><button class="hidden">Remove image</button>
+        <button class="cta" disabled style="pointer-events: none;">Click here to upload</button><button class="remove-image hidden">Remove image</button>
       </div>
     </label>
     <input id="tattoo-image" name="tattoo-image" type="file" accept="image/*" style="display: none;" />
@@ -70,7 +70,7 @@ const { values } = Astro.props;
       >Anything else you'd like me to know?
       <input id="miscellaneous" name="miscellaneous" placeholder="Miscellaneous" value={values.miscellaneous} />
     </label>
-    <button type="submit">Submit <LoadingSpinner id="submit-tattoo" /></button>
+    <button type="submit"><span class="button-text">Submit</span> <LoadingSpinner id="submit-tattoo" /></button>
   </form>
 </tattoo-form>
 
@@ -78,15 +78,17 @@ const { values } = Astro.props;
   class TattooForm extends HTMLElement {
     cta: HTMLSpanElement | null = null;
     removeButton: HTMLButtonElement | null = null;
+    submitText: HTMLSpanElement | null = null;
     submitSpinner: HTMLDivElement | null = null;
 
     imageInput: HTMLInputElement | null = null;
 
     constructor() {
       super();
+      this.submitText = this.querySelector(".button-text") as HTMLSpanElement;
       this.submitSpinner = this.querySelector("#submit-tattoo") as HTMLDivElement;
-      this.cta = this.querySelector(".custom-file-upload > span") as HTMLSpanElement;
-      this.removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
+      this.cta = this.querySelector(".custom-file-upload > .cta") as HTMLSpanElement;
+      this.removeButton = this.querySelector(".custom-file-upload > .remove-image") as HTMLButtonElement;
       this.imageInput = this.querySelector("#tattoo-image") as HTMLInputElement;
       this.querySelector("#tattoo-image")!.addEventListener("change", this.uploadImage);
       this.addEventListener("submit", this.submit);
@@ -113,7 +115,8 @@ const { values } = Astro.props;
           this.cta!.innerText = "Change Image";
           //   const removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
           this.removeButton!.classList.remove("hidden");
-          this.removeButton!.addEventListener("click", () => {
+          this.removeButton!.addEventListener("click", (e) => {
+            e.preventDefault()
             image.classList.add("hidden");
             input.value = "";
             this.removeButton!.classList.add("hidden");
@@ -125,6 +128,7 @@ const { values } = Astro.props;
     };
 
     toggleSpinner = () => {
+      this.submitText!.classList.toggle("hidden");
       this.submitSpinner!.classList.toggle("hidden");
     };
 
@@ -178,14 +182,14 @@ const { values } = Astro.props;
   .custom-file-upload {
     margin-top:.5rem;
     padding: 10px;
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
   }
 
   .custom-file-upload:hover {
-    background-color: #e0e0e0;
+    background-color: var(--secondary-color);
   }
 
   label {
@@ -219,8 +223,8 @@ const { values } = Astro.props;
     display: block;
   }
   .upload-preview {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: auto;
   }
   .hidden {
     display: none;
