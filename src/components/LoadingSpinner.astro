@@ -1,8 +1,8 @@
 ---
-const {id} = Astro.props
+const {id, visibility="hidden"} = Astro.props
 ---
 
-<div id={id} class="hidden">
+<div id={id} class={visibility}>
   <div class="loader"></div>
 </div>
 <style>

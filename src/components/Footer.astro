@@ -1,4 +1,5 @@
 ---
+import config from "../lib/config"
 import RemiFrogoLogo from "./RemiFrogoLogo.astro";
 import InstagramIcon from "./icons/instagramIcon.astro";
 ---
@@ -8,7 +9,8 @@ import InstagramIcon from "./icons/instagramIcon.astro";
     <a href="/about">About</a>
     <a href="/art">Art</a>
     <a href="/tattoos">Tattoos</a>
-    <a><InstagramIcon colorVariant="primary" /></a>
+    <a target="_blank" class="mobile" href={config.remiInstagram}><InstagramIcon colorVariant="primary" /></a>
+    <a target="_blank" class="desktop" href={config.remiInstagram}><InstagramIcon colorVariant="primary" sizeVariant="md" /></a>
   </div>
   <div class="logo-container"><RemiFrogoLogo id="footer" color="var(--primary-color)" /></div>
 </footer>
@@ -16,7 +18,14 @@ import InstagramIcon from "./icons/instagramIcon.astro";
 <style>
   footer {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
   }
+
   .link-container {
     flex: 1 0 auto;
     display: flex;
@@ -36,6 +45,10 @@ import InstagramIcon from "./icons/instagramIcon.astro";
     height: 50px;
   }
 
+  .desktop {
+    display: none;
+  }
+
   @media screen and (min-width: 768px) {
     footer .link-container a {
       font-size: 2rem;
@@ -44,6 +57,12 @@ import InstagramIcon from "./icons/instagramIcon.astro";
       padding: 1rem;
       width: 100px;
       height: 100px;
+    }
+    .mobile {
+      display: none;
+    }
+    .desktop {
+      display: block;
     }
   }
 </style>

@@ -1,5 +1,6 @@
 ---
 import dbInstance from "../lib/db";
+import config from "../lib/config";
 import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -148,7 +149,7 @@ if (Astro.request.method === "POST") {
           <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
         </div>
         <p>
-          feel free to contact me with any questions through DM <a href="https://www.instagram.com/remb0tron"
+          feel free to contact me with any questions through DM <a href={config.remiInstagram}
             >@remb0tron</a
           >
           on instagram <InstagramIcon />

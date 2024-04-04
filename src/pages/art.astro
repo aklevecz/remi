@@ -1,37 +1,148 @@
 ---
+import LoadingSpinner from "../components/LoadingSpinner.astro";
+import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
 
 // const { data } = await fetch("http://localhost:8055/items/remi").then(
 //   (response) => response.json()
 // );
 // console.log(data);
-const data = [
+// const data = [
+//   {
+//     id: 2,
+//     media: "64d0f868-efca-47b3-8e82-725c1a4d44b7",
+//     name: "Lamb City",
+//     description:
+//       "Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city ",
+//   },
+// ];
+type ArtPiece = {
+  name: string;
+  description: string;
+  src: string;
+  media: string;
+};
+const data: ArtPiece[] = [
   {
-    id: 2,
-    media: '64d0f868-efca-47b3-8e82-725c1a4d44b7',
-    name: 'Lamb City',
-    description: 'Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city Lamb city '
-  }
-]
+    name: "Lamb City",
+    description: "A beautiful painting depicting a cityscape with lambs.",
+    src: "/images/paintings/lambcityoil.jpg",
+    media: "Oil on canvas, 24x36 inches",
+  },
+  {
+    name: "Grass",
+    description: "An abstract painting inspired by the beauty of grass.",
+    src: "/images/paintings/grass.jpg",
+    media: "Acrylic on canvas, 24x36 inches",
+  },
+  {
+    name: "Collage",
+    description: "A mixed media artwork created using various materials.",
+    src: "/images/paintings/collage.jpg",
+    media: "Mixed media, 24x36 inches",
+  },
+  {
+    name: "Yellow Mask",
+    description: "A vibrant painting featuring a yellow mask.",
+    src: "/images/paintings/yellowmask.jpg",
+    media: "Acrylic on canvas, 24x36 inches",
+  },
+];
 ---
 
 <Layout title="Art">
-  <h1>art</h1>
-  <div>
-    {
-      data.map((d: any) => (
-        <div>
-          <h2>{d.name}</h2>
-          <img src={`/images/lambcityoil.jpg`} alt={d.title} />
-          <p>{d.description}</p>
-        </div>
-      ))
-    }
+  <div class="container">
+    <PageHeading>ART</PageHeading>
+    <div class="art-piece-list">
+      {
+        data.map((d) => (
+          <div class="art-piece">
+            <div class="art-piece-wrapper">
+              {/*<h1 class="title">{d.name}</h1> */}
+              <img style="display:none" src={d.src} alt={d.name} />
+              <LoadingSpinner visibility="show" />
+              <div class="description-section">
+                <div class="description">{d.description}</div>
+                <div class="description">{d.media}</div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
   </div>
 </Layout>
-
+<script>
+  const images = document.querySelectorAll("img");
+  for (const image of images) {
+    // image.onload = () => {
+    console.log("load");
+    image.style.display = "block";
+    image.style.height = window.innerHeight - 10 + "px";
+    image.style.height = "auto";
+    image.style.width = "100%";
+    console.log(image.nextElementSibling);
+    (image.nextElementSibling! as HTMLImageElement).style.display = "none";
+    // };
+  }
+</script>
 <style>
-    img {
-        width:100%;
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: red; */
+  }
+  .art-piece-list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+  }
+
+  .art-piece {
+    /* padding: 3rem; */
+    min-height: 80vh;
+    /* background: #6e6e6e; */
+    display: flex;
+    /* background-color: yellow; */
+  }
+
+  @media screen and (min-width: 768px) {
+    .art-piece {
+      padding: 2rem 5rem;
     }
+  }
+  .art-piece-wrapper {
+    /* margin:auto; */
+    display: block;
+    /* background-color: black; */
+  }
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .art-piece img {
+    box-shadow: 10px 10px 30px hsl(115.14deg 43.53% 37.67%);
+  }
+
+  .description-section {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 400px;
+  }
+  .description {
+    width: 50%;
+    font-size: 0.75rem;
+    padding: 1rem;
+    background-color: white;
+    color: black;
+  }
+  .description:nth-child(2) {
+    background-color: black;
+    color: white;
+  }
 </style>
