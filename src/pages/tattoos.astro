@@ -4,6 +4,9 @@ import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
 
 import { generateUUID } from "../lib/utils";
+import VenmoIcon from "../components/icons/VenmoIcon.astro";
+import ZelleIcon from "../components/icons/ZelleIcon.astro";
+import InstagramIcon from "../components/icons/instagramIcon.astro";
 
 const info = {
   dayOf:
@@ -94,17 +97,15 @@ if (Astro.request.method === "POST") {
       console.log(errors);
     } else {
       const R2 = Astro.locals.runtime.env.R2;
-      const fileExtension = image.type.split("/")[1];
-      const fileName = `${instagram}`;
-      await R2.put(fileName, image, { contentType: image.type });
+      const now = new Date();
+      const imgFileName = String(now.getTime());
+      await R2.put(imgFileName, image, { contentType: image.type });
       const user = await dbInstance.getUserByEmail(email);
       let userId = null;
-      console.log(user)
       if (user.length > 0) {
-        console.log("found user")
         userId = user[0].id;
       } else {
-        await dbInstance.createUser({name, email, instagram});
+        await dbInstance.createUser({ name, email, instagram });
         const user = await dbInstance.getUserByEmail(email);
         userId = user[0].id;
       }
@@ -121,7 +122,9 @@ if (Astro.request.method === "POST") {
         tattooSize,
         availability,
         miscellaneous,
-      })
+        imgFileName,
+        now,
+      });
       return Astro.redirect(`/success/${id}`);
     }
   } catch (e) {
@@ -132,15 +135,29 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout title="Tats">
-  <h1>Tats</h1>
-  <h2>BOOKING POLICIES</h2>
-  <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
-  <ul>
-    <li>venmo: @remifrogo</li>
-    <li>zelle: 7148087117</li>
-  </ul>
-  <p>
-    feel free to contact me with any questions through DM @remb0tron on instagram {"<3"}
-  </p>
+  <div class="info-section">
+    <h1>Tattoos</h1>
+    <h2>BOOKING POLICIES</h2>
+    <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-4">
+        <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
+      </div>
+      <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
+    </div>
+    <p>
+      feel free to contact me with any questions through DM <a href="https://www.instagram.com/remb0tron">@remb0tron</a>
+      on instagram <InstagramIcon/> {"<3"}
+    </p>
+  </div>
   <TattooForm values={values} />
 </Layout>
+<style>
+  .info-section {
+    max-width: 500px;
+    margin: auto;
+  }
+  div {
+    font-size: 1.5rem;
+  }
+</style>

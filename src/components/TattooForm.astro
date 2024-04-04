@@ -173,6 +173,7 @@ const { values } = Astro.props;
 </script>
 <style>
   .custom-file-upload {
+    margin-top:.5rem;
     padding: 10px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -192,14 +193,15 @@ const { values } = Astro.props;
     flex-direction: column;
     margin-bottom: 1rem;
     max-width: 500px;
+    font-size:1.5rem;
   }
   input {
     background: var(--secondary-color);
     color: var(--primary-color);
     border: none;
-    padding: 4px 6px;
-    font-size: 16px;
-    margin-top: 0.25rem;
+    padding: 10px;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
   }
   input::placeholder {
     color: white;
@@ -209,11 +211,10 @@ const { values } = Astro.props;
     background: var(--secondary-color);
     color: var(--primary-color);
     border: none;
-    padding: 10px;
-    font-size: 1.25rem;
-    border-radius: 25%;
-
-    margin: auto;
+    padding: 12px 30px;
+    font-size: 1.55rem;
+    border-radius: 50px;
+    margin: 2rem auto;
     display: block;
   }
   .upload-preview {

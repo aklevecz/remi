@@ -1,0 +1,25 @@
+---
+const { colorVariant } = Astro.props;
+
+const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-color)";
+---
+
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700">
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path
+      class="cls-1"
+      d="M644.02,0H59.81C27.89,0,0,22.97,0,54.52v585.48c0,31.73,27.89,60,59.81,60h584.03c32.09,0,56.16-28.44,56.16-59.98V54.52c.19-31.55-24.06-54.52-55.98-54.52ZM384.38,554.69h-162l-64.95-388.37,141.8-13.47,34.38,276.36c32.08-52.27,71.69-134.38,71.69-190.42,0-30.66-5.25-51.56-13.45-68.75l129.11-26.13c14.94,24.66,21.66,50,21.66,82.14-.02,102.34-87.37,235.3-158.22,328.64Z"
+    ></path>
+  </g>
+</svg>
+
+<style define:vars={{ color }}>
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+  .cls-1 {
+    fill: var(--color);
+    stroke-width: 0px;
+  }
+</style>

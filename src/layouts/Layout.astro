@@ -26,7 +26,7 @@ const isTats = new URL(Astro.request.url).pathname === "/tattoos";
     <main>
       <slot />
     </main>
-	<Footer/>
+    <Footer />
   </body>
 </html>
 <style is:global>
@@ -41,12 +41,7 @@ const isTats = new URL(Astro.request.url).pathname === "/tattoos";
     --accent: 136, 58, 234;
     --accent-light: 224, 204, 250;
     --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
+    --accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
   }
   html {
     font-family: system-ui, sans-serif;
@@ -70,12 +65,20 @@ const isTats = new URL(Astro.request.url).pathname === "/tattoos";
     color: black;
   }
   main {
-	margin: 1rem;
-	min-height: 82vh;
+    margin: 1rem;
+    min-height: 82vh;
   }
-  /* li {
-	list-style-type: none;
-  } */
+  li {
+    font-size: 1.5rem;
+    list-style-type: none;
+  }
+  h1 {
+    margin: 0px;
+    font-size: 3rem;
+  }
+  p {
+    font-size: 1.5rem;
+  }
   a {
     color: var(--secondary-color);
     transition:
@@ -90,18 +93,30 @@ const isTats = new URL(Astro.request.url).pathname === "/tattoos";
   }
 
   footer {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 2rem;
-	font-weight: bold;
-	height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    height: 100px;
     color: var(--primary-color);
     background-color: var(--secondary-color);
   }
 
   button {
-	cursor: pointer;
+    cursor: pointer;
   }
 
+  .flex {
+    display: flex;
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .gap-4 {
+    gap: 1rem;
+  }
 </style>
