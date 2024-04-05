@@ -16,7 +16,7 @@ const isDev = process.env.NODE_ENV === "development";
         <div>DATE</div>
       </div>
       {
-        appointments.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()).map((a) => (
+        appointments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map((a) => (
           <div class="line-item">
             <div class="line-item-identifiers">
               <div>{a.name}</div>
