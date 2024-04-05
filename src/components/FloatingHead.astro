@@ -1,11 +1,11 @@
 ---
-const { fileName, y, x } = Astro.props;
+const { fileName, y, x, initialVisibility = 'hidden' } = Astro.props;
 
 const orientation = Math.random() > 0.5 ? '-' : '';
 const offset = `${(Math.random() * 1).toFixed(2)}s`
 ---
 
-<img class="hidden" data-floating-head style={`left:${x}%;top:${y}%;transform:rotate(${orientation}${Math.random()*20}deg)`} src={`/images/remis/${fileName}.png`} alt={fileName} />
+<img class:list={[initialVisibility === 'hidden' ? 'hidden' : '']} data-floating-head style={`left:${x}%;top:${y}%;transform:rotate(${orientation}${Math.random()*20}deg)`} src={`/images/remis/${fileName}.png`} alt={fileName} />
 <style define:vars={{offset}}>
   img {
     position: absolute;

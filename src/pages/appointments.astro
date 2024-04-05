@@ -44,7 +44,7 @@ const isDev = process.env.NODE_ENV === "development";
               <div>
                 <strong>Miscellaneous:</strong> {a.miscellaneous}
               </div>
-              {isDev && <img src={`/img/${a.imageSrc}`} alt={a.name} />}
+              {!isDev && <img src={`/img/${a.imageSrc}`} alt={a.name} />}
             </div>
           </div>
         ))

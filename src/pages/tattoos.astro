@@ -129,11 +129,17 @@ if (Astro.request.method === "POST") {
         imgFileName,
         now,
       });
+      const baseUrl = new URL(Astro.request.url).origin
       await sendEmail({
         email,
         subject: "Your appointment has been scheduled!",
         message:
-          "Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.",
+          `Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.<a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
+      });
+      await sendEmail({
+        email: config.email,
+        subject: "New Appointment Request",
+        message: `New appointment request from ${name} at ${email}`,
       });
       return Astro.redirect(`/success/${id}`);
     }
@@ -142,6 +148,7 @@ if (Astro.request.method === "POST") {
     errors.push("There was an error processing your request");
   }
 }
+console.log()
 ---
 
 <Layout title="Tats">

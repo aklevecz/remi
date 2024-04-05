@@ -141,12 +141,11 @@ const { values } = Astro.props;
     submit = async (e: SubmitEvent) => {
       // e.preventDefault();
       this.toggleSpinner();
-      window.addEventListener("beforeunload", (event) => {
-        // Cancel the event as stated by the standard.
-        event.preventDefault();
-        // Chrome requires returnValue to be set.
-        event.returnValue = "";
-      });
+      // window.addEventListener("beforeunload", (event) => {
+      //   console.log(event)
+      //   event.preventDefault();
+      //   event.returnValue = "";
+      // });
       // Create a new FormData object from the form
       //   if (e.target) {
       //     // @ts-ignore
