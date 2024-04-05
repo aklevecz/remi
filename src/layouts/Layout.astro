@@ -12,8 +12,9 @@ interface Props {
 }
 
 const { title, seo } = Astro.props;
-const isHome = new URL(Astro.request.url).pathname === "/";
-const isTats = new URL(Astro.request.url).pathname === "/tattoos";
+const urlObject = new URL(Astro.request.url);
+const isHome = urlObject.pathname === "/";
+const isTats = urlObject.pathname === "/tattoos";
 
 const defaultDescription = "Remi Frogo's is a fine and tattoo artist based in Los Angeles, California.";
 const defaultImage = "/images/remi-frogo-logo.svg";
@@ -33,10 +34,10 @@ const img = seo?.image || defaultImage;
     <meta name="twitter:site" content="@astrodotbuild" />
     <meta name="twitter:title" content={seo?.title || title} />
     <meta name="twitter:description" content={seo?.description || defaultDescription} />
-    <meta name="twitter:image" content={Astro.request.url + img}  />
+    <meta name="twitter:image" content={urlObject.origin + img}  />
     <meta property="og:title" content={seo?.title || title} />
     <meta property="og:description" content={seo?.description || defaultDescription} />
-    <meta property="og:image" content={Astro.request.url + img} />
+    <meta property="og:image" content={urlObject.origin + img} />
     <meta property="og:url" content={Astro.request.url} />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#ea5001" />
