@@ -7,7 +7,7 @@ const isDev = process.env.NODE_ENV === "development";
 ---
 
 <Layout title="appointments">
-  <div>
+  <div class="container">
     <h2>Appointments</h2>
     <div class="line-items">
       <div class="headers line-item-identifiers">
@@ -64,6 +64,9 @@ const isDev = process.env.NODE_ENV === "development";
   });
 </script>
 <style>
+  .container {
+    margin: 1rem;
+  }
   .headers.line-item-identifiers {
     text-decoration: underline;
     font-size: 0.75rem;

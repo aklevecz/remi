@@ -3,27 +3,18 @@ import Layout from "../layouts/Layout.astro";
 import RemiFrogoLogoFull from "../components/RemiFrogoLogo.astro";
 import FloatingHead from "../components/FloatingHead.astro";
 
-const faces = [
-  "face1",
-  "face2",
-  "face3",
-  "face4",
-  "face5",
-  "face6",
-  "face7",
-  "face8",
-];
+const faces = ["face1", "face2", "face3", "face4", "face5", "face6", "face7", "face8"];
 
 const positions = [
-	{x: '0', y: '15'},
-	{x: '30', y: '15'},
-	{x: '60', y: '15'},
-	{x: '0', y: '75'},
-	{x: '30', y: '75'},
-	{x: '60', y: '75'},
-	{x: '0', y: '0'},
-	{x: '60', y: '0'}
-]
+  { x: "0", y: "15" },
+  { x: "30", y: "15" },
+  { x: "60", y: "15" },
+  { x: "0", y: "65" },
+  { x: "30", y: "65" },
+  { x: "60", y: "65" },
+  { x: "0", y: "0" },
+  { x: "60", y: "0" },
+];
 ---
 
 <Layout title="REMI FROGO">
@@ -32,12 +23,8 @@ const positions = [
       <RemiFrogoLogoFull />
       <div class="faces">
         {
-          faces.map((face,i) => (
-            <FloatingHead
-              x={positions[i%positions.length].x}
-              y={positions[i%positions.length].y}
-              fileName={face}
-            />
+          faces.map((face, i) => (
+            <FloatingHead x={positions[i % positions.length].x} y={positions[i % positions.length].y} fileName={face} />
           ))
         }
       </div>
@@ -47,93 +34,94 @@ const positions = [
           <a href="/about">about</a>
       </nav> -->
     </div>
-	<button class="hide" data-hide-faces></button>
+    <button class="hide" data-hide-faces></button>
   </main>
 </Layout>
 <script>
-	const footer = document.querySelector('footer') as HTMLElement;
-	const main = document.querySelector('[data-index-main]') as HTMLElement;
-	main.style.height = `calc(100vh - ${footer?.getBoundingClientRect().height}px)`
-	console.log(footer?.getBoundingClientRect().height)
-	document.documentElement.classList.add('black')
-	setTimeout(() => {
-		document.documentElement.classList.remove('black')
-	}, 1000)
+  document.documentElement.classList.add("black");
+  setTimeout(() => {
+    document.documentElement.classList.remove("black");
+  }, 1000);
 
-	const remiLogo = document.querySelector('[data-remi-logo]');
-	const remiLogoPaths = remiLogo?.querySelectorAll('path');
-	remiLogoPaths?.forEach(path => {
-		path?.addEventListener('mouseover', () => {
-			path?.classList.add('hover');
-		})
-		path?.addEventListener('mouseout', () => {
-			path?.classList.remove('hover');
-		})
-		// path.style.fill = 'white'
-		path.classList.add('white');
-		setTimeout(() => {
-			path.classList.remove('white');
-		},3000)
-	})
+  const remiLogo = document.querySelector("[data-remi-logo]");
+  const remiLogoPaths = remiLogo?.querySelectorAll("path");
+  remiLogoPaths?.forEach((path) => {
+    path?.addEventListener("mouseover", () => {
+      path?.classList.add("hover");
+    });
+    path?.addEventListener("mouseout", () => {
+      path?.classList.remove("hover");
+    });
+    // path.style.fill = 'white'
+    path.classList.add("white");
+    setTimeout(() => {
+      path.classList.remove("white");
+    }, 3000);
+  });
 
-	function toggleFaces() {
-		const faces = document.querySelectorAll('[data-floating-head]');
-		faces.forEach((face) => {
-			face?.classList.toggle('hidden');
-			// @ts-ignore
-			// face!.style.marginLeft = "15%"
-		})
-	
-	}
-	setTimeout(() => {
-		toggleFaces()
-	}, 3200)
+  function toggleFaces() {
+    const faces = document.querySelectorAll("[data-floating-head]");
+    faces.forEach((face) => {
+      face?.classList.toggle("hidden");
+      // @ts-ignore
+      // face!.style.marginLeft = "15%"
+    });
+  }
+  setTimeout(() => {
+    toggleFaces();
+    const footer = document.querySelector("footer") as HTMLElement;
+	footer.style.opacity = "100%";
+    const main = document.querySelector("[data-index-main]") as HTMLElement;
+    const windowHeight = window.innerHeight;
+    const footerHeight = footer?.getBoundingClientRect().height;
+    main.style.height = `calc(${windowHeight - footerHeight}px)`;
+  }, 3200);
 
-	const button = document.querySelector('[data-hide-faces]');
-	button?.addEventListener('click', () => {
-		toggleFaces()
-	})
+  const button = document.querySelector("[data-hide-faces]");
+  button?.addEventListener("click", () => {
+    toggleFaces();
+  });
 </script>
-  <style>
-	path.white {
-		fill: white
-	}
-	button {
-		z-index: 999;
-		position: absolute;
-		bottom:0px;
-	}
-    main {
-      margin: auto;
-      /* padding: 1rem; */
-      /* width: 800px; */
-      max-width: calc(100% - 2rem);
-      color: white;
-      font-size: 20px;
-      line-height: 1.6;
-      /* height: 90vh; */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow-x: hidden;
-    }
-    nav {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: bold;
-      letter-spacing: -3.2px;
-      margin-top: 0rem;
-    }
-	.hide {
-		background-color: var(--color-primary);
-		border: none;
-		left:0px;
-		height: 50px;
-		width:50px;
-	}
-	li {
-		list-style-type: none;
-	}
+<style>
+  path.white {
+    fill: white;
+  }
+  button {
+    z-index: 999;
+    position: absolute;
+    bottom: 0px;
+  }
+  main {
+    margin: auto;
+    /* padding: 1rem; */
+    /* width: 800px; */
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+    /* height: 90vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: -3.2px;
+    margin-top: 0rem;
+  }
+  .hide {
+    background-color: var(--color-primary);
+    border: none;
+    left: 0px;
+    height: 50px;
+    width: 50px;
+  }
+  li {
+    list-style-type: none;
+  }
 </style>

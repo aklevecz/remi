@@ -1,6 +1,6 @@
 const SENDGRID_API_KEY = import.meta.env.SENDGRID_API_KEY;
 const EMAIL_SENDER_ADDRESS = import.meta.env.EMAIL_SENDER_ADDRESS;
-console.log(SENDGRID_API_KEY)
+
 type Props = {
   email: string;
   subject: string;

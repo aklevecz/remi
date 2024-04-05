@@ -2,6 +2,8 @@
 import config from "../lib/config"
 import RemiFrogoLogo from "./RemiFrogoLogo.astro";
 import InstagramIcon from "./icons/instagramIcon.astro";
+
+const isHome = new URL(Astro.request.url).pathname === "/";
 ---
 
 <footer data-footer>
@@ -15,7 +17,7 @@ import InstagramIcon from "./icons/instagramIcon.astro";
   <div class="logo-container"><RemiFrogoLogo id="footer" color="var(--primary-color)" /></div>
 </footer>
 
-<style>
+<style define:vars={{opacity: isHome ? "0" : "1"}}>
   footer {
     display: flex;
     align-items: center;
@@ -24,6 +26,7 @@ import InstagramIcon from "./icons/instagramIcon.astro";
     font-weight: bold;
     color: var(--primary-color);
     background-color: var(--secondary-color);
+    opacity: var(--opacity);
   }
 
   .link-container {
