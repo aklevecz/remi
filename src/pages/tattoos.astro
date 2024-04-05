@@ -63,7 +63,7 @@ if (Astro.request.method === "POST") {
     values.tattooSize = data.get("tattoo-size") as string;
     values.availability = data.get("availability") as string;
     values.miscellaneous = (data.get("miscellaneous") as string) || "";
-    values.image = data.get("tattoo-image") as File;
+    // values.image = data.get("tattoo-image") as File;
 
     const timestamp = Astro.cookies.get("timestamp")
     const clientId = Astro.cookies.get("clientId")
@@ -81,7 +81,7 @@ if (Astro.request.method === "POST") {
       tattooPlacement,
       tattooSize,
       availability,
-      image,
+      // image,
       miscellaneous,
     } = values;
 
@@ -95,9 +95,10 @@ if (Astro.request.method === "POST") {
       !tattooDescription ||
       !tattooPlacement ||
       !tattooSize ||
-      !availability ||
-      !image ||
-      image.size === 0
+      !availability 
+      // ||
+      // !image ||
+      // image.size === 0
     ) {
       if (!name) errors.push("Name is required");
       if (!pronouns) errors.push("Pronouns are required");
@@ -107,7 +108,7 @@ if (Astro.request.method === "POST") {
       if (!tattooPlacement) errors.push("Tattoo placement is required");
       if (!tattooSize) errors.push("Tattoo size is required");
       if (!availability) errors.push("Availability is required");
-      if (!image || image.size === 0) errors.push("Image is required");
+      // if (!image || image.size === 0) errors.push("Image is required");
       if (!timestamp) errors.push("Something is wrong with your request :(");
       if (!clientId) errors.push("Something is wrong with your request :(");
       console.log(errors);
@@ -201,6 +202,9 @@ if (!Astro.cookies.has("clientId")) {
       </div>
       <div>
         <h2>BOOK AN APPOINTMENT</h2>
+        {errors.map(e => (
+          <p style="color:red;">{e}</p>
+        ))}
         <TattooForm values={values} />
       </div>
     </div>
