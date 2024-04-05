@@ -157,7 +157,7 @@ if (Astro.request.method === "POST") {
       <div class="info-section">
         <h2>BOOKING POLICIES</h2>
         <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
-        <div class="flex flex-col gap-4">
+        <div class="payment-container flex flex-col gap-4">
           <div class="flex items-center gap-4">
             <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
           </div>
@@ -194,7 +194,7 @@ if (Astro.request.method === "POST") {
     const scrollHeight = window.scrollY;
     const infoSection = document.querySelector(".info-section") as HTMLDivElement;
     const computedHeight = infoSection.getBoundingClientRect().height - scrollHeight;
-    if (computedHeight < 100) {
+    if (computedHeight < infoSection.getBoundingClientRect().height){
       debounce(() => infoSection.classList.add("small"))();
     } else {
       debounce(() => infoSection.classList.remove("small"))();
@@ -236,5 +236,11 @@ if (Astro.request.method === "POST") {
 
   .info-section.small {
     font-size: 1rem;
+  }
+  .info-section.small > h2 {
+    font-size: 1.5rem;
+  }
+  .info-section.small > .payment-container {
+    flex-direction: row;
   }
 </style>

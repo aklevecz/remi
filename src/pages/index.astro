@@ -20,7 +20,9 @@ const positions = [
 <Layout title="REMI FROGO">
   <main data-index-main>
     <div>
-      <RemiFrogoLogoFull />
+      <div class="logo-wrapper">
+        <RemiFrogoLogoFull />
+      </div>
       <div class="faces">
         {
           faces.map((face, i) => (
@@ -70,7 +72,7 @@ const positions = [
   setTimeout(() => {
     toggleFaces();
     const footer = document.querySelector("footer") as HTMLElement;
-	footer.style.opacity = "100%";
+    footer.style.opacity = "100%";
     const main = document.querySelector("[data-index-main]") as HTMLElement;
     const windowHeight = window.innerHeight;
     const footerHeight = footer?.getBoundingClientRect().height;
@@ -83,6 +85,18 @@ const positions = [
   });
 </script>
 <style>
+  .logo-wrapper {
+    position: absolute;
+    top: 32vh;
+    left: 0;
+    width: 100%;
+  }
+  @media screen and (min-width: 768px) {
+	.logo-wrapper {
+	  top: 25vh;
+	}
+	
+  }
   path.white {
     fill: white;
   }
