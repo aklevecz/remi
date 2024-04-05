@@ -56,7 +56,9 @@ const { values } = Astro.props;
       Upload an image
       <div class="custom-file-upload">
         <img class="upload-preview hidden" src="" alt="" />
-        <button class="cta" disabled style="pointer-events: none;">Click here to upload</button><button class="remove-image hidden">Remove image</button>
+        <button class="cta" disabled style="pointer-events: none;">To upload click here or drag an image from your computer</button><button
+          class="remove-image hidden">Remove image</button
+        >
       </div>
     </label>
     <input id="tattoo-image" name="tattoo-image" type="file" accept="image/*" style="display: none;" />
@@ -78,6 +80,8 @@ const { values } = Astro.props;
   class TattooForm extends HTMLElement {
     cta: HTMLSpanElement | null = null;
     removeButton: HTMLButtonElement | null = null;
+
+    submitButton: HTMLButtonElement | null = null;
     submitText: HTMLSpanElement | null = null;
     submitSpinner: HTMLDivElement | null = null;
 
@@ -85,6 +89,8 @@ const { values } = Astro.props;
 
     constructor() {
       super();
+      this.submitButton = this.querySelector("button[type='submit']") as HTMLButtonElement;
+      console.log(this.submitButton)
       this.submitText = this.querySelector(".button-text") as HTMLSpanElement;
       this.submitSpinner = this.querySelector("#submit-tattoo") as HTMLDivElement;
       this.cta = this.querySelector(".custom-file-upload > .cta") as HTMLSpanElement;
@@ -116,8 +122,8 @@ const { values } = Astro.props;
           //   const removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
           this.removeButton!.classList.remove("hidden");
           this.removeButton!.addEventListener("click", (e) => {
-            e.preventDefault()
-            image.classList.add("hidden");
+            e.preventDefault();
+            // image.classList.add("hidden");
             input.value = "";
             this.removeButton!.classList.add("hidden");
             this.cta!.innerText = "Upload Image";
@@ -135,6 +141,12 @@ const { values } = Astro.props;
     submit = async (e: SubmitEvent) => {
       // e.preventDefault();
       this.toggleSpinner();
+      window.addEventListener("beforeunload", (event) => {
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = "";
+      });
       // Create a new FormData object from the form
       //   if (e.target) {
       //     // @ts-ignore
@@ -177,13 +189,13 @@ const { values } = Astro.props;
 </script>
 <style>
   form {
-    margin-top:2rem;
+    margin-top: 2rem;
   }
   .custom-file-upload {
-    margin-top:.5rem;
+    margin-top: 0.5rem;
     padding: 10px;
     /* background-color: #f0f0f0; */
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 5px;
     cursor: pointer;
   }
@@ -198,7 +210,7 @@ const { values } = Astro.props;
     flex-direction: column;
     margin-bottom: 2rem;
     max-width: 500px;
-    font-size:1.5rem;
+    font-size: 1.5rem;
   }
   input {
     background: var(--secondary-color);

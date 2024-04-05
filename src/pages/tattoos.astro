@@ -1,6 +1,8 @@
 ---
 import dbInstance from "../lib/db";
 import config from "../lib/config";
+import { sendEmail } from "../lib/email";
+
 import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -126,6 +128,12 @@ if (Astro.request.method === "POST") {
         imgFileName,
         now,
       });
+      await sendEmail({
+        email,
+        subject: "Your appointment has been scheduled!",
+        message:
+          "Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.",
+      });
       return Astro.redirect(`/success/${id}`);
     }
   } catch (e) {
@@ -149,10 +157,8 @@ if (Astro.request.method === "POST") {
           <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
         </div>
         <p>
-          feel free to contact me with any questions through DM <a href={config.remiInstagram}
-            >@remb0tron</a
-          >
-          on instagram <InstagramIcon />
+          feel free to contact me with any questions through DM <a href={config.remboInstagram}><InstagramIcon />remb0tron</a>
+          on instagram 
           {"<3"}
         </p>
       </div>
@@ -163,11 +169,35 @@ if (Astro.request.method === "POST") {
     </div>
   </div>
 </Layout>
+<script>
+  const debounce = (func:any, delay=200) => {
+    let timeoutId:any;
+    return (...args:any) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(null, args);
+      }, delay);
+    };
+  };
+
+  const handleScroll = () => {
+    if (window.innerWidth > 768) return;
+    const scrollHeight = window.scrollY;
+    const infoSection = document.querySelector(".info-section") as HTMLDivElement
+    const computedHeight = infoSection.getBoundingClientRect().height-scrollHeight
+    if (computedHeight < 100) {
+      debounce(() => infoSection.classList.add("small"))()
+    } else {
+      debounce(() => infoSection.classList.remove("small"))()
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+</script>
 <style>
   .container {
     max-width: 1000px;
     margin: auto;
-
   }
   .content {
     display: flex;
@@ -186,9 +216,16 @@ if (Astro.request.method === "POST") {
   .info-section {
     max-width: 500px;
     /* margin: auto; */
-
-  }
-  div {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    background: var(--green);
+    z-index: 9;
     font-size: 1.5rem;
+    transition: font-size 500ms;
+  }
+
+  .info-section.small {
+    font-size: 1rem;
   }
 </style>
