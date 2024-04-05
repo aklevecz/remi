@@ -1,7 +1,7 @@
 ---
 import dbInstance from "../lib/db";
 import config from "../lib/config";
-import { sendEmail } from "../lib/email";
+import emailClient from "../lib/email";
 
 import TattooForm from "../components/TattooForm.astro";
 import Layout from "../layouts/Layout.astro";
@@ -130,6 +130,9 @@ if (Astro.request.method === "POST") {
         now,
       });
       const baseUrl = new URL(Astro.request.url).origin
+      const from = Astro.locals.runtime.env.EMAIL_SENDER_ADDRESS;
+      const apiKey = Astro.locals.runtime.env.SENDGRID_API_KEY;
+      const {sendEmail} = emailClient({apiKey, from})
       await sendEmail({
         email,
         subject: "Your appointment has been scheduled!",
