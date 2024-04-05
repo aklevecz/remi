@@ -27,7 +27,7 @@ const positions = [
 ---
 
 <Layout title="REMI FROGO">
-  <main>
+  <main data-index-main>
     <div>
       <RemiFrogoLogoFull />
       <div class="faces">
@@ -41,16 +41,20 @@ const positions = [
           ))
         }
       </div>
-      <nav>
+      <!-- <nav>
           <a href="/art">art</a>
           <a href="/tattoos">tattoos</a>
           <a href="/about">about</a>
-      </nav>
+      </nav> -->
     </div>
 	<button class="hide" data-hide-faces></button>
   </main>
 </Layout>
 <script>
+	const footer = document.querySelector('footer') as HTMLElement;
+	const main = document.querySelector('[data-index-main]') as HTMLElement;
+	main.style.height = `calc(100vh - ${footer?.getBoundingClientRect().height}px)`
+	console.log(footer?.getBoundingClientRect().height)
 	document.documentElement.classList.add('black')
 	setTimeout(() => {
 		document.documentElement.classList.remove('black')
@@ -107,7 +111,7 @@ const positions = [
       color: white;
       font-size: 20px;
       line-height: 1.6;
-      height: 90vh;
+      /* height: 90vh; */
       display: flex;
       flex-direction: column;
       justify-content: center;
