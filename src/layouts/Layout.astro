@@ -4,11 +4,19 @@ import Footer from "../components/Footer.astro";
 
 interface Props {
   title: string;
+  seo?: {
+    title: string;
+    description: string;
+    image: string;
+  };
 }
 
-const { title } = Astro.props;
+const { title, seo } = Astro.props;
 const isHome = new URL(Astro.request.url).pathname === "/";
 const isTats = new URL(Astro.request.url).pathname === "/tattoos";
+
+const defaultDescription = "Remi Frogo's is a fine and tattoo artist based in Los Angeles, California.";
+const defaultImage = "/images/remi-frogo-logo.svg";
 ---
 
 <!doctype html>
@@ -19,6 +27,18 @@ const isTats = new URL(Astro.request.url).pathname === "/tattoos";
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/images/lambheads.png" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@astrodotbuild" />
+    <meta name="twitter:title" content={seo?.title || title} />
+    <meta name="twitter:description" content={seo?.description || defaultDescription} />
+    <meta name="twitter:image" content={seo?.image || defaultImage} />
+    <meta property="og:title" content={seo?.title || title} />
+    <meta property="og:description" content={seo?.description || defaultDescription} />
+    <meta property="og:image" content={seo?.image || defaultImage} />
+    <meta property="og:url" content={Astro.request.url} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#ea5001" />
+
     <title>{title}</title>
   </head>
   <body>
