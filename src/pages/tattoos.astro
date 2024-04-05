@@ -215,15 +215,7 @@ if (!Astro.cookies.has("clientId")) {
   </div>
 </Layout>
 <script>
-  const debounce = (func: any, delay = 200) => {
-    let timeoutId: any;
-    return (...args: any) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(null, args);
-      }, delay);
-    };
-  };
+  import {debounce} from "../lib/debounce.ts"
 
   const handleScroll = () => {
     if (window.innerWidth > 768) return;
