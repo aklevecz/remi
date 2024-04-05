@@ -54,18 +54,18 @@ if (Astro.request.method === "POST") {
   try {
     const data = await Astro.request.formData();
     values.name = data.get("name") as string;
-    values.pronouns = data.get("pronouns") as string;
-    values.instagram = data.get("instagram") as string;
+    values.pronouns = data.get("pronouns") as string || "N/A";
+    values.instagram = data.get("instagram") as string || "N/A";
     values.email = data.get("email") as string;
     values.tattooDescription = data.get("tattoo-description") as string;
     values.tattooPlacement = data.get("tattoo-placement") as string;
     values.tattooSize = data.get("tattoo-size") as string;
     values.availability = data.get("availability") as string;
-    values.miscellaneous = (data.get("miscellaneous") as string) || "";
+    values.miscellaneous = (data.get("miscellaneous") as string) || "N/A";
     // values.image = data.get("tattoo-image") as File;
 
-    const timestamp = Astro.cookies.get("timestamp")
-    const clientId = Astro.cookies.get("clientId")
+    const timestamp = Astro.cookies.get("timestamp");
+    const clientId = Astro.cookies.get("clientId");
 
     if (!clientId) {
       return Astro.redirect("/tattoos");
@@ -94,7 +94,7 @@ if (Astro.request.method === "POST") {
       !tattooDescription ||
       !tattooPlacement ||
       !tattooSize ||
-      !availability 
+      !availability
       // ||
       // !image ||
       // image.size === 0
@@ -176,10 +176,17 @@ if (!Astro.cookies.has("clientId")) {
   Astro.cookies.set("clientId", crypto.randomUUID(), {
     expires: new Date(new Date().getTime() + 1000 * 60 * 60),
   });
-
 }
 ---
-<Layout title="Tattoos" seo={{title:"Remi Frogo | Tattoos", description: "Book an appointment for a tattoo!", image:"/images/seo-img-tat.png"}}>
+
+<Layout
+  title="Tattoos"
+  seo={{
+    title: "Remi Frogo | Tattoos",
+    description: "Book an appointment for a tattoo!",
+    image: "/images/seo-img-tat.png",
+  }}
+>
   <PageHeading>Tattoos</PageHeading>
   <div class="container">
     <div class="content">
@@ -188,9 +195,9 @@ if (!Astro.cookies.has("clientId")) {
         <p>$50 deposit is required to lock in the appointment. deposits go towards the cost of the tattoo!</p>
         <div class="payment-container flex flex-col gap-4">
           <div class="flex items-center gap-4">
-            <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
+            <VenmoIcon /><a target="_blank" aria-label="go to remi venmo" href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
           </div>
-          <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
+          <div class="flex items-center gap-4"><ZelleIcon /> <div style="text-decoration: underline;" data-mob>Click to reveal</div></div>
         </div>
         <p>
           feel free to contact me with any questions on instagram <a href={config.remboInstagram}
@@ -201,9 +208,7 @@ if (!Astro.cookies.has("clientId")) {
       </div>
       <div>
         <h2>BOOK AN APPOINTMENT</h2>
-        {errors.map(e => (
-          <p style="color:red;">{e}</p>
-        ))}
+        {errors.map((e) => <p class="error-item">{e}</p>)}
         <TattooForm values={values} />
       </div>
     </div>
@@ -233,6 +238,15 @@ if (!Astro.cookies.has("clientId")) {
   };
 
   window.addEventListener("scroll", handleScroll);
+
+  const mob = document.querySelector("[data-mob]") as HTMLDivElement;
+  mob.addEventListener("click", () => {
+    fetch('/info')
+      .then(res => res.text())
+      .then((data:string) => {
+        mob.innerHTML = data.replace(/9/g, '');
+      })
+  });
 </script>
 <style>
   .container {
@@ -276,5 +290,9 @@ if (!Astro.cookies.has("clientId")) {
   }
   .info-section.small > .payment-container {
     flex-direction: row;
+  }
+  .error-item {
+    color: var(--yellow);
+    font-weight: bold;
   }
 </style>

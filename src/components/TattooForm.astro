@@ -8,7 +8,7 @@ const { values } = Astro.props;
   <form method="POST" enctype="multipart/form-data">
     <label for="name"
       >Name
-      <input autocomplete="name" id="name" name="name" placeholder="Name" value={values.name} />
+      <input autocomplete="name" id="name" name="name" placeholder="Name" value={values.name} required/>
     </label>
 
     <label for="pronouns"
@@ -23,7 +23,7 @@ const { values } = Astro.props;
 
     <label for="email"
       >Email
-      <input autocomplete="email" id="email" name="email" type="email" placeholder="Email" value={values.email} />
+      <input autocomplete="email" id="email" name="email" type="email" placeholder="Email" value={values.email} required/>
     </label>
 
     <label for="tattoo-description"
@@ -33,22 +33,24 @@ const { values } = Astro.props;
         name="tattoo-description"
         placeholder="Tattoo Description"
         value={values.tattooDescription}
+        required
       />
     </label>
 
     <label for="tattoo-placement"
-      >Placement of tattoo ( could be potential placement or unsure)
+      >Placement of tattoo (could be potential placement or unsure)
       <input
         id="tattoo-placement"
         name="tattoo-placement"
         placeholder="Placement of tattoo"
         value={values.tattooPlacement}
+        required
       />
     </label>
 
     <label for="tattoo-size"
       >Approximate size of tattoo
-      <input id="tattoo-size" name="tattoo-size" placeholder="Size of tattoo" value={values.tattooSize} />
+      <input id="tattoo-size" name="tattoo-size" placeholder="Size of tattoo" value={values.tattooSize} required/>
     </label>
 
     <label for="tattoo-image">
@@ -65,7 +67,7 @@ const { values } = Astro.props;
 
     <label for="availability"
       >What is your availability? (e.g. typically weekends / after 2pm on tuesdays and thursdays)
-      <input id="availability" name="availability" placeholder="Availability" value={values.availability} />
+      <input id="availability" name="availability" placeholder="Availability" value={values.availability} required/>
     </label>
 
     <label for="miscellaneous"
