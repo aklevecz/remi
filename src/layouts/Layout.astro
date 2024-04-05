@@ -38,6 +38,8 @@ const img = seo?.image || defaultImage;
     <meta property="og:title" content={seo?.title || title} />
     <meta property="og:description" content={seo?.description || defaultDescription} />
     <meta property="og:image" content={urlObject.origin + img} />
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content={Astro.request.url} />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#ea5001" />
