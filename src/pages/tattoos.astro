@@ -67,6 +67,11 @@ if (Astro.request.method === "POST") {
 
     const timestamp = Astro.cookies.get("timestamp")
     const clientId = Astro.cookies.get("clientId")
+
+    if (!clientId) {
+      return Astro.redirect("/tattoos");
+    }
+
     const {
       name,
       pronouns,
@@ -195,7 +200,7 @@ if (!Astro.cookies.has("clientId")) {
         </p>
       </div>
       <div>
-        <h2>INFO</h2>
+        <h2>BOOK AN APPOINTMENT</h2>
         <TattooForm values={values} />
       </div>
     </div>
@@ -264,7 +269,7 @@ if (!Astro.cookies.has("clientId")) {
     font-size: 1rem;
   }
   .info-section.small > h2 {
-    font-size: 1.5rem;
+    font-size: 0rem;
   }
   .info-section.small > .payment-container {
     flex-direction: row;

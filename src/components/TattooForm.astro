@@ -151,19 +151,22 @@ const { values } = Astro.props;
               })
                 .then((response) => response.json())
                 .then((result) => {
-                  console.log(result);
                   this.imgUploadSpinner?.classList.toggle("hidden");
+                  this.imageInput!.disabled = true
 
                   const image = this.querySelector("img.upload-preview") as HTMLImageElement;
                   image.src = reader.result as string;
                   image.classList.remove("hidden");
-                  this.cta!.innerText = "Change Image";
+                  // this.cta!.innerText = "Change Image";
+                  this.cta!.innerText = "";
                   //   const removeButton = this.querySelector(".custom-file-upload > button") as HTMLButtonElement;
                   this.removeButton!.classList.remove("hidden");
                   this.removeButton!.addEventListener("click", (e) => {
                     e.preventDefault();
                     // image.classList.add("hidden");
                     console.log(input)
+                    this.imageInput!.disabled = false
+
                     image.classList.add("hidden");
                     input.value = "";
                     this.removeButton!.classList.add("hidden");
