@@ -1,7 +1,9 @@
 name: Astro Studio
 
 env:
-  ASTRO_STUDIO_APP_TOKEN: ${{secrets.ASTRO_STUDIO_APP_TOKEN }}
+  ASTRO_STUDIO_APP_TOKEN: ${{secrets.ASTRO_STUDIO_APP_TOKEN}}
+  EMAIL_SENDER_ADDRESS: ${{secrets.EMAIL_SENDER_ADDRESS}}
+  SENDGRID_API_KEY: ${{secrets.SENDGRID_API_KEY}}
 
 on:
   push:
