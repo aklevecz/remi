@@ -65,6 +65,8 @@ if (Astro.request.method === "POST") {
     values.miscellaneous = (data.get("miscellaneous") as string) || "";
     values.image = data.get("tattoo-image") as File;
 
+    const timestamp = Astro.cookies.get("timestamp")
+    const clientId = Astro.cookies.get("clientId")
     const {
       name,
       pronouns,
@@ -77,7 +79,10 @@ if (Astro.request.method === "POST") {
       image,
       miscellaneous,
     } = values;
+
     if (
+      !timestamp ||
+      !clientId ||
       !name ||
       !pronouns ||
       !instagram ||
@@ -98,12 +103,15 @@ if (Astro.request.method === "POST") {
       if (!tattooSize) errors.push("Tattoo size is required");
       if (!availability) errors.push("Availability is required");
       if (!image || image.size === 0) errors.push("Image is required");
+      if (!timestamp) errors.push("Something is wrong with your request :(");
+      if (!clientId) errors.push("Something is wrong with your request :(");
       console.log(errors);
     } else {
-      const R2 = Astro.locals.runtime.env.R2;
+      // const R2 = Astro.locals.runtime.env.R2;
       const now = new Date();
-      const imgFileName = String(now.getTime());
-      await R2.put(imgFileName, image, { contentType: image.type });
+      // const imgFileName = String(now.getTime());
+      const imgFileName = clientId.value;
+      // await R2.put(imgFileName, image, { contentType: image.type });
       const user = await dbInstance.getUserByEmail(email);
       let userId = null;
       if (user.length > 0) {
@@ -113,7 +121,7 @@ if (Astro.request.method === "POST") {
         const user = await dbInstance.getUserByEmail(email);
         userId = user[0].id;
       }
-      const id = generateUUID();
+      const id = clientId.value;
       await dbInstance.createAppointment({
         id,
         userId,
@@ -129,21 +137,22 @@ if (Astro.request.method === "POST") {
         imgFileName,
         now,
       });
-      const baseUrl = new URL(Astro.request.url).origin
+      const baseUrl = new URL(Astro.request.url).origin;
       const from = Astro.locals.runtime.env.EMAIL_SENDER_ADDRESS;
       const apiKey = Astro.locals.runtime.env.SENDGRID_API_KEY;
-      const {sendEmail} = emailClient({apiKey, from})
+      const { sendEmail } = emailClient({ apiKey, from });
       await sendEmail({
         email,
         subject: "Your appointment has been scheduled!",
-        message:
-          `Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.<a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
+        message: `Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.<a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
       });
       await sendEmail({
         email: config.email,
         subject: "New Appointment Request",
         message: `New appointment request from ${name} at ${email}`,
       });
+      await Astro.cookies.delete("timestamp");
+      await Astro.cookies.delete("clientId");
       return Astro.redirect(`/success/${id}`);
     }
   } catch (e) {
@@ -151,15 +160,27 @@ if (Astro.request.method === "POST") {
     errors.push("There was an error processing your request");
   }
 }
----
 
+if (!Astro.cookies.has("timestamp")) {
+  Astro.cookies.set("timestamp", String(new Date().getTime()), {
+    expires: new Date(new Date().getTime() + 1000 * 60 * 60),
+  });
+}
+
+if (!Astro.cookies.has("clientId")) {
+  Astro.cookies.set("clientId", crypto.randomUUID(), {
+    expires: new Date(new Date().getTime() + 1000 * 60 * 60),
+  });
+
+}
+---
 <Layout title="Tats">
   <PageHeading>Tattoos</PageHeading>
   <div class="container">
     <div class="content">
       <div class="info-section">
         <h2>BOOKING POLICIES</h2>
-        <p>$50 deposit is required to lock in the appointment - the deposit will go toward the cost of the tattoo!</p>
+        <p>$50 deposit is required to lock in the appointment. deposits go towards the cost of the tattoo!</p>
         <div class="payment-container flex flex-col gap-4">
           <div class="flex items-center gap-4">
             <VenmoIcon /><a href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
@@ -167,10 +188,9 @@ if (Astro.request.method === "POST") {
           <div class="flex items-center gap-4"><ZelleIcon /> <div>7148087117</div></div>
         </div>
         <p>
-          feel free to contact me with any questions through DM <a href={config.remboInstagram}
+          feel free to contact me with any questions on instagram <a href={config.remboInstagram}
             ><InstagramIcon />remb0tron</a
           >
-          on instagram
           {"<3"}
         </p>
       </div>
@@ -197,7 +217,7 @@ if (Astro.request.method === "POST") {
     const scrollHeight = window.scrollY;
     const infoSection = document.querySelector(".info-section") as HTMLDivElement;
     const computedHeight = infoSection.getBoundingClientRect().height - scrollHeight;
-    if (computedHeight < infoSection.getBoundingClientRect().height){
+    if (computedHeight < infoSection.getBoundingClientRect().height) {
       debounce(() => infoSection.classList.add("small"))();
     } else {
       debounce(() => infoSection.classList.remove("small"))();

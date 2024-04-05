@@ -22,7 +22,7 @@ const isDev = process.env.NODE_ENV === "development";
               <div>{a.name}</div>
               <div>{a.email}</div>
               <div>
-                {a.createdAt.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", hour12: true })}
+                {a.createdAt.toLocaleString("en-US", { timeZone: "America/Los_Angeles", month: "short", day: "numeric", hour: "numeric", hour12: true })}
               </div>
             </div>
             <div class="line-item-info hidden">

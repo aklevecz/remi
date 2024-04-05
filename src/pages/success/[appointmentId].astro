@@ -8,6 +8,7 @@ if (!appointmentId) {
 }
 const appointments = await dbInstance.getAppointmentById(appointmentId);
 const appointment = appointments[0] as any;
+console.log(appointment);
 ---
 
 <Layout title="success">
@@ -51,11 +52,16 @@ const appointment = appointments[0] as any;
     </div>
   </div>
 </Layout>
+<script>
+  if (window.history.replaceState) {
+    window.history.replaceState(null, "", window.location.href);
+  }
+</script>
 <style>
   .container {
     margin: 1rem;
   }
-  @media screen and (min-width: 768px){
+  @media screen and (min-width: 768px) {
     .container {
       margin: auto;
       max-width: 800px;
