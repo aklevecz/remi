@@ -3,7 +3,7 @@ const { colorVariant } = Astro.props;
 const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-color)";
 ---
 
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 713.31 712.89">
+<svg id="Layer_2" data-name="Layer 2" data-zelle-icon xmlns="http://www.w3.org/2000/svg" viewBox="0 0 713.31 712.89">
   <g id="Layer_1-2" data-name="Layer 1">
     <g id="X5mULM.tif">
       <path
@@ -17,10 +17,16 @@ const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-c
 <style define:vars={{ color }}>
 svg {
     width: 50px;
-    height: 50px;å
+    height: 50px;
 }
   .cls-1 {
     fill: var(--color);
     stroke-width: 0px;
   }
+
+  svg.small {
+    width: 25px;
+    height: 25px;
+  }
+  
 </style>

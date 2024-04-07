@@ -4,7 +4,7 @@ const { colorVariant } = Astro.props;
 const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-color)";
 ---
 
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700">
+<svg id="Layer_2" data-venmo-icon data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 700">
   <g id="Layer_1-2" data-name="Layer 1">
     <path
       class="cls-1"
@@ -21,5 +21,9 @@ const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-c
   .cls-1 {
     fill: var(--color);
     stroke-width: 0px;
+  }
+  svg.small {
+    width: 25px;
+    height: 25px;
   }
 </style>

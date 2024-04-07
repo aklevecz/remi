@@ -54,8 +54,8 @@ if (Astro.request.method === "POST") {
   try {
     const data = await Astro.request.formData();
     values.name = data.get("name") as string;
-    values.pronouns = data.get("pronouns") as string || "N/A";
-    values.instagram = data.get("instagram") as string || "N/A";
+    values.pronouns = (data.get("pronouns") as string) || "N/A";
+    values.instagram = (data.get("instagram") as string) || "N/A";
     values.email = data.get("email") as string;
     values.tattooDescription = data.get("tattoo-description") as string;
     values.tattooPlacement = data.get("tattoo-placement") as string;
@@ -195,9 +195,14 @@ if (!Astro.cookies.has("clientId")) {
         <p>$50 deposit is required to lock in the appointment. deposits go towards the cost of the tattoo!</p>
         <div class="payment-container flex flex-col gap-4">
           <div class="flex items-center gap-4">
-            <VenmoIcon /><a target="_blank" aria-label="go to remi venmo" href="https://account.venmo.com/u/remifrogo">@remifrogo</a>
+            <VenmoIcon /><a target="_blank" aria-label="go to remi venmo" href="https://account.venmo.com/u/remifrogo"
+              >@remifrogo</a
+            >
           </div>
-          <div class="flex items-center gap-4"><ZelleIcon /> <div style="text-decoration: underline;" data-mob>Click to reveal</div></div>
+          <div class="flex items-center gap-4">
+            <ZelleIcon />
+            <div style="text-decoration: underline;" data-mob>Click to reveal</div>
+          </div>
         </div>
         <p>
           feel free to contact me with any questions on instagram <a href={config.remboInstagram}
@@ -215,17 +220,27 @@ if (!Astro.cookies.has("clientId")) {
   </div>
 </Layout>
 <script>
-  import {debounce} from "../lib/debounce.ts"
+  import { debounce } from "../lib/debounce.ts";
 
   const handleScroll = () => {
     if (window.innerWidth > 768) return;
     const scrollHeight = window.scrollY;
     const infoSection = document.querySelector(".info-section") as HTMLDivElement;
+    const zelleIcon = document.querySelector("[data-zelle-icon]") as HTMLDivElement;
+    const venmoIcon = document.querySelector("[data-venmo-icon]") as HTMLDivElement;
     const computedHeight = infoSection.getBoundingClientRect().height - scrollHeight;
     if (computedHeight < infoSection.getBoundingClientRect().height) {
-      debounce(() => infoSection.classList.add("small"))();
+      debounce(() => {
+        infoSection.classList.add("small");
+        zelleIcon.classList.add("small");
+        venmoIcon.classList.add("small");
+      })();
     } else {
-      debounce(() => infoSection.classList.remove("small"))();
+      debounce(() => {
+        infoSection.classList.remove("small");
+        zelleIcon.classList.remove("small");
+        venmoIcon.classList.remove("small");
+      })();
     }
   };
 
@@ -233,11 +248,11 @@ if (!Astro.cookies.has("clientId")) {
 
   const mob = document.querySelector("[data-mob]") as HTMLDivElement;
   mob.addEventListener("click", () => {
-    fetch('/info')
-      .then(res => res.text())
-      .then((data:string) => {
-        mob.innerHTML = data.replace(/9/g, '');
-      })
+    fetch("/info")
+      .then((res) => res.text())
+      .then((data: string) => {
+        mob.innerHTML = data.replace(/9/g, "");
+      });
   });
 </script>
 <style>
@@ -283,6 +298,7 @@ if (!Astro.cookies.has("clientId")) {
   .info-section.small > .payment-container {
     flex-direction: row;
   }
+
   .error-item {
     color: var(--yellow);
     font-weight: bold;
