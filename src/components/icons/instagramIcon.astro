@@ -1,11 +1,11 @@
 ---
-const { colorVariant, sizeVariant="sm" } = Astro.props;
+const { colorVariant, sizeVariant="sm", className="" } = Astro.props;
 
 const color = colorVariant ? `var(--${colorVariant}-color)` : "var(--secondary-color)";
 const size = sizeVariant === "sm" ? "18px" : "24px";
 ---
 
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<svg class={className} id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
   <g id="Layer_1-2" data-name="Layer 1">
     <g>
       <path
@@ -28,9 +28,14 @@ const size = sizeVariant === "sm" ? "18px" : "24px";
   svg {
     width: var(--size);
     height: var(--size);
+    box-sizing: border-box;
   }
   .cls-1 {
     fill: var(--color);
     stroke-width: 0px;
+  }
+  .inline-variant {
+    padding-top: 4px;
+    margin-right: -2px;
   }
 </style>
