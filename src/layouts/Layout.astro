@@ -15,15 +15,27 @@ const { title, seo } = Astro.props;
 const urlObject = new URL(Astro.request.url);
 const isHome = urlObject.pathname === "/";
 const isTats = urlObject.pathname === "/tattoos";
+const isArt = urlObject.pathname === "/art";
 
 const defaultDescription = "Remi Frogo's is a fine and tattoo artist based in Los Angeles, California.";
 const defaultImage = "/images/seo-img.png";
 
 const img = seo?.image || defaultImage;
+
+const testColor = '#fff'
+
+const theme = {
+  primary: 'var(--yellow)',
+  secondary: 'var(--orange)', 
+}
+
+if (isArt) {
+  theme.primary = '#fff'
+}
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" style={`--primary-color:${theme.primary};--secondary-color:${theme.secondary}`}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={seo?.description || defaultDescription}/>
@@ -51,17 +63,17 @@ const img = seo?.image || defaultImage;
     <main>
       <slot />
     </main>
-    <Footer />
+    {!isHome && <Footer />}
   </body>
 </html>
 <style is:global>
   :root {
-    --yellow: #f2eb03;
+    --yellow: #e9ff6e;
     --green: #8bcf85;
     --orange: #ea5001;
 
-    --primary-color: var(--green);
-    --secondary-color: var(--orange);
+    /* --primary-color: var(--yellow);
+    --secondary-color: var(--orange); */
 
     --accent: 136, 58, 234;
     --accent-light: 224, 204, 250;

@@ -1,7 +1,6 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import RemiFrogoLogoFull from "../components/RemiFrogoLogo.astro";
-import FloatingHead from "../components/FloatingHead.astro";
+import Layout from "../layouts/Layout.astro";
 
 const faces = ["face1", "face2", "face3", "face4", "face5", "face6", "face7", "face8"];
 
@@ -23,18 +22,18 @@ const positions = [
       <div class="logo-wrapper">
         <RemiFrogoLogoFull />
       </div>
-      <div class="faces">
+      <!-- <div class="faces">
         {
           faces.map((face, i) => (
             <FloatingHead x={positions[i % positions.length].x} y={positions[i % positions.length].y} fileName={face} />
           ))
         }
-      </div>
-      <!-- <nav>
-          <a href="/art">art</a>
-          <a href="/tattoos">tattoos</a>
-          <a href="/about">about</a>
-      </nav> -->
+      </div> -->
+      <nav>
+        <a href="/art">art</a>
+        <a href="/tattoos">tattoos</a>
+        <a href="/about">about</a>
+      </nav>
     </div>
     <button class="hide" data-hide-faces></button>
   </main>
@@ -86,17 +85,16 @@ const positions = [
 </script>
 <style>
   .logo-wrapper {
-    position: absolute;
+    /* position: absolute;
     top: 20vh;
-    left: 0;
+    left: 0; */
     width: 100%;
-	height: 50%;
+    height: 50%;
   }
   @media screen and (min-width: 768px) {
-	.logo-wrapper {
-	  top: 25vh;
-	}
-	
+    .logo-wrapper {
+      top: 25vh;
+    }
   }
   path.white {
     fill: white;
@@ -122,12 +120,12 @@ const positions = [
   }
   nav {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     justify-content: center;
     font-size: 2rem;
     font-weight: bold;
     letter-spacing: -3.2px;
-    margin-top: 0rem;
+    margin-top: 1rem;
   }
   .hide {
     background-color: var(--color-primary);

@@ -1,0 +1,117 @@
+---
+import { Image } from "astro:assets";
+import LoadingSpinner from "./LoadingSpinner.astro";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  name: string;
+  src: string;
+  description: string;
+  media: string;
+}
+
+const { name, src, description, media } = Astro.props;
+const images = import.meta.glob<{ default: ImageMetadata }>("/src/assets/paintings/*.{jpeg,jpg,png,gif}");
+if (!images[src]) throw new Error(`"${src}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
+---
+
+<div id={name} class="art-piece">
+  <div class="art-piece-wrapper">
+    {/*<h1 class="title">{d.name}</h1> */}
+    <div class="img-wrapper">
+      <Image width="800" src={images[src]()} alt={name} class="desk" />
+      <Image width="300" src={images[src]()} alt={name} class="mobile" />
+    </div>
+    <!-- <LoadingSpinner visibility="show" /> -->
+    <div class="description-section">
+      <div class="description">{description}</div>
+      <div class="description">{media}</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .art-piece {
+    /* padding: 3rem; */
+    min-height: 80vh;
+    /* background: #6e6e6e; */
+    display: flex;
+    /* max-width: 800px; */
+
+    /* background-color: yellow; */
+  }
+
+  .art-piece-wrapper {
+    /* margin:auto; */
+    display: flex;
+    flex-direction: column;
+    flex: 1 0;
+    /* background-color: black; */
+  }
+  .img-wrapper {
+    display: block;
+    margin: 40px auto;
+  }
+  img {
+    margin: 0 auto;
+  }
+  .desk {
+    display: none;
+  }
+
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .art-piece img {
+    box-shadow: 10px 10px 30px hsl(0, 0%, 73%);
+  }
+
+  .description-section {
+    /* margin-top: 2rem; */
+    /* display: flex; */
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 400px;
+    /* margin-top: 2rem; */
+    padding-left: 20px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .desk {
+      display: block;
+    }
+    .mobile {
+      display: none;
+    }
+    .art-piece {
+      padding: 2rem 5rem;
+    }
+    .art-piece-wrapper {
+        flex: 1 0 auto;
+      flex-direction: row;
+    }
+    .img-wrapper {
+        margin: 0 auto;
+    }
+    .description-section {
+        flex: 0 0 200px;
+
+    }
+  }
+
+
+  .description {
+    /* width: 50%; */
+    /* padding: 1rem; */
+    /* background-color: white; */
+    color: black;
+  }
+
+  .description:nth-child(2) {
+    margin-top: 1rem;
+    /* background-color: black;
+    color: white; */
+  }
+</style>

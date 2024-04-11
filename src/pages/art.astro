@@ -1,4 +1,5 @@
 ---
+import ArtPiece from "../components/ArtPiece.astro";
 import LoadingSpinner from "../components/LoadingSpinner.astro";
 import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
@@ -26,125 +27,143 @@ const data: ArtPiece[] = [
   {
     name: "Lamb City",
     description: "A beautiful painting depicting a cityscape with lambs.",
-    src: "/images/paintings/lambcityoil.jpg",
+    src: "/src/assets/paintings/lambcityoil.jpg",
     media: "Oil on canvas, 24x36 inches",
   },
   {
     name: "Grass",
     description: "An abstract painting inspired by the beauty of grass.",
-    src: "/images/paintings/grass.jpg",
+    src: "/src/assets/paintings/grass.jpg",
     media: "Acrylic on canvas, 24x36 inches",
   },
   {
     name: "Collage",
     description: "A mixed media artwork created using various materials.",
-    src: "/images/paintings/collage.jpg",
+    src: "/src/assets/paintings/collage.jpg",
     media: "Mixed media, 24x36 inches",
   },
   {
     name: "Yellow Mask",
     description: "A vibrant painting featuring a yellow mask.",
-    src: "/images/paintings/yellowmask.jpg",
+    src: "/src/assets/paintings/yellowmask.jpg",
     media: "Acrylic on canvas, 24x36 inches",
   },
 ];
 ---
 
-<Layout title="Art" seo={{title:"Remi Frogo | Art"}}>
+<Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
+  <PageHeading>ART</PageHeading>
   <div class="container">
-    <PageHeading>ART</PageHeading>
-    <div class="art-piece-list">
+    <div class="art-piece-titles">
       {
-        data.map((d) => (
-          <div class="art-piece">
-            <div class="art-piece-wrapper">
-              {/*<h1 class="title">{d.name}</h1> */}
-              <img style="display:none" src={d.src} alt={d.name} />
-              <LoadingSpinner visibility="show" />
-              <div class="description-section">
-                <div class="description">{d.description}</div>
-                <div class="description">{d.media}</div>
-              </div>
-            </div>
-          </div>
-        ))
+        data.map((d) => {
+          return (
+            <button class="link-button" data-art={d.name} onclick={`location.hash = '#' + '${d.name}'`}>
+              {d.name}
+            </button>
+          );
+        })
       }
+    </div>
+    <div class="art-piece-list">
+      {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)}
     </div>
   </div>
 </Layout>
 <script>
-  const images = document.querySelectorAll("img");
-  for (const image of images) {
-    // image.onload = () => {
-    console.log("load");
-    image.style.display = "block";
-    image.style.height = window.innerHeight - 10 + "px";
-    image.style.height = "auto";
-    image.style.width = "100%";
-    console.log(image.nextElementSibling);
-    (image.nextElementSibling! as HTMLImageElement).style.display = "none";
-    // };
-  }
+  // const images = document.querySelectorAll("img");
+  // for (const image of images) {
+  //   // image.onload = () => {
+  //   console.log("load");
+  //   const aspect = image.naturalWidth / image.naturalHeight;
+  //   image.style.display = "block";
+  //   image.style.height = window.innerHeight - 10 + "px";
+  //   image.style.height = "auto";
+  //   image.style.width = "100%";
+
+  //   console.log(image.nextElementSibling);
+  //   (image.nextElementSibling! as HTMLImageElement).style.display = "none";
+  //   // };
+  // }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(
+      (entry) => {
+        if (entry.isIntersecting) {
+          const currentArtPiece = entry.target.id;
+          console.log("Current Art Piece:", currentArtPiece);
+          document.querySelectorAll(".link-button").forEach((button: any) => button.classList.remove("visible"));
+          const artLink = document.querySelector(`button[data-art="${currentArtPiece}"]`);
+          artLink?.classList.add("visible");
+          console.log(artLink);
+          // Perform any desired actions with the current art piece
+        }
+      },
+      { threshold: 0.8 }
+    );
+  });
+
+  const artPieces = document.querySelectorAll(".art-piece");
+  artPieces.forEach((artPiece) => {
+    observer.observe(artPiece);
+  });
 </script>
+
 <style>
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 1rem;
+    padding-bottom: 5rem;
+
     /* background-color: red; */
+  }
+  .art-piece-titles {
+    display: flex;
+    top: 0;
+    position: sticky;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    width: 100%;
+  }
+  .art-piece-titles .link-button {
+    background: none;
+    border: none;
+    color: black;
+  }
+
+  .art-piece-titles .link-button.visible {
+    color: var(--orange);
+  }
+  @media screen and (min-width: 768px) {
+    .container {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .art-piece-titles {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      top: 0;
+      position: sticky;
+      padding-top: 3rem;
+      flex: 0 0 210px;
+      width: unset;
+    }
+    .art-piece-titles .link-button {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: black;
+    }
   }
   .art-piece-list {
     margin-top: 2rem;
     display: flex;
     flex-direction: column;
-    max-width: 800px;
-    gap:10rem;
-  }
-
-  .art-piece {
-    /* padding: 3rem; */
-    min-height: 80vh;
-    /* background: #6e6e6e; */
-    display: flex;
-    /* background-color: yellow; */
-  }
-
-  @media screen and (min-width: 768px) {
-    .art-piece {
-      padding: 2rem 5rem;
-    }
-  }
-  .art-piece-wrapper {
-    /* margin:auto; */
-    display: block;
-    /* background-color: black; */
-  }
-
-  .title {
-    margin-bottom: 1rem;
-  }
-
-  .art-piece img {
-    box-shadow: 10px 10px 30px hsl(115.14deg 43.53% 37.67%);
-  }
-
-  .description-section {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    max-width: 400px;
-  }
-  .description {
-    width: 50%;
-    font-size: 0.75rem;
-    padding: 1rem;
-    background-color: white;
-    color: black;
-  }
-  .description:nth-child(2) {
-    background-color: black;
-    color: white;
+    /* max-width: 800px; */
+    gap: 10rem;
+    flex: 1 0 auto;
   }
 </style>
