@@ -1,0 +1,306 @@
+---
+import dbInstance from "../lib/db";
+import config from "../lib/config";
+import emailClient from "../lib/email";
+
+import TattooForm from "../components/TattooForm.astro";
+import Layout from "../layouts/Layout.astro";
+
+import VenmoIcon from "../components/icons/VenmoIcon.astro";
+import ZelleIcon from "../components/icons/ZelleIcon.astro";
+import InstagramIcon from "../components/icons/instagramIcon.astro";
+import PageHeading from "../components/PageHeading.astro";
+
+const info = {
+  dayOf:
+    "Please come hydated and well fed before the appointment. I would also prefer you not do drugs or drink heavily beforehand. The tattoo may take anywhere from 1-3 hours depending on the size and amount of detail. Plan your day accordingly <3",
+  designs:
+    "I have flash posted that you can look through on my instagram. If you have a custom request, pls make sure we discuss the idea before your appointment",
+  deposit:
+    "I ask that you send a $50 deposit to me through zelle (preferred): 714-808-7117 or Venmo: @remifrogo - if sending on venmo, please use an emoji for the description. Deposit goes towards total price of tattoo and is meant to secure your appointment spot. If you cancel the night before or day of, you will need to put down another deposit to reschedule.",
+  pricing:
+    "I have a minimum of $80. Most flash will be around $80-$250 depending on size and complexity. Custom pricing can be discussed beforehand. Please pay the full amount with either Zelle or cash on the day of the appointment",
+};
+
+type Values = {
+  name: string;
+  pronouns: string;
+  instagram: string;
+  email: string;
+  tattooDescription: string;
+  tattooPlacement: string;
+  tattooSize: string;
+  availability: string;
+  miscellaneous: string;
+  image: File | null;
+};
+
+let values: Values = {
+  name: "",
+  pronouns: "",
+  instagram: "",
+  email: "",
+  tattooDescription: "",
+  tattooPlacement: "",
+  tattooSize: "",
+  availability: "",
+  miscellaneous: "",
+  image: null,
+};
+
+const errors = [];
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    values.name = data.get("name") as string;
+    values.pronouns = (data.get("pronouns") as string) || "N/A";
+    values.instagram = (data.get("instagram") as string) || "N/A";
+    values.email = data.get("email") as string;
+    values.tattooDescription = data.get("tattoo-description") as string;
+    values.tattooPlacement = data.get("tattoo-placement") as string;
+    values.tattooSize = data.get("tattoo-size") as string;
+    values.availability = data.get("availability") as string;
+    values.miscellaneous = (data.get("miscellaneous") as string) || "N/A";
+    // values.image = data.get("tattoo-image") as File;
+
+    const timestamp = Astro.cookies.get("timestamp");
+    const clientId = Astro.cookies.get("clientId");
+
+    if (!clientId) {
+      return Astro.redirect("/tattoos");
+    }
+
+    const {
+      name,
+      pronouns,
+      instagram,
+      email,
+      tattooDescription,
+      tattooPlacement,
+      tattooSize,
+      availability,
+      // image,
+      miscellaneous,
+    } = values;
+
+    if (
+      !timestamp ||
+      !clientId ||
+      !name ||
+      !pronouns ||
+      !instagram ||
+      !email ||
+      !tattooDescription ||
+      !tattooPlacement ||
+      !tattooSize ||
+      !availability
+      // ||
+      // !image ||
+      // image.size === 0
+    ) {
+      if (!name) errors.push("Name is required");
+      if (!pronouns) errors.push("Pronouns are required");
+      if (!instagram) errors.push("Instagram handle is required");
+      if (!email) errors.push("Email is required");
+      if (!tattooDescription) errors.push("Tattoo description is required");
+      if (!tattooPlacement) errors.push("Tattoo placement is required");
+      if (!tattooSize) errors.push("Tattoo size is required");
+      if (!availability) errors.push("Availability is required");
+      // if (!image || image.size === 0) errors.push("Image is required");
+      if (!timestamp) errors.push("Something is wrong with your request :(");
+      if (!clientId) errors.push("Something is wrong with your request :(");
+      console.log(errors);
+    } else {
+      // const R2 = Astro.locals.runtime.env.R2;
+      const now = new Date();
+      // const imgFileName = String(now.getTime());
+      const imgFileName = clientId.value;
+      // await R2.put(imgFileName, image, { contentType: image.type });
+      const user = await dbInstance.getUserByEmail(email);
+      let userId = null;
+      if (user.length > 0) {
+        userId = user[0].id;
+      } else {
+        await dbInstance.createUser({ name, email, instagram });
+        const user = await dbInstance.getUserByEmail(email);
+        userId = user[0].id;
+      }
+      const id = clientId.value;
+      await dbInstance.createAppointment({
+        id,
+        userId,
+        name,
+        email,
+        instagram,
+        pronouns,
+        tattooDescription,
+        tattooPlacement,
+        tattooSize,
+        availability,
+        miscellaneous,
+        imgFileName,
+        now,
+      });
+      const baseUrl = new URL(Astro.request.url).origin;
+      const from = Astro.locals.runtime.env.EMAIL_SENDER_ADDRESS;
+      const apiKey = Astro.locals.runtime.env.SENDGRID_API_KEY;
+      const { sendEmail } = emailClient({ apiKey, from });
+      await sendEmail({
+        email,
+        subject: "Your appointment has been scheduled!",
+        message: `Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.<a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
+      });
+      await sendEmail({
+        email: config.email,
+        subject: "New Appointment Request",
+        message: `New appointment request from ${name} at ${email}`,
+      });
+      await Astro.cookies.delete("timestamp");
+      await Astro.cookies.delete("clientId");
+      return Astro.redirect(`/success/${id}`);
+    }
+  } catch (e) {
+    console.log(e);
+    errors.push("There was an error processing your request");
+  }
+}
+
+if (!Astro.cookies.has("timestamp")) {
+  Astro.cookies.set("timestamp", String(new Date().getTime()), {
+    expires: new Date(new Date().getTime() + 1000 * 60 * 60),
+  });
+}
+
+if (!Astro.cookies.has("clientId")) {
+  Astro.cookies.set("clientId", crypto.randomUUID(), {
+    expires: new Date(new Date().getTime() + 1000 * 60 * 60),
+  });
+}
+---
+
+<Layout
+  title="Tattoos"
+  seo={{
+    title: "Remi Frogo | Tattoos",
+    description: "Book an appointment for a tattoo!",
+    image: "/images/seo-img-tat.png",
+  }}
+>
+  <PageHeading>Tattoos</PageHeading>
+  <div class="container">
+    <div class="content">
+      <div class="info-section">
+        <h2>BOOKING POLICIES</h2>
+        <p>$50 deposit is required to lock in the appointment. deposits go towards the cost of the tattoo!</p>
+        <div class="payment-container flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <VenmoIcon /><a target="_blank" aria-label="go to remi venmo" href="https://account.venmo.com/u/remifrogo"
+              >@remifrogo</a
+            >
+          </div>
+          <div class="flex items-center gap-4">
+            <ZelleIcon />
+            <div style="text-decoration: underline;" data-mob>Click to reveal</div>
+          </div>
+        </div>
+        <p>
+          feel free to contact me with any questions on instagram <a class="" href={config.remboInstagram}
+            ><InstagramIcon className="inline-variant" />remb0tron</a
+          >
+          {"<3"}
+        </p>
+      </div>
+      <div>
+        <h2>BOOK AN APPOINTMENT</h2>
+        {errors.map((e) => <p class="error-item">{e}</p>)}
+        <TattooForm values={values} />
+      </div>
+    </div>
+  </div>
+</Layout>
+<script>
+  import { debounce } from "../lib/debounce.ts";
+
+  const handleScroll = () => {
+    if (window.innerWidth > 768) return;
+    const scrollHeight = window.scrollY;
+    const infoSection = document.querySelector(".info-section") as HTMLDivElement;
+    const zelleIcon = document.querySelector("[data-zelle-icon]") as HTMLDivElement;
+    const venmoIcon = document.querySelector("[data-venmo-icon]") as HTMLDivElement;
+    const computedHeight = infoSection.getBoundingClientRect().height - scrollHeight;
+    if (computedHeight < infoSection.getBoundingClientRect().height) {
+      debounce(() => {
+        infoSection.classList.add("small");
+        zelleIcon.classList.add("small");
+        venmoIcon.classList.add("small");
+      })();
+    } else {
+      debounce(() => {
+        infoSection.classList.remove("small");
+        zelleIcon.classList.remove("small");
+        venmoIcon.classList.remove("small");
+      })();
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  const mob = document.querySelector("[data-mob]") as HTMLDivElement;
+  mob.addEventListener("click", () => {
+    fetch("/info")
+      .then((res) => res.text())
+      .then((data: string) => {
+        mob.innerHTML = data.replace(/9/g, "");
+      });
+  });
+</script>
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 1rem;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      margin: 2rem auto;
+    }
+    .content {
+      flex-direction: row;
+      /* justify-content: space-between; */
+    }
+  }
+  .info-section {
+    max-width: 500px;
+    /* margin: auto; */
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    background: var(--primary-color);
+    z-index: 9;
+    font-size: 1.5rem;
+    transition: font-size 500ms;
+  }
+
+  .info-section.small {
+    font-size: 1rem;
+  }
+  .info-section.small > h2 {
+    font-size: 0rem;
+  }
+  .info-section.small > .payment-container {
+    flex-direction: row;
+  }
+
+  .error-item {
+    color: var(--yellow);
+    font-weight: bold;
+  }
+</style>

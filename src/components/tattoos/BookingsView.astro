@@ -1,0 +1,122 @@
+---
+import TattooForm from "../TattooForm.astro";
+import VenmoIcon from "../icons/VenmoIcon.astro";
+import ZelleIcon from "../icons/ZelleIcon.astro";
+import InstagramIcon from "../icons/instagramIcon.astro";
+
+const { config, values, errors } = Astro.props;
+---
+
+<div class="content">
+  <div class="info-section">
+    <h2>BOOKING POLICIES</h2>
+    <p>$50 deposit is required to lock in the appointment. deposits go towards the cost of the tattoo!</p>
+    <div class="payment-container flex flex-col gap-4">
+      <div class="flex items-center gap-4">
+        <>
+          <VenmoIcon />
+          <a target="_blank" aria-label="go to remi venmo" href="https://account.venmo.com/u/remifrogo"> @remifrogo </a>
+        </>
+      </div>
+      <div class="flex items-center gap-4">
+        <ZelleIcon />
+        <div style="text-decoration: underline;" data-mob>Click to reveal</div>
+      </div>
+    </div>
+    <p>
+      feel free to contact me with any questions on instagram{" "}
+      <a class="" href={config.remboInstagram}>
+        <InstagramIcon className="inline-variant" />
+        remb0tron
+      </a>
+      {"<3"}
+    </p>
+  </div>
+  <div>
+    <h2>BOOK AN APPOINTMENT</h2>
+    {errors.map((e: string) => <p class="error-item">{e}</p>)}
+    <TattooForm values={values} />
+  </div>
+</div>
+<script>
+  import { debounce } from "../../lib/debounce.ts";
+  if (window.location.pathname.includes("bookings")) {
+    const handleScroll = () => {
+      if (window.innerWidth > 768) return;
+      const scrollHeight = window.scrollY;
+      const infoSection = document.querySelector(".info-section") as HTMLDivElement;
+      const zelleIcon = document.querySelector("[data-zelle-icon]") as HTMLDivElement;
+      const venmoIcon = document.querySelector("[data-venmo-icon]") as HTMLDivElement;
+      const computedHeight = infoSection.getBoundingClientRect().height - scrollHeight;
+      if (computedHeight < infoSection.getBoundingClientRect().height) {
+        debounce(() => {
+          infoSection.classList.add("small");
+          zelleIcon.classList.add("small");
+          venmoIcon.classList.add("small");
+        })();
+      } else {
+        debounce(() => {
+          infoSection.classList.remove("small");
+          zelleIcon.classList.remove("small");
+          venmoIcon.classList.remove("small");
+        })();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    const mob = document.querySelector("[data-mob]") as HTMLDivElement;
+    mob.addEventListener("click", () => {
+      fetch("/info")
+        .then((res) => res.text())
+        .then((data: string) => {
+          mob.innerHTML = data.replace(/9/g, "");
+        });
+    });
+  }
+</script>
+<style>
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      margin: 2rem auto;
+    }
+    .content {
+      flex-direction: row;
+      /* justify-content: space-between; */
+    }
+  }
+  .info-section {
+    max-width: 500px;
+    /* margin: auto; */
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    background: var(--primary-color);
+    z-index: 9;
+    font-size: 1.5rem;
+    transition: font-size 500ms;
+  }
+
+  .info-section.small {
+    font-size: 1rem;
+  }
+  .info-section.small > h2 {
+    font-size: 0rem;
+  }
+  .info-section.small > .payment-container {
+    flex-direction: row;
+  }
+
+  .error-item {
+    color: var(--yellow);
+    font-weight: bold;
+  }
+</style>

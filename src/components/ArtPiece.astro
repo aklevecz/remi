@@ -74,8 +74,10 @@ if (!images[src]) throw new Error(`"${src}" does not exist in glob: "src/assets/
     justify-content: space-between;
     gap: 1rem;
     max-width: 400px;
+    width: 70%;
     /* margin-top: 2rem; */
-    padding-left: 20px;
+    padding-left: 2rem;
+    font-size: .75rem;
   }
 
   @media screen and (min-width: 768px) {
@@ -97,6 +99,7 @@ if (!images[src]) throw new Error(`"${src}" does not exist in glob: "src/assets/
     }
     .description-section {
         flex: 0 0 200px;
+        font-size: 1.5rem;
 
     }
   }
