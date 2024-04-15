@@ -16,14 +16,14 @@ console.log(metaData);
 const { title, material, dimensions, year } = metaData;
 const env = process.env.NODE_ENV;
 const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
-const src = process.env.NODE_ENV === "production" ? imgHost + "/" + key : placeHolder;
+const src = imgHost + "/" + key
 ---
 
 <div id={key} class="art-piece">
   <div class="art-piece-wrapper">
     {/*<h1 class="title">{d.name}</h1> */}
     <div class="img-wrapper">
-      <Image width="800" height="800" data-src={src} src={src} alt={title} class="desk" />
+      <Image width="800" height="800" data-src={src} src={process.env.NODE_ENV === 'production' ? src : placeHolder} alt={title} class="desk" />
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
     </div>
     <!-- <LoadingSpinner visibility="show" /> -->
