@@ -2,6 +2,7 @@
 import { desc } from "astro:db";
 import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
 
 const R2 = Astro.locals.runtime.env.R2;
 
@@ -16,50 +17,94 @@ if (Astro.request.method === "POST") {
   // const imageBuffer = await image.arrayBuffer();
   // const imageBase64 = Buffer.from(imageBuffer).toString("base64");
   // console.log(imageBase64);
-  await R2.put(fileName, image, { contentType: image.type, customMetadata:{title, description, material}});
-  console.log(fileName);
-
+  await R2.put(`paintings/${fileName}`, image, { contentType: image.type, customMetadata: { title, description, material } });
   return Astro.redirect("/admin");
-  // const response = await fetch("/api/upload", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     title,
-  //     description,
-  //     material,
-  //     image: imageBase64,
-  //   }),
-  // });
-
-  // if (response.ok) {
-  //   console.log("Uploaded successfully");
-  // } else {
-  //   console.error("Failed to upload");
-  // }
 }
+
+// if (Astro.request.method === "DELETE") {
+const url = new URLSearchParams(new URL(Astro.request.url).search);
+const key = url.get("key");
+const action = url.get("action");
+if (action == "del") {
+  await R2.delete(key);
+  return Astro.redirect("/admin");
+}
+// }
+
 const paintings = await R2.list();
-const painting = await R2.get("title");
+const env = process.env.NODE_ENV;
+
+const imgHost = env === "production" ? "https://remifrogo.art" : "http://localhost:4321";
 ---
 
 <Layout title="admin">
-  <p>{JSON.stringify(paintings)}</p>
-  <p>{JSON.stringify(painting)}</p>
   <PageHeading> Admin </PageHeading>
-  <form method="POST" enctype="multipart/form-data">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" required />
+  <div class="container">
+    <div class="paintings">
+      {
+        paintings.objects.map((painting: any) => {
+          return (
+            <div>
+              <>
+                <Image
+                  width="300"
+                  height="300"
+                  src={`${imgHost}/img/${painting.key}`}
+                  alt={painting.key}
+                />
+                <h2>{painting.key}</h2>
+                <div>{painting.customMetadata.description || "DESC"}</div>
+                <div>{painting.customMetadata.material || "MATERIAL"}</div>
+                <a href={`/admin?action=del&key=${painting.key}`}>DELETE</a>
+              </>
+            </div>
+          );
+        })
+      }
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required />
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
 
-    <label for="material">Material:</label>
-    <input type="text" id="material" name="material" required />
+      <label for="material">Material:</label>
+      <input type="text" id="material" name="material" required />
 
-    <label for="image">Image:</label>
-    <input type="file" id="image" name="image" accept="image/*" required />
+      <label for="image">Image:</label>
+      <input type="file" id="image" name="image" accept="image/*" required />
 
-    <button type="submit">Upload</button>
-  </form>
+      <button type="submit">Upload</button>
+    </form>
+  </div>
 </Layout>
+<script>
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.addEventListener("click", async (e: any) => {
+      const key = e.target.id;
+      await fetch(`/admin?key=${key}`, { method: "DELETE" });
+    });
+  });
+</script>
+
+<style>
+  .container {
+    display: flex;
+  }
+  .paintings {
+    padding: 1rem;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  a {
+    box-sizing: border-box;
+    background-color: red;
+    color: white;
+    font-size: 1.25rem;
+  }
+</style>
