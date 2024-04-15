@@ -11,14 +11,14 @@ const metaData = painting.customMetadata;
 
 <div>
   <div class="painting-view">
-    <!-- <Image
+    <Image
       width="300"
       height="300"
-      src={env === "development"
+      src={env === "production"
         ? `${imgHost}/${key}`
-        : `https://baos.haus/cdn-cgi/image/width=300,quality=100/${imgHost}/${key}`}
+        : `https://storage.remifrogo.art/paintings/test`}
       alt={key}
-    /> -->
+    />
     <div>
       <h1>{metaData.title}</h1>
       <h2>{key}</h2>

@@ -1,5 +1,6 @@
 ---
 import ArtPiece from "../components/ArtPiece.astro";
+import ArtPieceR2 from "../components/ArtPieceR2.astro";
 import LoadingSpinner from "../components/LoadingSpinner.astro";
 import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
@@ -49,13 +50,17 @@ const data: ArtPiece[] = [
     media: "Acrylic on canvas, 24x36 inches",
   },
 ];
+
+const R2 = Astro.locals.runtime.env.R2;
+
+const paintings = await R2.list();
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
   <PageHeading>ART</PageHeading>
   <div class="container">
     <div class="art-piece-titles">
-      {
+      <!-- {
         data.map((d) => {
           return (
             <button class="link-button" data-art={d.name} onclick={`location.hash = '#' + '${d.name}'`}>
@@ -63,15 +68,25 @@ const data: ArtPiece[] = [
             </button>
           );
         })
+      } -->
+      {
+        paintings.objects.map((painting: any) => {
+          return (
+            <button class="link-button" data-art={painting.key} onclick={`location.hash = '#' + '${painting.key}'`}>
+              {painting.key}
+            </button>
+          );
+        })
       }
     </div>
     <div class="art-piece-list">
-      {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)}
+      <!-- {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)} -->
+      {paintings.objects.map((painting: any) => <ArtPieceR2 key={painting.key} />)}
     </div>
   </div>
 </Layout>
 <script>
-  // const images = document.querySelectorAll("img");
+  const images = document.querySelectorAll("img");
   // for (const image of images) {
   //   // image.onload = () => {
   //   console.log("load");
@@ -85,6 +100,22 @@ const data: ArtPiece[] = [
   //   (image.nextElementSibling! as HTMLImageElement).style.display = "none";
   //   // };
   // }
+
+  images.forEach((image:any) => {
+    image.onload = () => {
+      console.log("load");
+      // const aspect = image.naturalWidth / image.naturalHeight;
+      // image.style.display = "block";
+      // image.style.height = window.innerHeight - 10 + "px";
+      // image.style.height = "auto";
+      // image.style.width = "100%";
+      // image.src = image.dataset.src;
+      console.log(image.nextElementSibling);
+      // (image.nextElementSibling! as HTMLImageElement).style.display = "none";
+    }});
+  
+
+  
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(
@@ -131,7 +162,7 @@ const data: ArtPiece[] = [
     background: none;
     border: none;
     color: black;
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
 
   .art-piece-titles .link-button.visible {
