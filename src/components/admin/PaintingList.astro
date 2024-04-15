@@ -18,7 +18,7 @@ const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http:/
               <Image
                 width="300"
                 height="300"
-                src={`${imgHost}/${painting.key}`}
+                src={env === 'development' ? `${imgHost}/${painting.key}` :` https://baos.haus/cdn-cgi/image/width=300,quality=100/${imgHost}/${painting.key}`}
                 alt={painting.key}
               />
               <h2>{painting.key}</h2>
