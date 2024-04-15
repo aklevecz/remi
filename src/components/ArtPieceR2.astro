@@ -23,7 +23,7 @@ const src = process.env.NODE_ENV === "production" ? imgHost + "/" + key : placeH
   <div class="art-piece-wrapper">
     {/*<h1 class="title">{d.name}</h1> */}
     <div class="img-wrapper">
-      <Image width="800" height="800" data-src={src} src={placeHolder} alt={title} class="desk" />
+      <Image width="800" height="800" data-src={src} src={src} alt={title} class="desk" />
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
     </div>
     <!-- <LoadingSpinner visibility="show" /> -->
