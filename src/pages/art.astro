@@ -73,7 +73,7 @@ const paintings = await R2.list();
         paintings.objects.map((painting: any) => {
           return (
             <button class="link-button" data-art={painting.key} onclick={`location.hash = '#' + '${painting.key}'`}>
-              {painting.key}
+              {painting.key.replace('paintings/','').split('-').slice(0,-1).join(' ')}
             </button>
           );
         })

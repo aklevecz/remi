@@ -8,22 +8,26 @@ interface Props {
   key: string;
 }
 
-const { key } = Astro.props;
+let { key } = Astro.props;
 const R2 = Astro.locals.runtime.env.R2;
 const painting = await R2.get(key);
 const metaData = painting.customMetadata;
 console.log(metaData);
 const { title, material, dimensions, year } = metaData;
+
 const isProd = process.env.NODE_ENV;
 const imgHost = isProd ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
-const src = imgHost + "/" + key;
+let src = imgHost + "/" + key;
+if (process.env.NODE_ENV === 'development') {
+  src = 'https://storage.remifrogo.art/paintings/lamb-city-1713209386638'
+}
 ---
 
 <div id={key} class="art-piece">
   <div class="art-piece-wrapper">
     {/*<h1 class="title">{d.name}</h1> */}
     <div class="img-wrapper">
-      <Image width="800" height="800" data-src={src} src={src} alt={title} class="desk" />
+      <img data-src={src} src={src} alt={title} />
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
     </div>
     <!-- <LoadingSpinner visibility="show" /> -->
@@ -59,6 +63,7 @@ const src = imgHost + "/" + key;
   }
   img {
     margin: 0 auto;
+    width: 100%;
   }
   .desk {
     display: none;
@@ -100,6 +105,7 @@ const src = imgHost + "/" + key;
     }
     .img-wrapper {
       margin: 0 auto;
+      width: 800px;
     }
     .description-section {
       flex: 0 0 200px;
@@ -115,7 +121,7 @@ const src = imgHost + "/" + key;
   }
 
   .description:nth-child(2) {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     /* background-color: black;
     color: white; */
   }
