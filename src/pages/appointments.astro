@@ -55,10 +55,8 @@ const isDev = process.env.NODE_ENV === "development";
 <script>
   const lineItems = document.querySelectorAll(".line-item");
   lineItems.forEach((item) => {
-    console.log(item);
     item.addEventListener("click", () => {
       const info = item.querySelector(".line-item-info") as HTMLDivElement;
-      console.log(info);
       info.classList.toggle("hidden");
     });
   });
