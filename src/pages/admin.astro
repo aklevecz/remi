@@ -40,10 +40,12 @@ if (Astro.request.method === "POST") {
   // }
 }
 const paintings = await R2.list();
+const painting = await R2.get("title");
 ---
 
 <Layout title="admin">
-  {JSON.stringify(paintings)}
+  <p>{JSON.stringify(paintings)}</p>
+  <p>{JSON.stringify(painting)}</p>
   <PageHeading> Admin </PageHeading>
   <form method="POST" enctype="multipart/form-data">
     <label for="title">Title:</label>
