@@ -1,32 +1,21 @@
 ---
-import { Image } from "astro:assets";
-import PaintingMeta from "./PaintingMeta.astro";
+import PaintingItem from "./PaintingItem.astro";
 
 const R2 = Astro.locals.runtime.env.R2;
 
 const paintings = await R2.list();
-const env = process.env.NODE_ENV;
-const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
 ---
-<div class="paintings">
-    {
-      paintings.objects.map((painting: any) => {
-        return (
-          <div>
-            <PaintingMeta key={painting.key}/>
-            <>
-              <Image
-                width="300"
-                height="300"
-                src={env === 'development' ? `${imgHost}/${painting.key}` :`https://baos.haus/cdn-cgi/image/width=300,quality=100/${imgHost}/${painting.key}`}
-                alt={painting.key}
-              />
-              <h2>{painting.key}</h2>
 
-              <a href={`/admin?action=del&key=${painting.key}`}>DELETE</a>
-            </>
-          </div>
-        );
-      })
-    }
-  </div>
+<div class="paintings">
+  {
+    paintings.objects.map((painting: any) => {
+      return <PaintingItem key={painting.key} />;
+    })
+  }
+</div>
+
+<style>
+  .paintings {
+    padding: 1rem;
+  }
+</style>

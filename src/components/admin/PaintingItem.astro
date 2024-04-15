@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+
+const env = process.env.NODE_ENV;
+const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
+const { key } = Astro.props;
+const R2 = Astro.locals.runtime.env.R2;
+const painting = await R2.get(key);
+const metaData = painting.customMetadata;
+---
+
+<div>
+  <div class="painting-view">
+    <!-- <Image
+      width="300"
+      height="300"
+      src={env === "development"
+        ? `${imgHost}/${key}`
+        : `https://baos.haus/cdn-cgi/image/width=300,quality=100/${imgHost}/${key}`}
+      alt={key}
+    /> -->
+    <div>
+      <h1>{metaData.title}</h1>
+      <h2>{key}</h2>
+      <p>{metaData.material}</p>
+      <p>{metaData.dimensions}</p>
+      <p>{metaData.year}</p>
+    </div>
+
+    <a href={`/admin?action=del&key=${key}`}>DELETE</a>
+    <button id="edit-button">EDIT</button>
+  </div>
+  <form method="POST" class="hidden" enctype="multipart/form-data">
+    <input type="hidden" name="key" value={key} />
+    <input type="text" name="title" value={metaData.title} />
+    <input type="text" name="material" value={metaData.material} />
+    <input type="text" name="dimensions" value={metaData.dimensions} />
+    <input type="text" name="year" value={metaData.year} />
+    <input type="file" name="image" accept="image/*" />
+    <button type="submit">Save</button>
+  </form>
+</div>
+<script>
+  document.getElementById("edit-button")!.addEventListener("click", () => {
+    document.querySelector("form")!.classList.toggle("hidden");
+  });
+</script>
+<style>
+  a {
+    box-sizing: border-box;
+    background-color: red;
+    color: white;
+    font-size: 1.25rem;
+  }
+  .hidden {
+    display: none;
+  }
+</style>

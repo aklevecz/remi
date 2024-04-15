@@ -8,17 +8,36 @@ const R2 = Astro.locals.runtime.env.R2;
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const title = form.get("title") as string;
-  const description = form.get("description");
   const material = form.get("material");
-  const image = form.get("image") as File;
+  const dimensions = form.get("dimensions");
+  const year = form.get("year");
+  let image = form.get("image") as File;
+  
 
-  const fileName = title.replace(/\s+/g, "-").toLowerCase();
+
+  const dateTime = new Date().getTime()
+  const fileName = form.get('key') || `paintings/${title.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
+  if (!image.size) {
+    const object = await R2.get(fileName)
+    image = object.body
+  }
+//   async function streamToBuffer(readableStream) {
+//   let chunks = [];
+//   for await (let chunk of readableStream) {
+//     chunks.push(chunk);
+//   }
+//   return Buffer.concat(chunks);
+// }
+
+// let imageBuffer = await streamToBuffer(image);
+  console.log('FILENAME:', fileName)
   // const imageBuffer = await image.arrayBuffer();
   // const imageBase64 = Buffer.from(imageBuffer).toString("base64");
   // console.log(imageBase64);
-  await R2.put(`paintings/${fileName}`, image, {
+  console.log('image:', image)
+  await R2.put(`${fileName}`, image, {
     contentType: image.type,
-    customMetadata: { title, description, material },
+    customMetadata: { title, material, dimensions, year},
   });
   return Astro.redirect("/admin");
 }
@@ -38,6 +57,7 @@ if (action == "del") {
 // }
 // <div>{painting.customMetadata.description || "DESC"}</div>
 // <div>{painting.customMetadata.material || "MATERIAL"}</div>
+https://95cadc44b50c03ce724073f2eee037c2/cdn-cgi/image/<OPTIONS>/<SOURCE-IMAGE>
 ---
 
 <Layout title="admin">
@@ -48,11 +68,14 @@ if (action == "del") {
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" required />
 
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" required></textarea>
-
       <label for="material">Material:</label>
       <input type="text" id="material" name="material" required />
+
+      <label for="dimensions">Dimensions:</label>
+      <input type="text" id="dimensions" name="dimensions" required />
+
+      <label for="year">Year:</label>
+      <input type="text" id="year" name="year" required />
 
       <label for="image">Image:</label>
       <input type="file" id="image" name="image" accept="image/*" required />
@@ -75,18 +98,11 @@ if (action == "del") {
   .container {
     display: flex;
   }
-  .paintings {
-    padding: 1rem;
-  }
+
   form {
     display: flex;
     flex-direction: column;
     padding: 1rem;
   }
-  a {
-    box-sizing: border-box;
-    background-color: red;
-    color: white;
-    font-size: 1.25rem;
-  }
+
 </style>
