@@ -72,7 +72,7 @@ const paintings = await R2.list();
       {
         paintings.objects.map((painting: any) => {
           return (
-            <button class="link-button" data-art={painting.key} onclick={`location.hash = '#' + '${painting.key}'`}>
+            <button class="link-button" data-art={painting.key} onclick={`location.hash = '#' + '${painting.key}-marker'`}>
               {painting.key.replace('paintings/','').split('-').slice(0,-1).join(' ')}
             </button>
           );
@@ -121,6 +121,7 @@ const paintings = await R2.list();
     entries.forEach(
       (entry) => {
         if (entry.isIntersecting) {
+          history.replaceState(null, document.title, window.location.pathname + window.location.search);
           const currentArtPiece = entry.target.id;
           console.log("Current Art Piece:", currentArtPiece);
           document.querySelectorAll(".link-button").forEach((button: any) => button.classList.remove("visible"));
@@ -171,6 +172,14 @@ const paintings = await R2.list();
   .art-piece-titles .link-button.visible {
     color: var(--green);
   }
+  .art-piece-list {
+    /* margin-top: 2rem; */
+    display: flex;
+    flex-direction: column;
+    /* max-width: 800px; */
+    gap: 10rem;
+    /* flex: 1 0 auto; */
+  }
   @media screen and (min-width: 768px) {
     .container {
       flex-direction: row;
@@ -193,13 +202,9 @@ const paintings = await R2.list();
       font-size: 2rem;
       color: black;
     }
+    .art-piece-list {
+      margin-top:2rem;
+    }
   }
-  .art-piece-list {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    /* max-width: 800px; */
-    gap: 10rem;
-    /* flex: 1 0 auto; */
-  }
+
 </style>

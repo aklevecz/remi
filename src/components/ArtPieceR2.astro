@@ -23,7 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 ---
 
-<div id={key} class="art-piece">
+<div id={key}  class="art-piece">
+  <div id={key+'-marker'} class="marker"></div>
   <div class="art-piece-wrapper">
     {/*<h1 class="title">{d.name}</h1> */}
     <div class="img-wrapper">
@@ -31,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
     </div>
     <!-- <LoadingSpinner visibility="show" /> -->
-    <div class="description-section">
+    <div  class="description-section">
       <div class="description">{material}</div>
       <div class="description">{dimensions}</div>
       <div class="description">{year}</div>
@@ -41,13 +42,27 @@ if (process.env.NODE_ENV === 'development') {
 
 <style>
   .art-piece {
+    position: relative;
+    z-index: -1;
     /* padding: 3rem; */
     min-height: 80vh;
     /* background: #6e6e6e; */
     display: flex;
+    padding-top:2rem;
     /* max-width: 800px; */
 
     /* background-color: yellow; */
+  }
+
+  .marker {
+    width: 10px;
+    height:10px;
+    background-color: black;
+    pointer-events: none;
+    top:-10px;
+    position: absolute;
+    top: -10px;
+    opacity: 0;
   }
 
   .art-piece-wrapper {
