@@ -1,0 +1,10 @@
+---
+const {key} = Astro.props
+const R2 = Astro.locals.runtime.env.R2;
+const painting = await R2.get(key);
+  const metaData = painting.customMetadata
+---
+
+<div>
+    {JSON.stringify(metaData)}
+</div>

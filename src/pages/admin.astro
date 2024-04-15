@@ -1,8 +1,7 @@
 ---
-import { desc } from "astro:db";
 import PageHeading from "../components/PageHeading.astro";
+import PaintingList from "../components/admin/PaintingList.astro";
 import Layout from "../layouts/Layout.astro";
-import { Image } from "astro:assets";
 
 const R2 = Astro.locals.runtime.env.R2;
 
@@ -17,7 +16,10 @@ if (Astro.request.method === "POST") {
   // const imageBuffer = await image.arrayBuffer();
   // const imageBase64 = Buffer.from(imageBuffer).toString("base64");
   // console.log(imageBase64);
-  await R2.put(`paintings/${fileName}`, image, { contentType: image.type, customMetadata: { title, description, material } });
+  await R2.put(`paintings/${fileName}`, image, {
+    contentType: image.type,
+    customMetadata: { title, description, material },
+  });
   return Astro.redirect("/admin");
 }
 
@@ -29,40 +31,19 @@ if (action == "del") {
   await R2.delete(key);
   return Astro.redirect("/admin");
 }
+// if (action=='getMeta') {
+//   const painting = await R2.get(key);
+//   return JSON.stringify(painting.customMetadata);
 // }
-                // <div>{painting.customMetadata.description || "DESC"}</div>
-                // <div>{painting.customMetadata.material || "MATERIAL"}</div>
-const paintings = await R2.list();
-const env = process.env.NODE_ENV;
-
-const imgHost = env === "production" ? "https://remifrogo.art" : "http://localhost:4321";
+// }
+// <div>{painting.customMetadata.description || "DESC"}</div>
+// <div>{painting.customMetadata.material || "MATERIAL"}</div>
 ---
 
 <Layout title="admin">
   <PageHeading> Admin </PageHeading>
   <div class="container">
-    <div class="paintings">
-      {
-        paintings.objects.map((painting: any) => {
-          return (
-            <div>
-              {JSON.stringify(painting)}
-              <>
-                <Image
-                  width="300"
-                  height="300"
-                  src={`${imgHost}/img/${painting.key}`}
-                  alt={painting.key}
-                />
-                <h2>{painting.key}</h2>
-
-                <a href={`/admin?action=del&key=${painting.key}`}>DELETE</a>
-              </>
-            </div>
-          );
-        })
-      }
-    </div>
+    <PaintingList/>
     <form method="POST" enctype="multipart/form-data">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" required />
