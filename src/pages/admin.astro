@@ -30,7 +30,8 @@ if (action == "del") {
   return Astro.redirect("/admin");
 }
 // }
-
+                // <div>{painting.customMetadata.description || "DESC"}</div>
+                // <div>{painting.customMetadata.material || "MATERIAL"}</div>
 const paintings = await R2.list();
 const env = process.env.NODE_ENV;
 
@@ -45,6 +46,7 @@ const imgHost = env === "production" ? "https://remifrogo.art" : "http://localho
         paintings.objects.map((painting: any) => {
           return (
             <div>
+              {JSON.stringify(painting)}
               <>
                 <Image
                   width="300"
@@ -53,8 +55,7 @@ const imgHost = env === "production" ? "https://remifrogo.art" : "http://localho
                   alt={painting.key}
                 />
                 <h2>{painting.key}</h2>
-                <div>{painting.customMetadata.description || "DESC"}</div>
-                <div>{painting.customMetadata.material || "MATERIAL"}</div>
+
                 <a href={`/admin?action=del&key=${painting.key}`}>DELETE</a>
               </>
             </div>
