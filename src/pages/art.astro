@@ -19,36 +19,36 @@ import Layout from "../layouts/Layout.astro";
 //   },
 // ];
 type ArtPiece = {
-  name: string;
-  description: string;
-  src: string;
-  media: string;
+    name: string;
+    description: string;
+    src: string;
+    media: string;
 };
 const data: ArtPiece[] = [
-  {
-    name: "Lamb City",
-    description: "A beautiful painting depicting a cityscape with lambs.",
-    src: "/src/assets/paintings/lambcityoil.jpg",
-    media: "Oil on canvas, 24x36 inches",
-  },
-  {
-    name: "Grass",
-    description: "An abstract painting inspired by the beauty of grass.",
-    src: "/src/assets/paintings/grass.jpg",
-    media: "Acrylic on canvas, 24x36 inches",
-  },
-  {
-    name: "Collage",
-    description: "A mixed media artwork created using various materials.",
-    src: "/src/assets/paintings/collage.jpg",
-    media: "Mixed media, 24x36 inches",
-  },
-  {
-    name: "Yellow Mask",
-    description: "A vibrant painting featuring a yellow mask.",
-    src: "/src/assets/paintings/yellowmask.jpg",
-    media: "Acrylic on canvas, 24x36 inches",
-  },
+    {
+        name: "Lamb City",
+        description: "A beautiful painting depicting a cityscape with lambs.",
+        src: "/src/assets/paintings/lambcityoil.jpg",
+        media: "Oil on canvas, 24x36 inches",
+    },
+    {
+        name: "Grass",
+        description: "An abstract painting inspired by the beauty of grass.",
+        src: "/src/assets/paintings/grass.jpg",
+        media: "Acrylic on canvas, 24x36 inches",
+    },
+    {
+        name: "Collage",
+        description: "A mixed media artwork created using various materials.",
+        src: "/src/assets/paintings/collage.jpg",
+        media: "Mixed media, 24x36 inches",
+    },
+    {
+        name: "Yellow Mask",
+        description: "A vibrant painting featuring a yellow mask.",
+        src: "/src/assets/paintings/yellowmask.jpg",
+        media: "Acrylic on canvas, 24x36 inches",
+    },
 ];
 
 const R2 = Astro.locals.runtime.env.R2;
@@ -57,10 +57,10 @@ const paintings = await R2.list();
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
-  <PageHeading>ART</PageHeading>
-  <div class="container">
-    <div class="art-piece-titles">
-      <!-- {
+    <PageHeading>ART</PageHeading>
+    <div class="container">
+        <div class="art-piece-titles">
+            <!-- {
         data.map((d) => {
           return (
             <button class="link-button" data-art={d.name} onclick={`location.hash = '#' + '${d.name}'`}>
@@ -69,142 +69,151 @@ const paintings = await R2.list();
           );
         })
       } -->
-      {
-        paintings.objects.map((painting: any) => {
-          return (
-            <button class="link-button" data-art={painting.key} onclick={`location.hash = '#' + '${painting.key}-marker'`}>
-              {painting.key.replace('paintings/','').split('-').slice(0,-1).join(' ')}
-            </button>
-          );
-        })
-      }
+            {
+                paintings.objects.map((painting: any) => {
+                    return (
+                        <button
+                            class="link-button"
+                            data-art={painting.key}
+                            onclick={`location.hash = '#' + '${painting.key}-marker'`}
+                        >
+                            {painting.key
+                                .replace("paintings/", "")
+                                .split("-")
+                                .slice(0, -1)
+                                .join(" ")}
+                        </button>
+                    );
+                })
+            }
+        </div>
+        <div class="art-piece-list">
+            <!-- {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)} -->
+            {
+                paintings.objects.map((painting: any) => (
+                    <ArtPieceR2 key={painting.key} />
+                ))
+            }
+        </div>
     </div>
-    <div class="art-piece-list">
-      <!-- {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)} -->
-      {paintings.objects.map((painting: any) => <ArtPieceR2 key={painting.key} />)}
-    </div>
-  </div>
 </Layout>
 <script>
-  const images = document.querySelectorAll("img");
-  // for (const image of images) {
-  //   // image.onload = () => {
-  //   console.log("load");
-  //   const aspect = image.naturalWidth / image.naturalHeight;
-  //   image.style.display = "block";
-  //   image.style.height = window.innerHeight - 10 + "px";
-  //   image.style.height = "auto";
-  //   image.style.width = "100%";
+    const images = document.querySelectorAll("img");
 
-  //   console.log(image.nextElementSibling);
-  //   (image.nextElementSibling! as HTMLImageElement).style.display = "none";
-  //   // };
-  // }
-
-  images.forEach((image:any) => {
-    image.onload = () => {
-      console.log("load");
-      // const aspect = image.naturalWidth / image.naturalHeight;
-      // image.style.display = "block";
-      // image.style.height = window.innerHeight - 10 + "px";
-      // image.style.height = "auto";
-      // image.style.width = "100%";
-      // image.src = image.dataset.src;
-      console.log(image.nextElementSibling);
-      // (image.nextElementSibling! as HTMLImageElement).style.display = "none";
-    }});
-  
-
-  
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(
-      (entry) => {
-        if (entry.isIntersecting) {
-          history.replaceState(null, document.title, window.location.pathname + window.location.search);
-          const currentArtPiece = entry.target.id;
-          console.log("Current Art Piece:", currentArtPiece);
-          document.querySelectorAll(".link-button").forEach((button: any) => button.classList.remove("visible"));
-          const artLink = document.querySelector(`button[data-art="${currentArtPiece}"]`);
-          artLink?.classList.add("visible");
-          console.log(artLink);
-          // Perform any desired actions with the current art piece
+    images.forEach((image: any) => {
+        const isMobile = window.innerWidth < 768;
+        const aspect = image.naturalWidth / image.naturalHeight;
+        let width;
+        let height;
+        if (isMobile) {
+            width = window.innerWidth - 10;
+            height = width / aspect;
+        } else {
+            width = 800;
+            height = width / aspect;
         }
-      },
-      { threshold: 0.8 }
-    );
-  });
+        image.style.height = height + "px";
+        image.style.width = width + "px";
+        image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}`;
+    });
 
-  const artPieces = document.querySelectorAll(".art-piece");
-  artPieces.forEach((artPiece) => {
-    observer.observe(artPiece);
-  });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(
+            (entry) => {
+                if (entry.isIntersecting) {
+                    history.replaceState(
+                        null,
+                        document.title,
+                        window.location.pathname + window.location.search,
+                    );
+                    const currentArtPiece = entry.target.id;
+                    console.log("Current Art Piece:", currentArtPiece);
+                    document
+                        .querySelectorAll(".link-button")
+                        .forEach((button: any) =>
+                            button.classList.remove("visible"),
+                        );
+                    const artLink = document.querySelector(
+                        `button[data-art="${currentArtPiece}"]`,
+                    );
+                    artLink?.classList.add("visible");
+                    console.log(artLink);
+                    // Perform any desired actions with the current art piece
+                }
+            },
+            { threshold: 0.8 },
+        );
+    });
+
+    const artPieces = document.querySelectorAll(".art-piece");
+    artPieces.forEach((artPiece) => {
+        observer.observe(artPiece);
+    });
 </script>
 
 <style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1rem;
-    padding-bottom: 5rem;
-
-    /* background-color: red; */
-  }
-  .art-piece-titles {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    top: 0;
-    position: sticky;
-    padding: 1rem;
-    background-color: var(--primary-color);
-    background: none;
-    width: 100%;
-  }
-  .art-piece-titles .link-button {
-    background: none;
-    border: none;
-    color: black;
-    font-size: 0.75rem;
-  }
-
-  .art-piece-titles .link-button.visible {
-    color: var(--green);
-  }
-  .art-piece-list {
-    /* margin-top: 2rem; */
-    display: flex;
-    flex-direction: column;
-    /* max-width: 800px; */
-    gap: 10rem;
-    /* flex: 1 0 auto; */
-  }
-  @media screen and (min-width: 768px) {
     .container {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 1rem;
+        padding-bottom: 5rem;
+
+        /* background-color: red; */
     }
     .art-piece-titles {
-      display: flex;
-      flex-direction: column;
-      align-items: start;
-      top: 0;
-      position: sticky;
-      padding-top: 3rem;
-      flex: 0 0 300px;
-      width: unset;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        top: 0;
+        position: sticky;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        background: none;
+        width: 100%;
     }
     .art-piece-titles .link-button {
-      background: none;
-      border: none;
-      font-size: 2rem;
-      color: black;
+        background: none;
+        border: none;
+        color: black;
+        font-size: 0.75rem;
+    }
+
+    .art-piece-titles .link-button.visible {
+        color: var(--green);
     }
     .art-piece-list {
-      margin-top:2rem;
+        /* margin-top: 2rem; */
+        display: flex;
+        flex-direction: column;
+        /* max-width: 800px; */
+        gap: 10rem;
+        /* flex: 1 0 auto; */
     }
-  }
-
+    @media screen and (min-width: 768px) {
+        .container {
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .art-piece-titles {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            top: 0;
+            position: sticky;
+            padding-top: 3rem;
+            flex: 0 0 300px;
+            width: unset;
+        }
+        .art-piece-titles .link-button {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: black;
+        }
+        .art-piece-list {
+            margin-top: 2rem;
+        }
+    }
 </style>
