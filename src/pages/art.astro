@@ -106,7 +106,7 @@ const paintings = await R2.list();
         let width;
         let height;
         if (isMobile) {
-            width = window.innerWidth - 10;
+            width = window.innerWidth - window.innerWidth * 0.2;
             height = width / aspect;
         } else {
             width = 800;
