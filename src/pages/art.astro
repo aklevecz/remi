@@ -137,6 +137,7 @@ const paintings = await R2.list();
                         `button[data-art="${currentArtPiece}"]`,
                     );
                     artLink?.classList.add("visible");
+                    artLink?.scrollIntoView({behavior: "smooth", block: "nearest"});
                     console.log(artLink);
                     // Perform any desired actions with the current art piece
                 }
