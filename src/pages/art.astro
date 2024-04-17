@@ -123,8 +123,7 @@ const paintings = await R2.list();
 
           // Scroll the sidebar to the art link
           if (artLink && sidebar) {
-            console.log(artLink.offsetTop, sidebar.offsetTop, sidebar.scrollTop)
-            sidebar.scrollTop = artLink.offsetTop - sidebar.offsetTop;
+            sidebar.scrollTop = artLink.offsetTop - window.innerHeight
           }
           console.log(artLink);
           // Perform any desired actions with the current art piece
