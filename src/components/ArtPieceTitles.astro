@@ -1,9 +1,9 @@
 ---
 const { paintings } = Astro.props;
 ---
+<button id="show-link-button">Show titles</button>
 
 <div class="art-piece-titles">
-  <button id="show-link-buttons">Show titles</button>
   {
     paintings.map((painting: any) => {
       return (
@@ -21,7 +21,7 @@ const { paintings } = Astro.props;
 <script>
   const isMobile = window.innerWidth < 768;
   const linkButtons = document.querySelectorAll(".link-button");
-  const showLinkButton = document.querySelector("#show-link-buttons") as HTMLButtonElement;
+  const showLinkButton = document.querySelector("#show-link-button") as HTMLButtonElement;
   function showLinkButtons() {
     let isHidden = true
     linkButtons.forEach((linkButton) => {
@@ -39,11 +39,17 @@ const { paintings } = Astro.props;
   }
 </script>
 <style>
+        #show-link-button {
+    position: fixed;
+    top:10px;
+    left: 4px;
+    z-index: 999;
+    }
   .art-piece-titles {
     display: flex;
     flex-direction: column;
     align-items: start;
-    top: 0;
+    top: 20px;
     position: sticky;
     position: fixed;
     padding: 1rem;
@@ -77,8 +83,9 @@ const { paintings } = Astro.props;
     color: var(--green);
   }
 
+
   @media screen and (min-width: 768px) {
-    #show-link-buttons {
+    #show-link-button {
       display: none;
     }
     .art-piece-titles {
