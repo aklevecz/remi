@@ -1,0 +1,101 @@
+---
+const { paintings } = Astro.props;
+---
+
+<div class="art-piece-titles">
+  <button id="show-link-buttons">Show titles</button>
+  {
+    paintings.map((painting: any) => {
+      return (
+        <button
+          class="link-button offscreen"
+          data-art={painting.key}
+          onclick={`location.hash = '#' + '${painting.key}-marker'`}
+        >
+          {painting.key.replace("paintings/", "").split("-").slice(0, -1).join(" ")}
+        </button>
+      );
+    })
+  }
+</div>
+<script>
+  const isMobile = window.innerWidth < 768;
+  const linkButtons = document.querySelectorAll(".link-button");
+  const showLinkButton = document.querySelector("#show-link-buttons") as HTMLButtonElement;
+  function showLinkButtons() {
+    let isHidden = true
+    linkButtons.forEach((linkButton) => {
+      linkButton.classList.toggle("offscreen");
+      if (!linkButton.classList.contains('offscreen')){
+        isHidden = false
+      }
+      showLinkButton.innerText = isHidden ? 'Show titles' : 'Hide titles'
+    });
+  }
+  if (isMobile) {
+    showLinkButton?.addEventListener("click", showLinkButtons);
+  } else {
+    showLinkButtons();
+  }
+</script>
+<style>
+  .art-piece-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    top: 0;
+    position: sticky;
+    position: fixed;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    background: none;
+    width: 100%;
+    overflow: scroll;
+    max-height: 90vh;
+    pointer-event: none;
+    width: 50%;
+    left: 0px;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 1.45rem;
+    backdrop-filter: blur(3px);
+  }
+  .art-piece-titles .link-button {
+    transform: translateX(0%);
+    transition: transform 500ms;
+  }
+
+  .art-piece-titles .link-button.offscreen {
+    transform: translateX(-120%);
+  }
+
+  .art-piece-titles .link-button.visible {
+    color: var(--green);
+  }
+
+  @media screen and (min-width: 768px) {
+    #show-link-buttons {
+      display: none;
+    }
+    .art-piece-titles {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      top: 0;
+      position: sticky;
+      padding-top: 3rem;
+      flex: 0 0 300px;
+      width: unset;
+    }
+    .art-piece-titles .link-button {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: black;
+    }
+  }
+</style>
