@@ -2,40 +2,41 @@
 import PageHeading from "../components/PageHeading.astro";
 import PaintingList from "../components/admin/PaintingList.astro";
 import Layout from "../layouts/Layout.astro";
+import dbInstance from "../lib/db";
 
 const R2 = Astro.locals.runtime.env.R2;
 
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const title = form.get("title") as string;
-  const material = form.get("material");
-  const dimensions = form.get("dimensions");
-  const year = form.get("year");
-  const rank = form.get("rank");
+  const material = form.get("material") as string;
+  const dimensions = form.get("dimensions") as string;
+  const year = form.get("year") as string;
+  const rank = form.get("rank") as string;
   let image = form.get("image") as File;
-  
 
-
-  const dateTime = new Date().getTime()
-  const fileName = form.get('key') || `paintings/${title.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
+  const dateTime = new Date().getTime();
+  const fileName = form.get("key") as string || `paintings/${title.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
   if (!image.size) {
-    const object = await R2.get(fileName)
-    image = object.body
+    const object = await R2.get(fileName);
+    image = object.body;
   }
 
   await R2.put(`${fileName}`, image, {
     contentType: image.type,
-    customMetadata: { title, material, dimensions, rank, year},
+    customMetadata: { title, material, dimensions, rank, year },
   });
+  await dbInstance.addPainting({ title, material, dimensions, year: parseInt(year), rank: parseInt(rank), key: fileName });
   return Astro.redirect("/admin");
 }
 
 // if (Astro.request.method === "DELETE") {
 const url = new URLSearchParams(new URL(Astro.request.url).search);
-const key = url.get("key");
+const key = url.get("key") as string;
 const action = url.get("action");
 if (action == "del") {
   await R2.delete(key);
+  await dbInstance.deletePainting(key)
   return Astro.redirect("/admin");
 }
 // if (action=='getMeta') {
@@ -49,29 +50,27 @@ if (action == "del") {
 
 <Layout title="admin">
   <PageHeading> Admin </PageHeading>
-  <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">
-    Drop here
-  </div>
+  <form method="POST" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="material">Material:</label>
+    <input type="text" id="material" name="material" required />
+
+    <label for="dimensions">Dimensions:</label>
+    <input type="text" id="dimensions" name="dimensions" required />
+
+    <label for="year">Year:</label>
+    <input type="text" id="year" name="year" required />
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required />
+
+    <button type="submit">Upload</button>
+  </form>
+  <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">Drop here</div>
   <div class="container">
-    <PaintingList/>
-    <form method="POST" enctype="multipart/form-data">
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" required />
-
-      <label for="material">Material:</label>
-      <input type="text" id="material" name="material" required />
-
-      <label for="dimensions">Dimensions:</label>
-      <input type="text" id="dimensions" name="dimensions" required />
-
-      <label for="year">Year:</label>
-      <input type="text" id="year" name="year" required />
-
-      <label for="image">Image:</label>
-      <input type="file" id="image" name="image" accept="image/*" required />
-
-      <button type="submit">Upload</button>
-    </form>
+    <PaintingList />
   </div>
 </Layout>
 <script>
@@ -83,14 +82,14 @@ if (action == "del") {
     });
   });
 
-  const dropZone = document.getElementById('drop-zone') as HTMLElement;
-  dropZone.addEventListener('dragover', (event) => {
-    event.preventDefault();  // This is necessary to allow the drop
+  const dropZone = document.getElementById("drop-zone") as HTMLElement;
+  dropZone.addEventListener("dragover", (event) => {
+    event.preventDefault(); // This is necessary to allow the drop
   });
-  dropZone.addEventListener('drop', (event:any) => {
-    event.preventDefault();  // This is necessary to prevent the browser's default handling of the data
-    console.log(event)
-    const id = event.dataTransfer.getData('text/plain');
+  dropZone.addEventListener("drop", (event: any) => {
+    event.preventDefault(); // This is necessary to prevent the browser's default handling of the data
+    console.log(event);
+    const id = event.dataTransfer.getData("text/plain");
     const draggableElement = document.getElementById(id) as HTMLElement;
     dropZone.appendChild(draggableElement);
   });
@@ -105,6 +104,6 @@ if (action == "del") {
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    width: 300px;
   }
-
 </style>

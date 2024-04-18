@@ -5,7 +5,7 @@ import ArtPieceTitles from "../components/ArtPieceTitles.astro";
 import LoadingSpinner from "../components/LoadingSpinner.astro";
 import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
-
+import dbInstance from "../lib/db";
 // const { data } = await fetch("http://localhost:8055/items/remi").then(
 //   (response) => response.json()
 // );
@@ -52,23 +52,24 @@ const data: ArtPiece[] = [
   },
 ];
 
-const R2 = Astro.locals.runtime.env.R2;
+// const R2 = Astro.locals.runtime.env.R2;
 
-let paintings = [];
-if (process.env.NODE_ENV === "production") {
-  paintings = await R2.list();
-} else {
-  paintings = await fetch("http://localhost:8787/remi").then((r) => r.json());
-}
+// let paintings = [];
+// if (process.env.NODE_ENV === "production") {
+//   paintings = await R2.list();
+// } else {
+//   paintings = await fetch("http://localhost:8787/remi").then((r) => r.json());
+// }
+const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
   <PageHeading>ART</PageHeading>
   <div class="container">
-    <ArtPieceTitles paintings={paintings.objects} />
+    <ArtPieceTitles paintings={paintings} />
     <div class="art-piece-list">
       <!-- {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)} -->
-      {paintings.objects.map((painting: any) => <ArtPieceR2 key={painting.key} />)}
+      {paintings.map((painting: any) => <ArtPieceR2 key={painting.key} painting={painting} />)}
     </div>
   </div>
 </Layout>

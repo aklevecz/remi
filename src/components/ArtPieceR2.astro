@@ -6,21 +6,23 @@ import placeHolder from "../assets/paintings/lambcityoil.jpg";
 
 interface Props {
   key: string;
+  painting: any;
 }
 
-let { key } = Astro.props;
-const R2 = Astro.locals.runtime.env.R2;
-let painting:any = null;
-if (process.env.NODE_ENV === "production") {
-  painting = await R2.get(key);
-} else {
-  painting = await fetch("http://localhost:8787/remi/" + encodeURIComponent(key)).then((r) => r.json());
-}
+let { key, painting } = Astro.props;
+// const R2 = Astro.locals.runtime.env.R2;
+// let painting:any = null;
+// if (process.env.NODE_ENV === "production") {
+//   painting = await R2.get(key);
+// } else {
+//   painting = await fetch("http://localhost:8787/remi/" + encodeURIComponent(key)).then((r) => r.json());
+// }
 // console.log(painting)
-const metaData = painting.customMetadata;
+// const metaData = painting.customMetadata;
 // console.log(metaData);
 // console.log(metaData)
-const { title, material, dimensions, year } = metaData;
+console.log(painting)
+const { title, material, dimensions, year } = painting;
 
 const isProd = process.env.NODE_ENV;
 const imgHost = isProd ? "https://storage.remifrogo.art" : "http://localhost:4321/img";

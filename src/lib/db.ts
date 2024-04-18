@@ -1,4 +1,4 @@
-import { db, eq, Appointment, User } from "astro:db";
+import { db, eq, Appointment, User, Painting } from "astro:db";
 
 const dbInstance = () => {
   const getAppointmentById = async (id: string) => {
@@ -78,7 +78,30 @@ const dbInstance = () => {
     return db.select().from(User);
   };
 
-  return { getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser };
+  const getAllPaintings = async () => {
+    return db.select().from(Painting);
+  }
+
+  type Painting = {
+    key: string;
+    title: string;
+    material: string;
+    dimensions: string;
+    rank: number;
+    year: number;
+  }
+
+  const addPainting = async (painting: Painting) => {
+    const { key, title, material, dimensions, rank, year } = painting;
+    return db.insert(Painting).values([{ key, title, material, dimensions, rank, year }]);
+  }
+
+  const deletePainting = async (key: string) => {
+    return db.delete(Painting).where(eq(Painting.key, key));
+
+  }
+
+  return { getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser, getAllPaintings, addPainting, deletePainting };
 };
 
 export default dbInstance();

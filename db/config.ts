@@ -29,7 +29,18 @@ const Appointment = defineTable({
   }
 })
 
+const Painting = defineTable({
+  columns: {
+    key: column.text({primaryKey: true}),
+    title: column.text(),
+    material : column.text(),
+    dimensions: column.text(),
+    rank: column.number(),
+    year: column.number(),
+  }
+})
+
 // https://astro.build/db/config
 export default defineDb({
-  tables: {User, Appointment}
+  tables: {User, Appointment, Painting}
 });

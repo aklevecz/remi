@@ -2,20 +2,45 @@
 import PaintingItem from "./PaintingItem.astro";
 
 const R2 = Astro.locals.runtime.env.R2;
+let paintings = [];
+if (process.env.NODE_ENV === "production") {
+  paintings = await R2.list();
+} else {
+  paintings = await fetch("http://localhost:8787/remi").then((res) => res.json());
+}
 
-const paintings = await R2.list();
+const metas:any = [];
+for (const object of paintings.objects) {
+  console.log(object)
+  let painting: any = null;
+  if (process.env.NODE_ENV === "production") {
+    painting = await R2.get(object.key);
+  } else {
+    painting = await fetch("http://localhost:8787/remi/" + encodeURIComponent(object.key)).then((res) => res.json());
+  }
+  if (painting.customMetadata.rank === undefined) {
+    painting.customMetadata.rank = 99999999;
+  }
+  metas.push(painting)
+}
+console.log(metas)
 ---
 
 <div class="paintings">
   {
-    paintings.objects.map((painting: any, i:number) => {
+    metas.sort((a,b) => a.customMetadata.rank - b.customMetadata.rank).map((painting: any, i: number) => {
       return <PaintingItem rank={i} key={painting.key} />;
     })
   }
 </div>
+<script define:vars={{metas}}>
+console.log(metas)
 
+</script>
 <style>
   .paintings {
     padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
   }
 </style>
