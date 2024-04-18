@@ -11,6 +11,7 @@ if (Astro.request.method === "POST") {
   const material = form.get("material");
   const dimensions = form.get("dimensions");
   const year = form.get("year");
+  const rank = form.get("rank");
   let image = form.get("image") as File;
   
 
@@ -21,23 +22,10 @@ if (Astro.request.method === "POST") {
     const object = await R2.get(fileName)
     image = object.body
   }
-//   async function streamToBuffer(readableStream) {
-//   let chunks = [];
-//   for await (let chunk of readableStream) {
-//     chunks.push(chunk);
-//   }
-//   return Buffer.concat(chunks);
-// }
 
-// let imageBuffer = await streamToBuffer(image);
-  console.log('FILENAME:', fileName)
-  // const imageBuffer = await image.arrayBuffer();
-  // const imageBase64 = Buffer.from(imageBuffer).toString("base64");
-  // console.log(imageBase64);
-  console.log('image:', image)
   await R2.put(`${fileName}`, image, {
     contentType: image.type,
-    customMetadata: { title, material, dimensions, year},
+    customMetadata: { title, material, dimensions, rank, year},
   });
   return Astro.redirect("/admin");
 }
@@ -61,6 +49,9 @@ if (action == "del") {
 
 <Layout title="admin">
   <PageHeading> Admin </PageHeading>
+  <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">
+    Drop here
+  </div>
   <div class="container">
     <PaintingList/>
     <form method="POST" enctype="multipart/form-data">
@@ -90,6 +81,18 @@ if (action == "del") {
       const key = e.target.id;
       await fetch(`/admin?key=${key}`, { method: "DELETE" });
     });
+  });
+
+  const dropZone = document.getElementById('drop-zone');
+  dropZone.addEventListener('dragover', (event) => {
+    event.preventDefault();  // This is necessary to allow the drop
+  });
+  dropZone.addEventListener('drop', (event) => {
+    event.preventDefault();  // This is necessary to prevent the browser's default handling of the data
+    console.log(event)
+    const id = event.dataTransfer.getData('text/plain');
+    const draggableElement = document.getElementById(id);
+    dropZone.appendChild(draggableElement);
   });
 </script>
 

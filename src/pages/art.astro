@@ -54,7 +54,12 @@ const data: ArtPiece[] = [
 
 const R2 = Astro.locals.runtime.env.R2;
 
-const paintings = await R2.list();
+let paintings = [];
+if (process.env.NODE_ENV === "production") {
+  paintings = await R2.list();
+} else {
+  paintings = await fetch("http://localhost:8787/remi").then((r) => r.json());
+}
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
@@ -102,7 +107,7 @@ const paintings = await R2.list();
           // Scroll the sidebar to the art link
           if (artLink && sidebar) {
             console.log(artLink.offsetTop, window.innerHeight);
-            sidebar.scrollTop = artLink.offsetTop - window.innerHeight + 150
+            sidebar.scrollTop = artLink.offsetTop - window.innerHeight + 150;
           }
           console.log(artLink);
           // Perform any desired actions with the current art piece

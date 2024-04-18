@@ -8,8 +8,8 @@ const paintings = await R2.list();
 
 <div class="paintings">
   {
-    paintings.objects.map((painting: any) => {
-      return <PaintingItem key={painting.key} />;
+    paintings.objects.map((painting: any, i:number) => {
+      return <PaintingItem rank={i} key={painting.key} />;
     })
   }
 </div>

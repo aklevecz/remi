@@ -1,6 +1,7 @@
 ---
 const { paintings } = Astro.props;
 ---
+
 <button id="show-link-button">Show titles</button>
 
 <div class="art-piece-titles">
@@ -20,16 +21,20 @@ const { paintings } = Astro.props;
 </div>
 <script>
   const isMobile = window.innerWidth < 768;
+  const artPieceTitles = document.querySelector(".art-piece-titles") as HTMLDivElement;
   const linkButtons = document.querySelectorAll(".link-button");
   const showLinkButton = document.querySelector("#show-link-button") as HTMLButtonElement;
   function showLinkButtons() {
-    let isHidden = true
+    let isHidden = true;
     linkButtons.forEach((linkButton) => {
       linkButton.classList.toggle("offscreen");
-      if (!linkButton.classList.contains('offscreen')){
-        isHidden = false
+      if (!linkButton.classList.contains("offscreen")) {
+        isHidden = false;
       }
-      showLinkButton.innerText = isHidden ? 'Show titles' : 'Hide titles'
+      showLinkButton.innerText = isHidden ? "Show titles" : "Hide titles";
+      setTimeout(() => {
+        artPieceTitles.style.overflow = isHidden ? "hidden" : "scroll"; // Add this line
+      }, 500);
     });
   }
   if (isMobile) {
@@ -39,12 +44,12 @@ const { paintings } = Astro.props;
   }
 </script>
 <style>
-        #show-link-button {
+  #show-link-button {
     position: fixed;
-    top:10px;
+    top: 10px;
     left: 4px;
     z-index: 999;
-    }
+  }
   .art-piece-titles {
     display: flex;
     flex-direction: column;
@@ -60,6 +65,7 @@ const { paintings } = Astro.props;
     max-height: 90vh;
     pointer-event: none;
     width: 50%;
+    width: 300px;
     left: 0px;
   }
 
@@ -83,7 +89,6 @@ const { paintings } = Astro.props;
     color: var(--green);
   }
 
-
   @media screen and (min-width: 768px) {
     #show-link-button {
       display: none;
@@ -101,7 +106,7 @@ const { paintings } = Astro.props;
     .art-piece-titles .link-button {
       background: none;
       border: none;
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: black;
     }
   }

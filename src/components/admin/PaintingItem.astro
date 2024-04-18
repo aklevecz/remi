@@ -3,14 +3,15 @@ import { Image } from "astro:assets";
 
 const env = process.env.NODE_ENV;
 const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
-const { key } = Astro.props;
+const { key, rank } = Astro.props;
 const R2 = Astro.locals.runtime.env.R2;
 const painting = await R2.get(key);
 const metaData = painting.customMetadata;
 ---
 
-<div>
-  <div class="painting-view">
+<div id={key} draggable="true">
+  <div>{rank}</div>
+   <div class="painting-view">
     <Image
       width="300"
       height="300"
@@ -36,6 +37,7 @@ const metaData = painting.customMetadata;
     <input type="text" name="material" value={metaData.material} />
     <input type="text" name="dimensions" value={metaData.dimensions} />
     <input type="text" name="year" value={metaData.year} />
+    <input type="text" name="rank" value={metaData?.rank} />
     <input type="file" name="image" accept="image/*" />
     <button type="submit">Save</button>
   </form>
@@ -43,6 +45,10 @@ const metaData = painting.customMetadata;
 <script>
   document.getElementById("edit-button")!.addEventListener("click", () => {
     document.querySelector("form")!.classList.toggle("hidden");
+  });
+  const draggableElement = document.querySelector('[draggable="true"]') as any
+  draggableElement.addEventListener('dragstart', (event) => {
+    event.dataTransfer.setData('text/plain', event.target.id);
   });
 </script>
 <style>
