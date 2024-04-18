@@ -47,7 +47,7 @@ const metaData = painting.customMetadata;
     document.querySelector("form")!.classList.toggle("hidden");
   });
   const draggableElement = document.querySelector('[draggable="true"]') as any
-  draggableElement.addEventListener('dragstart', (event) => {
+  draggableElement.addEventListener('dragstart', (event:any) => {
     event.dataTransfer.setData('text/plain', event.target.id);
   });
 </script>
