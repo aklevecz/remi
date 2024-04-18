@@ -28,7 +28,7 @@ console.log(metas)
 
 <div class="paintings">
   {
-    metas.sort((a,b) => a.customMetadata.rank - b.customMetadata.rank).map((painting: any, i: number) => {
+    metas.sort((a:any,b:any) => a.customMetadata.rank - b.customMetadata.rank).map((painting: any, i: number) => {
       return <PaintingItem rank={i} key={painting.key} />;
     })
   }
