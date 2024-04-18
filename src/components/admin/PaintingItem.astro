@@ -42,12 +42,13 @@ const metaData = painting.customMetadata;
     <button type="submit">Save</button>
   </form>
 </div>
-<script>
-  document.getElementById("edit-button")!.addEventListener("click", () => {
-    document.querySelector("form")!.classList.toggle("hidden");
+<script define:vars={{key}}>
+  const container = document.getElementById(`#${key}`)
+  container.getElementById("edit-button").addEventListener("click", () => {
+    container.querySelector("form").classList.toggle("hidden");
   });
-  const draggableElement = document.querySelector('[draggable="true"]') as any
-  draggableElement.addEventListener('dragstart', (event:any) => {
+  const draggableElement = container.querySelector('[draggable="true"]')
+  draggableElement.addEventListener('dragstart', (event) => {
     event.dataTransfer.setData('text/plain', event.target.id);
   });
 </script>
