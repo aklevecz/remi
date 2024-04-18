@@ -43,14 +43,15 @@ const metaData = painting.customMetadata;
   </form>
 </div>
 <script define:vars={{key}}>
-  const container = document.getElementById(`#${key}`)
-  container.getElementById("edit-button").addEventListener("click", () => {
+  const container = document.getElementById(`${key}`)
+  console.log(container.querySelector("#edit-button"))
+  container.querySelector("#edit-button").addEventListener("click", () => {
     container.querySelector("form").classList.toggle("hidden");
   });
-  const draggableElement = container.querySelector('[draggable="true"]')
-  draggableElement.addEventListener('dragstart', (event) => {
-    event.dataTransfer.setData('text/plain', event.target.id);
-  });
+  // const draggableElement = container.querySelector('[draggable="true"]')
+  // draggableElement.addEventListener('dragstart', (event) => {
+  //   event.dataTransfer.setData('text/plain', event.target.id);
+  // });
 </script>
 <style>
   a {
