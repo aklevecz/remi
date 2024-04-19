@@ -49,7 +49,7 @@ let src = imgHost + "/" + key;
     <div class="description-section">
       <div class="description">{title}</div>
       <div class="description">{material}</div>
-      <div class="description">{dimensions}</div>
+      <div class="description">{dimensions === 'null' ? dimensions : ""}</div>
       <div class="description">{year}</div>
     </div>
   </div>
