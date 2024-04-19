@@ -91,9 +91,12 @@ const dbInstance = () => {
     year: number;
   }
 
-  const addPainting = async (painting: Painting) => {
+  const addOrUpdatePainting = async (painting: Painting) => {
     const { key, title, material, dimensions, rank, year } = painting;
-    return db.insert(Painting).values([{ key, title, material, dimensions, rank, year }]);
+    return db.insert(Painting).values([{ key, title, material, dimensions, rank, year }]).onConflictDoUpdate({
+      target: Painting.key,
+      set: { title, material, dimensions, rank, year }
+    });
   }
 
   const deletePainting = async (key: string) => {
@@ -101,7 +104,7 @@ const dbInstance = () => {
 
   }
 
-  return { getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser, getAllPaintings, addPainting, deletePainting };
+  return { getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser, getAllPaintings, addOrUpdatePainting, deletePainting };
 };
 
 export default dbInstance();

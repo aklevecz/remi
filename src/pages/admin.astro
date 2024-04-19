@@ -26,7 +26,7 @@ if (Astro.request.method === "POST") {
     contentType: image.type,
     customMetadata: { title, material, dimensions, rank, year },
   });
-  await dbInstance.addPainting({ title, material, dimensions, year: parseInt(year), rank: parseInt(rank), key: fileName });
+  await dbInstance.addOrUpdatePainting({ title, material, dimensions, year: parseInt(year), rank: parseInt(rank), key: fileName });
   return Astro.redirect("/admin");
 }
 
