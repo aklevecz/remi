@@ -39,6 +39,7 @@ const { paintings } = Astro.props;
   }
   if (isMobile) {
     showLinkButton?.addEventListener("click", showLinkButtons);
+    artPieceTitles.style.overflow = "hidden"
   } else {
     showLinkButtons();
   }
@@ -49,6 +50,7 @@ const { paintings } = Astro.props;
     top: 10px;
     left: 4px;
     z-index: 999;
+    text-decoration: underline;
   }
   .art-piece-titles {
     display: flex;
@@ -57,7 +59,7 @@ const { paintings } = Astro.props;
     top: 20px;
     position: sticky;
     position: fixed;
-    padding: 1rem;
+    padding: 1rem 0.3rem 0rem;
     background-color: var(--primary-color);
     background: none;
     width: 100%;
