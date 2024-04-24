@@ -14,8 +14,8 @@ interface Props {
 const { title, seo } = Astro.props;
 const urlObject = new URL(Astro.request.url);
 const isHome = urlObject.pathname === "/";
-const isTats = urlObject.pathname === "/tattoos";
-const isArt = urlObject.pathname === "/art";
+const isTats = urlObject.pathname.includes("/tattoos")
+const isArt = urlObject.pathname.includes("/art")
 const isAbout = urlObject.pathname === "/about";
 
 const defaultDescription = "Remi Frogo is a fine and tattoo artist based in Los Angeles, California.";

@@ -1,9 +1,30 @@
 ---
-const { default: innerHTML } = await import(`./svgs/tattoo-logo.svg?raw`);
+// const { default: innerHTML } = await import(`./svgs/tattoo-logo.svg?raw`);
 ---
-<Fragment data-remobotron-logo set:html={innerHTML}/>
 
-<style is:global>
+<!-- <Fragment data-remobotron-logo set:html={innerHTML}/> -->
+<img loading="lazy" class="mob" src="/images/rembotrontransparent_300.png" alt="Remobotron Logo" data-remobotron-logo />
+<img loading="lazy" class="lap" src="/images/rembotrontransparent_500.png" alt="Remobotron Logo" data-remobotron-logo />
+<style>
+  .lap {
+    display: none;
+  }
+  img {
+    margin: auto;
+    display: block;
+    margin-top: -5%;
+  }
+  @media screen and (min-width: 768px) {
+    .mob {
+      display: none;
+    }
+    .lap {
+      display: block;
+    }
+    
+  }
+</style>
+<!-- <style is:global>
   svg[data-remobotron-logo] {
     width:100%;
     height:100%;
@@ -18,4 +39,4 @@ const { default: innerHTML } = await import(`./svgs/tattoo-logo.svg?raw`);
   svg[data-remobotron-logo] path.white {
     fill: white;
   }
-</style>
+</style> -->

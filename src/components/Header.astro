@@ -1,6 +1,7 @@
 ---
 // import RemiFrogoLogo from "./RemiFrogoLogo.astro";
 const { isTats } = Astro.props;
+console.log(isTats)
 let LogoComponent = null;
 if (!isTats) {
   LogoComponent = (await import("./RemiFrogoLogo.astro")).default;
