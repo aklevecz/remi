@@ -1,14 +1,20 @@
 ---
 import { Image } from "astro:assets";
+import dbInstance from '../../lib/db'
+import {genImgResizeUrl} from '../../lib/utils'
 
 const images = import.meta.glob<{ default: ImageMetadata }>("/src/assets/tattoos/*.{jpeg,jpg,png,gif}");
+const tattoos = await dbInstance.getAllTattoos()
+const storageBaseUrl = 'https://storage.remifrogo.art'
 ---
 
 <div class="gallery-container">
   {
-    Object.keys(images).map((image, index) => (
+    // Object.keys(images).map((image, index) => (
+      tattoos.map(tat => (
       <div>
-        <Image src={images[image]()} alt="tattoo"/>
+        {/* <Image src={images[image]()} alt="tattoo"/> */}
+        <img loading="lazy" src={genImgResizeUrl({width:300, height:300, quality:100, url:`${storageBaseUrl}/${tat.key}`})}/>
       </div>
     ))
   }

@@ -17,7 +17,7 @@ console.log(tattoos)
 
   <button type="submit">Upload</button>
 </form>
-<div>
+<div class="tat-img-container">
   {
     tattoos.map((tat) => {
       return (
@@ -51,6 +51,11 @@ console.log(tattoos)
     flex-direction: column;
     padding: 1rem;
     width: 300px;
+  }
+  .tat-img-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
   }
   .tat-img {
     width: 300px;
