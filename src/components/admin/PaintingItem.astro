@@ -48,7 +48,6 @@ const metaData = painting.customMetadata;
 </div>
 <script define:vars={{ key }}>
   const container = document.getElementById(`${key}`);
-  console.log(container.querySelector("#edit-button"));
   container.querySelector("#edit-button").addEventListener("click", () => {
     container.querySelector("form").classList.toggle("hidden");
   });

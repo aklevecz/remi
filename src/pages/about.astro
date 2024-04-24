@@ -1,18 +1,19 @@
 ---
 import PageHeading from "../components/PageHeading.astro";
 import Layout from "../layouts/Layout.astro";
-const aboutBlurb = `
-Remi Frogo, is an LA-based artist working in the mediums of oil paint, graphite, and commercial digital design.  She completed her BFA at the University of Southern California.  
-
-Presented in an environment of digitally-dominated distortion, Remi’s practice translates associated feelings of disconnection and manipulation, byproducts of existing as a modern individual in a heavily virtual world.  The works convey moments of visual processing, and use painting and other creative outlets to symbolize instances of introspection, either symbolically referencing digital spaces or portraying her personal experiences on a backdrop of an extremely contemporary world.  She will often provide her own body as the content of her pieces, further representing the self-ruminative nature of her ideas.  Each work presents a specific context of time, a physicality of memory.  `;
+const aboutBlurb = [
+  `Remi Frogo (b. 2001, Orange County, CA) is a University of Southern California graduate and an LA-based artist working in the mediums of oil paint, graphite, and commercial digital design. Presented in an environment of digital distortion, Frogo’s practice translates associated feelings of disconnection and misrepresentation, byproducts of existing in a heavily virtual world. Her work discusses meditative visual processing, and uses multimedia techniques to reference online spaces while portraying her personal relationship with the hyper contemporary world. She will often provide her own body as the content of her pieces, further representing the self-ruminative nature of her ideas. Each work presents a specific context of time, a physicality of memory.`,
+  `Contact for purchases/commissions/inquiries.`,
+  `Pricing for existing work available upon request.`,
+  `@remifrogo`,
+  `@remb0tron`,
+];
 ---
 
-<Layout title="About Remi Frogo" seo={{title:"Remi Frogo | About"}}>
+<Layout title="About Remi Frogo" seo={{ title: "Remi Frogo | About" }}>
   <PageHeading>ABOUT</PageHeading>
   <div class="container">
-    <p>
-      {aboutBlurb}
-    </p>
+    {aboutBlurb.map((blurb, index) => <div class="blurb-line">{blurb}</div>)}
     <img src="/images/remis/face1.png" alt="Remi Frogo" />
   </div>
 </Layout>
@@ -22,6 +23,13 @@ Presented in an environment of digitally-dominated distortion, Remi’s practice
   }
   h1 {
     padding-left: 1rem;
+  }
+  div.blurb-line {
+    margin: auto;
+    padding: 0rem 1rem;
+    max-width: 786px;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
   }
   p {
     margin: auto;

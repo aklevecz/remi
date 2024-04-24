@@ -47,9 +47,9 @@ let src = imgHost + "/" + key;
     </div>
     <!-- <LoadingSpinner visibility="show" /> -->
     <div class="description-section">
-      <div class="description">{title}</div>
+      <div class="art-piece-title description">{title}</div>
       <div class="description">{material}</div>
-      <div class="description">{dimensions === 'null' ? dimensions : ""}</div>
+      <div class="description">{dimensions !== 'null' ? dimensions : ""}</div>
       <div class="description">{year}</div>
     </div>
   </div>
@@ -114,12 +114,29 @@ let src = imgHost + "/" + key;
     gap: 1rem;
     max-width: 400px;
     margin-top: -10px;
-    width: 70%;
+    /* width: 70%; */
     /* margin-top: 2rem; */
     /* padding-left: 2rem; */
     font-size: 0.75rem;
   }
 
+  .art-piece-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .description {
+    /* width: 50%; */
+    /* padding: 1rem; */
+    /* background-color: white; */
+    color: black;
+  }
+
+  .description:nth-child(2) {
+    /* margin-top: 1rem; */
+    /* background-color: black;
+    color: white; */
+  }
   @media screen and (min-width: 768px) {
     .desk {
       display: block;
@@ -145,18 +162,10 @@ let src = imgHost + "/" + key;
       font-size: 1.5rem;
       text-wrap: balance;
     }
+    .art-piece-title {
+    font-size: 1.75rem;
   }
 
-  .description {
-    /* width: 50%; */
-    /* padding: 1rem; */
-    /* background-color: white; */
-    color: black;
   }
 
-  .description:nth-child(2) {
-    /* margin-top: 1rem; */
-    /* background-color: black;
-    color: white; */
-  }
 </style>

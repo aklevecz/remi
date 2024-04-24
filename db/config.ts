@@ -39,8 +39,14 @@ const Painting = defineTable({
     year: column.number(),
   }
 })
+const Tattoo = defineTable({
+  columns: {
+    key: column.text({primaryKey: true}),
+    name: column.text(),
+  }
+})
 
 // https://astro.build/db/config
 export default defineDb({
-  tables: {User, Appointment, Painting}
+  tables: {User, Appointment, Painting, Tattoo}
 });

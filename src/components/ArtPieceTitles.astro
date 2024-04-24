@@ -11,7 +11,7 @@ const { paintings } = Astro.props;
         <button
           class="link-button offscreen"
           data-art={painting.key}
-          onclick={`location.hash = '#' + '${painting.key}-marker'`}
+          onclick={`location.hash = "#${painting.key}-marker"`}
         >
           {painting.key.replace("paintings/", "").split("-").slice(0, -1).join(" ")}
         </button>

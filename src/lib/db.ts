@@ -1,4 +1,4 @@
-import { db, eq, Appointment, User, Painting } from "astro:db";
+import { db, eq, Appointment, User, Painting, Tattoo } from "astro:db";
 
 const dbInstance = () => {
   const getAppointmentById = async (id: string) => {
@@ -39,7 +39,7 @@ const dbInstance = () => {
       availability,
       miscellaneous,
       imgFileName,
-      now
+      now,
     } = appointment;
     return db.insert(Appointment).values([
       {
@@ -78,10 +78,6 @@ const dbInstance = () => {
     return db.select().from(User);
   };
 
-  const getAllPaintings = async () => {
-    return db.select().from(Painting);
-  }
-
   type Painting = {
     key: string;
     title: string;
@@ -89,22 +85,54 @@ const dbInstance = () => {
     dimensions: string;
     rank: number;
     year: number;
-  }
+  };
+
+  const getAllPaintings = async () => {
+    return db.select().from(Painting);
+  };
 
   const addOrUpdatePainting = async (painting: Painting) => {
     const { key, title, material, dimensions, rank, year } = painting;
     return db.insert(Painting).values([{ key, title, material, dimensions, rank, year }]).onConflictDoUpdate({
       target: Painting.key,
-      set: { title, material, dimensions, rank, year }
+      set: { title, material, dimensions, rank, year },
     });
-  }
+  };
 
   const deletePainting = async (key: string) => {
     return db.delete(Painting).where(eq(Painting.key, key));
+  };
 
+  type Tattoo = {
+    key: string;
+    name: string;
+  };
+
+  const getAllTattoos = async () => {
+    return db.select().from(Tattoo);
   }
 
-  return { getAppointmentById, getAllAppointments, createAppointment, getUserByEmail, getAllUsers, createUser, getAllPaintings, addOrUpdatePainting, deletePainting };
+  const addOrUpdateTattoo = async (tattoo: Tattoo) => {
+    const { key, name } = tattoo;
+    return db.insert(Tattoo).values([{ key, name }]).onConflictDoUpdate({
+      target: Tattoo.key,
+      set: { name },
+    });
+  };
+
+  return {
+    getAppointmentById,
+    getAllAppointments,
+    createAppointment,
+    getUserByEmail,
+    getAllUsers,
+    createUser,
+    getAllPaintings,
+    addOrUpdatePainting,
+    deletePainting,
+    getAllTattoos,
+    addOrUpdateTattoo,
+  };
 };
 
 export default dbInstance();
