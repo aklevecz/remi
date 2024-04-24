@@ -19,9 +19,9 @@ const isArt = urlObject.pathname.includes("/art")
 const isAbout = urlObject.pathname === "/about";
 
 const defaultDescription = "Remi Frogo is a fine and tattoo artist based in Los Angeles, California.";
-const defaultImage = "/images/seo-img.png";
+const defaultImage = "https://remifrogo.art/images/seo-img.png";
 
-const img = seo?.image || defaultImage;
+const imgUrl = seo?.image || defaultImage;
 
 const testColor = "#fff";
 
@@ -54,10 +54,10 @@ if (isAbout) {
     <meta name="twitter:site" content="@astrodotbuild" />
     <meta name="twitter:title" content={seo?.title || title} />
     <meta name="twitter:description" content={seo?.description || defaultDescription} />
-    <meta name="twitter:image" content={urlObject.origin + img} />
+    <meta name="twitter:image" content={imgUrl} />
     <meta property="og:title" content={seo?.title || title} />
     <meta property="og:description" content={seo?.description || defaultDescription} />
-    <meta property="og:image" content={urlObject.origin + img} />
+    <meta property="og:image" content={imgUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content={Astro.request.url} />

@@ -21,7 +21,7 @@ let { key, painting } = Astro.props;
 // const metaData = painting.customMetadata;
 // console.log(metaData);
 // console.log(metaData)
-console.log(painting)
+console.log(painting);
 const { title, material, dimensions, year } = painting;
 
 const isProd = process.env.NODE_ENV;
@@ -49,12 +49,31 @@ let src = imgHost + "/" + key;
     <div class="description-section">
       <div class="art-piece-title description">{title}</div>
       <div class="description">{material}</div>
-      <div class="description">{dimensions !== 'null' ? dimensions : ""}</div>
+      <div class="description">{dimensions !== "null" ? dimensions : ""}</div>
       <div class="description">{year}</div>
     </div>
   </div>
 </div>
+<script>
+  const images = document.querySelectorAll("img");
 
+  images.forEach((image: any) => {
+    const isMobile = window.innerWidth < 768;
+    const aspect = image.naturalWidth / image.naturalHeight;
+    let width;
+    let height;
+    if (isMobile) {
+      width = window.innerWidth - window.innerWidth * 0.2;
+      height = width / aspect;
+    } else {
+      width = 800;
+      height = width / aspect;
+    }
+    image.style.height = height + "px";
+    image.style.width = width + "px";
+    image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}`;
+  });
+</script>
 <style>
   .art-piece {
     position: relative;
@@ -163,9 +182,7 @@ let src = imgHost + "/" + key;
       text-wrap: balance;
     }
     .art-piece-title {
-    font-size: 1.75rem;
+      font-size: 1.75rem;
+    }
   }
-
-  }
-
 </style>

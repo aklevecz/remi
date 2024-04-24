@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbInstance from "../../lib/db";
+const { piece } = Astro.params;
+const painting = (await dbInstance.getPainting(piece as string))[0];
+const description = `${painting.title}
+${painting.material}
+${painting.year}`;
+const image = `https://storage.remifrogo.art/${painting.key}`;
+---
+
+<Layout title={painting.title} seo={{ title: painting.title, description, image }}>
+  <h1>{painting.title}</h1>
+  <img src={image} />
+</Layout>
+<style>
+    h1 {
+        position:absolute;
+        top:10px;
+        left:10px;
+    }
+    img {
+        /* width: 100%; */
+        height:100%;
+    }
+</style>

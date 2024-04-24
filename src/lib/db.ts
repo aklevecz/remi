@@ -87,6 +87,10 @@ const dbInstance = () => {
     year: number;
   };
 
+  const getPainting = async (key:string) => {
+    return db.select().from(Painting).where(eq(Painting.key, key));
+  }
+
   const getAllPaintings = async () => {
     return db.select().from(Painting);
   };
@@ -127,6 +131,7 @@ const dbInstance = () => {
     getUserByEmail,
     getAllUsers,
     createUser,
+    getPainting,
     getAllPaintings,
     addOrUpdatePainting,
     deletePainting,

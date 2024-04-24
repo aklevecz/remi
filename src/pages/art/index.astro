@@ -1,0 +1,93 @@
+---
+import ArtPiece from "../../components/ArtPiece.astro";
+import ArtPieceR2 from "../../components/ArtPieceR2.astro";
+import ArtPieceTitles from "../../components/ArtPieceTitles.astro";
+import LoadingSpinner from "../../components/LoadingSpinner.astro";
+import PageHeading from "../../components/PageHeading.astro";
+import Layout from "../../layouts/Layout.astro";
+import dbInstance from "../../lib/db";
+
+// const R2 = Astro.locals.runtime.env.R2;
+
+// let paintings = [];
+// if (process.env.NODE_ENV === "production") {
+//   paintings = await R2.list();
+// } else {
+//   paintings = await fetch("http://localhost:8787/remi").then((r) => r.json());
+// }
+const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
+---
+
+<Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
+  <PageHeading>ART</PageHeading>
+  <div class="container">
+    <ArtPieceTitles paintings={paintings} />
+    <div class="art-piece-list">
+      <!-- {data.map((d) => <ArtPiece name={d.name} description={d.description} src={d.src} media={d.media} />)} -->
+      {paintings.map((painting: any) => <ArtPieceR2 key={painting.key} painting={painting} />)}
+    </div>
+  </div>
+</Layout>
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(
+      (entry) => {
+        if (entry.isIntersecting) {
+          history.replaceState(null, document.title, window.location.pathname + window.location.search);
+          const currentArtPiece = entry.target.id;
+          console.log("Current Art Piece:", currentArtPiece);
+          document.querySelectorAll(".link-button").forEach((button: any) => button.classList.remove("visible"));
+          const artLink = document.querySelector(`button[data-art="${currentArtPiece}"]`) as HTMLElement;
+          artLink?.classList.add("visible");
+          const sidebar = document.querySelector(".art-piece-titles") as HTMLElement;
+
+          // Scroll the sidebar to the art link
+          if (artLink && sidebar) {
+            console.log(artLink.offsetTop, window.innerHeight);
+            sidebar.scrollTop = artLink.offsetTop - window.innerHeight + 150;
+          }
+          console.log(artLink);
+          // Perform any desired actions with the current art piece
+        }
+      },
+      { threshold: 0.8 }
+    );
+  });
+
+  const artPieces = document.querySelectorAll(".art-piece");
+  artPieces.forEach((artPiece) => {
+    observer.observe(artPiece);
+  });
+</script>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    padding-bottom: 5rem;
+
+    /* background-color: red; */
+  }
+
+  .art-piece-list {
+    /* margin-top: 2rem; */
+    display: flex;
+    flex-direction: column;
+    /* max-width: 800px; */
+    gap: 10rem;
+    flex: 1 0 auto;
+  }
+  @media screen and (min-width: 768px) {
+    .container {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .art-piece-list {
+      margin-top: 2rem;
+    }
+  }
+</style>
