@@ -11,7 +11,6 @@ const { paintings } = Astro.props;
         <button
           class="link-button offscreen"
           data-art={painting.key}
-          onclick={`location.hash = "#${painting.key}-marker"`}
         >
           {painting.key.replace("paintings/", "").split("-").slice(0, -1).join(" ")}
         </button>
@@ -34,6 +33,7 @@ const { paintings } = Astro.props;
       showLinkButton.innerText = isHidden ? "Show titles" : "Hide titles";
       setTimeout(() => {
         artPieceTitles.style.overflow = isHidden ? "hidden" : "scroll"; // Add this line
+        artPieceTitles.style.pointerEvents = isHidden ? "none" : "auto"; // Add this line
       }, 500);
     });
   }
@@ -43,13 +43,22 @@ const { paintings } = Astro.props;
   } else {
     showLinkButtons();
   }
+
+  linkButtons.forEach((linkButton) => {
+    const artPieceKey = linkButton.getAttribute("data-art");
+    linkButton.addEventListener("click", () => {
+      location.hash = `#${artPieceKey}`;
+      showLinkButtons()
+    });
+
+  });
 </script>
 <style>
   #show-link-button {
     position: fixed;
     top: 10px;
     left: 4px;
-    z-index: 999;
+    z-index: 9999;
     text-decoration: underline;
   }
   .art-piece-titles {
@@ -69,6 +78,7 @@ const { paintings } = Astro.props;
     width: 50%;
     width: 300px;
     left: 0px;
+    z-index: 999;
   }
 
   button {

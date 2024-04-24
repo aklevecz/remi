@@ -54,7 +54,8 @@ const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b
     );
   });
 
-  const artPieces = document.querySelectorAll(".art-piece");
+  const artPieces = document.querySelectorAll(".art-piece-wrapper");
+  console.log(artPieces)
   artPieces.forEach((artPiece) => {
     observer.observe(artPiece);
   });
