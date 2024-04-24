@@ -1,0 +1,62 @@
+---
+import PaintingList from "./PaintingList.astro";
+
+
+---
+<form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="type" value="painting" />
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="material">Material:</label>
+    <input type="text" id="material" name="material" required />
+
+    <label for="dimensions">Dimensions:</label>
+    <input type="text" id="dimensions" name="dimensions" required />
+
+    <label for="year">Year:</label>
+    <input type="text" id="year" name="year" required />
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required />
+
+    <button type="submit">Upload</button>
+  </form>
+  <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">Drop here</div>
+  <div class="container">
+    <PaintingList />
+  </div>
+  <script>
+    // const buttons = document.querySelectorAll("button");
+    // console.log(buttons)
+    // buttons.forEach((button) => {
+    //   button.addEventListener("click", async (e: any) => {
+    //     const key = e.target.id;
+    //     await fetch(`/admin?key=${key}`, { method: "DELETE" });
+    //   });
+    // });
+  
+    const dropZone = document.getElementById("drop-zone") as HTMLElement;
+    dropZone.addEventListener("dragover", (event) => {
+      event.preventDefault(); // This is necessary to allow the drop
+    });
+    dropZone.addEventListener("drop", (event: any) => {
+      event.preventDefault(); // This is necessary to prevent the browser's default handling of the data
+      console.log(event);
+      const id = event.dataTransfer.getData("text/plain");
+      const draggableElement = document.getElementById(id) as HTMLElement;
+      dropZone.appendChild(draggableElement);
+    });
+  </script>
+  <style>
+    .container {
+      display: flex;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      width: 300px;
+    }
+  </style>

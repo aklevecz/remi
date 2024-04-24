@@ -1,0 +1,97 @@
+---
+import PageHeading from "../../components/PageHeading.astro";
+import PaintingView from "../../components/admin/PaintingView.astro";
+import TattooView from "../../components/admin/TattooView.astro";
+import Layout from "../../layouts/Layout.astro";
+import dbInstance from "../../lib/db";
+
+const { view } = Astro.params;
+
+const R2 = Astro.locals.runtime.env.R2;
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const type = form.get("type") as string;
+  if (type === "tattoo") {
+    const name = form.get("name") as string;
+    let image = form.get("image") as File;
+    const dateTime = new Date().getTime();
+    const fileName = (form.get("key") as string) || `tattoos/${name.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
+    if (!image.size) {
+      const object = await R2.get(fileName);
+      image = object.body;
+    }
+    await R2.put(`${fileName}`, image, {
+      contentType: image.type,
+      customMetadata: { name },
+    });
+    await dbInstance.addOrUpdateTattoo({
+      key: fileName,
+      name,
+    });
+    return Astro.redirect("/admin/tattoos");
+  }
+  if (type === "painting") {
+    const title = form.get("title") as string;
+    const material = form.get("material") as string;
+    const dimensions = form.get("dimensions") as string;
+    const year = form.get("year") as string;
+    const rank = form.get("rank") as string;
+    let image = form.get("image") as File;
+
+    const dateTime = new Date().getTime();
+    // key comes from the edit form that is embedded in the painting item
+    const fileName = (form.get("key") as string) || `paintings/${title.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
+    if (!image.size) {
+      const object = await R2.get(fileName);
+      image = object.body;
+    }
+
+    await R2.put(`${fileName}`, image, {
+      contentType: image.type,
+      customMetadata: { title, material, dimensions, rank, year },
+    });
+    await dbInstance.addOrUpdatePainting({
+      title,
+      material,
+      dimensions,
+      year: parseInt(year),
+      rank: parseInt(rank),
+      key: fileName,
+    });
+    return Astro.redirect("/admin/paintings");
+  }
+}
+
+// if (Astro.request.method === "DELETE") {
+const url = new URLSearchParams(new URL(Astro.request.url).search);
+const key = url.get("key") as string;
+const action = url.get("action");
+if (action == "del") {
+  await R2.delete(key);
+  await dbInstance.deletePainting(key);
+  return Astro.redirect("/admin");
+}
+
+// if (action=='getMeta') {
+//   const painting = await R2.get(key);
+//   return JSON.stringify(painting.customMetadata);
+// }
+// }
+// <div>{painting.customMetadata.description || "DESC"}</div>
+// <div>{painting.customMetadata.material || "MATERIAL"}</div>
+---
+
+<Layout title="admin">
+  <PageHeading> Admin </PageHeading>
+  <ul>
+    <li>
+      <a href="/admin/paintings">Paintings</a>
+    </li>
+    <li>
+      <a href="/admin/tattoos">Tattoos</a>
+    </li>
+    {view === "paintings" && <PaintingView />}
+    {view === "tattoos" && <TattooView />}
+  </ul>
+</Layout>
