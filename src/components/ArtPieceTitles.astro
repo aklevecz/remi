@@ -48,7 +48,7 @@ const { paintings } = Astro.props;
     const artPieceKey = linkButton.getAttribute("data-art");
     linkButton.addEventListener("click", () => {
       location.hash = `#${artPieceKey}`;
-      showLinkButtons()
+      if (isMobile) showLinkButtons()
     });
 
   });
