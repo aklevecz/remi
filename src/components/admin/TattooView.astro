@@ -20,7 +20,7 @@ const imgHost =  "https://storage.remifrogo.art"
     {tattoos.map(tat => {
         return (
             <div>
-            <img src={`${imgHost}/${tat.key}`} alt={tat.key} />
+            <img class="tat-img" src={`${imgHost}/${tat.key}`} alt={tat.key} />
             <p>{tat.name}</p>
             </div>
         )
@@ -49,5 +49,9 @@ const imgHost =  "https://storage.remifrogo.art"
       flex-direction: column;
       padding: 1rem;
       width: 300px;
+    }
+    .tat-img {
+        width: 300px;
+        height: 300px;
     }
   </style>
