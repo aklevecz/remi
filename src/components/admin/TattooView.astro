@@ -20,7 +20,7 @@ const imgHost =  "https://storage.remifrogo.art"
     {tattoos.map(tat => {
         return (
             <div>
-            <img src={imgHost + tat.key} alt={tat.key} />
+            <img src={`${imgHost}/${tat.key}`} alt={tat.key} />
             <p>{tat.name}</p>
             </div>
         )
