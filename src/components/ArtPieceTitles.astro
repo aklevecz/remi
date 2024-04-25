@@ -31,15 +31,18 @@ const { paintings } = Astro.props;
         isHidden = false;
       }
       showLinkButton.innerText = isHidden ? "Show titles" : "Hide titles";
+      console.log('what')
       setTimeout(() => {
         artPieceTitles.style.overflow = isHidden ? "hidden" : "scroll"; // Add this line
         artPieceTitles.style.pointerEvents = isHidden ? "none" : "auto"; // Add this line
       }, 500);
     });
   }
+
   if (isMobile) {
     showLinkButton?.addEventListener("click", showLinkButtons);
     artPieceTitles.style.overflow = "hidden"
+    artPieceTitles.style.pointerEvents = "none"
   } else {
     showLinkButtons();
   }
