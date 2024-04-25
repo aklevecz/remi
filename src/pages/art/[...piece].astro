@@ -1,39 +1,57 @@
 ---
 import type { GetStaticPaths } from "astro";
 import dbInstance from "../../lib/db";
+
+import testImg from "../../assets/paintings/collage.jpg";
+
 export const prerender = true;
 export const getStaticPaths = (async () => {
-    const paintings = await dbInstance.getAllPaintings()
-    return paintings.map(painting => ({
-        params: {
-            piece: painting.key
-        },
-        props: {
-            painting
-        }
-    }));
+  const paintings = await dbInstance.getAllPaintings();
+  return paintings.map((painting) => ({
+    params: {
+      piece: painting.key,
+    },
+    props: {
+      painting,
+    },
+  }));
 }) satisfies GetStaticPaths;
 import Layout from "../../layouts/Layout.astro";
 
-const {painting} = Astro.props;
+const { painting } = Astro.props;
 const description = `${painting.title}
 ${painting.material}
 ${painting.year}`;
-const image = `https://storage.remifrogo.art/${painting.key}`;
+const imageSrc = `https://storage.remifrogo.art/${painting.key}`;
 ---
 
-<Layout title={painting.title} seo={{ title: painting.title, description, image }}>
-  <h1>{painting.title}</h1>
-  <img src={image} />
+<Layout title={painting.title} seo={{ title: painting.title, description, image: imageSrc }}>
+  <img src={imageSrc} />
+  <div class="details">
+    <h1>{painting.title}</h1>
+    <div>{painting.material}</div>
+    <div>{painting.dimensions}</div>
+    <div>{painting.year}</div>
+  </div>
 </Layout>
 <style>
-    h1 {
-        position:absolute;
+  img {
+    width: 90%;
+    max-width: 600px;
+    /* height:100%; */
+    display: block;
+    margin: auto;
+  }
+  h1 {
+    /* position:absolute;
         top:10px;
-        left:10px;
-    }
-    img {
-        /* width: 100%; */
-        height:100%;
-    }
+        left:10px; */
+    margin: 0px;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .details {
+    margin:2rem;
+    text-align: center;
+  }
 </style>
