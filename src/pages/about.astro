@@ -1,12 +1,12 @@
 ---
+import config from "../lib/config";
 import PageHeading from "../components/PageHeading.astro";
+import InstagramIcon from "../components/icons/instagramIcon.astro";
 import Layout from "../layouts/Layout.astro";
 const aboutBlurb = [
   `Remi Frogo (b. 2001, Orange County, CA) is a University of Southern California graduate and an LA-based artist working in the mediums of oil paint, graphite, and commercial digital design. Presented in an environment of digital distortion, Frogo’s practice translates associated feelings of disconnection and misrepresentation, byproducts of existing in a heavily virtual world. Her work discusses meditative visual processing, and uses multimedia techniques to reference online spaces while portraying her personal relationship with the hyper contemporary world. She will often provide her own body as the content of her pieces, further representing the self-ruminative nature of her ideas. Each work presents a specific context of time, a physicality of memory.`,
   `Contact for purchases/commissions/inquiries.`,
   `Pricing for existing work available upon request.`,
-  `@remifrogo`,
-  `@remb0tron`,
 ];
 ---
 
@@ -14,7 +14,19 @@ const aboutBlurb = [
   <PageHeading>ABOUT</PageHeading>
   <div class="container">
     {aboutBlurb.map((blurb, index) => <div class="blurb-line">{blurb}</div>)}
+    <div class="blurb-line">
+    <a href={config.remiInstagram}>
+      <InstagramIcon className="inline-variant" />
+      remifrogo
+    </a></div>
+    <div class="blurb-line">
+    <a class="" href={config.remboInstagram}>
+      <InstagramIcon className="inline-variant" />
+      remb0tron
+    </a>
+    </div>
     <img src="/images/remis/face1.png" alt="Remi Frogo" />
+
   </div>
 </Layout>
 <style>
@@ -42,4 +54,10 @@ const aboutBlurb = [
     display: block;
     margin: auto;
   }
+  /* a {
+    display: block;
+    margin: auto;
+    /* text-align: center; */
+    font-size: 2rem;
+  } */
 </style>
