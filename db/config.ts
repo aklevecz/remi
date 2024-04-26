@@ -37,6 +37,7 @@ const Painting = defineTable({
     dimensions: column.text(),
     rank: column.number(),
     year: column.number(),
+    updatedAt: column.date({default: new Date()}),
   }
 })
 const Tattoo = defineTable({

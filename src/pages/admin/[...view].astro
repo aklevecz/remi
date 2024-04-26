@@ -48,19 +48,18 @@ if (Astro.request.method === "POST") {
       image = object.body;
     }
     // delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // await R2.put(`${fileName}`, image, {
-    //   contentType: image.type,
-    //   customMetadata: { title, material, dimensions, rank, year },
-    // });
-    // await dbInstance.addOrUpdatePainting({
-    //   title,
-    //   material,
-    //   dimensions,
-    //   year: parseInt(year),
-    //   rank: parseInt(rank || "999"),
-    //   key: fileName,
-    // });
+    await R2.put(`${fileName}`, image, {
+      contentType: image.type,
+      customMetadata: { title, material, dimensions, rank, year },
+    });
+    await dbInstance.addOrUpdatePainting({
+      title,
+      material,
+      dimensions,
+      year: parseInt(year),
+      rank: parseInt(rank || "999"),
+      key: fileName,
+    });
     return Astro.redirect("/admin/paintings");
   }
 }
@@ -119,7 +118,7 @@ if (action == "del") {
   a:hover {
     text-decoration: underline;
   }
-  [data-loading-overlay] {
+  [data-overlay-loading] {
     position: fixed;
     display: flex;
     top: 0;

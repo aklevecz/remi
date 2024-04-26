@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { genImgResizeUrl } from "../../lib/utils";
 
 const env = process.env.NODE_ENV;
 // const imgHost = env === "production" ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
@@ -7,15 +8,16 @@ const imgHost =  "https://storage.remifrogo.art"
 
 const { painting } = Astro.props;
 
-const {key, title, material, dimensions, year, rank} = painting
+const {key, title, material, dimensions, year, rank, updatedAt} = painting
+//      src={}
+const imageUrl = `${imgHost}/${key}?time=${updatedAt.getTime()}`
+
 ---
 
-<div id={key} draggable="true">
+<div class="painting-container" id={key} draggable="true">
   <div class="painting-view">
-    <Image
-      width="300"
-      height="300"
-      src={`${imgHost}/${key}`}
+    <img class="painting"
+    src={genImgResizeUrl({width:300,height:"auto", quality:100,url:imageUrl})}
       alt={key}
     />
     <!-- <div>
@@ -73,6 +75,16 @@ const {key, title, material, dimensions, year, rank} = painting
   // });
 </script>
 <style>
+  .painting-container {
+    width: 300px;
+    height: 300px;
+  }
+  .painting {
+    /* width:100px; */
+    width: 300px;
+    height: 250px;
+    object-fit: contain;
+  }
   .painting-view {
     display: flex;
     flex-direction: column;

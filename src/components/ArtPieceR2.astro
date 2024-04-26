@@ -22,7 +22,7 @@ let { key, painting } = Astro.props;
 // console.log(metaData);
 // console.log(metaData)
 // console.log(painting);
-const { title, material, dimensions, year } = painting;
+const { title, material, dimensions, year, updatedAt } = painting;
 
 const isProd = process.env.NODE_ENV;
 const imgHost = isProd ? "https://storage.remifrogo.art" : "http://localhost:4321/img";
@@ -30,6 +30,7 @@ let src = imgHost + "/" + key;
 // if (process.env.NODE_ENV === "development") {
 //     src = "https://storage.remifrogo.art/paintings/lamb-city-1713209386638";
 // }
+const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${updatedAt.getTime()}`
 ---
 
 <!-- <div id={key} class="art-piece"> -->
@@ -40,9 +41,10 @@ let src = imgHost + "/" + key;
       <img
         loading="lazy"
         data-src={src}
+        data-iso={updatedAt.getTime().toString()}
         data-key={key}
-        src={"https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${Date.now()}`}
-        alt={title}
+        src={imgUrl}
+        alt={title + ' new?'}
       />
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
     </a>
@@ -67,12 +69,12 @@ let src = imgHost + "/" + key;
       width = window.innerWidth - window.innerWidth * 0.2;
       height = width / aspect;
     } else {
-      width = 400;
+      width = LAPTOP_WIDTH;
       height = width / aspect;
     }
     image.style.height = height + "px";
     image.style.width = width + "px";
-    image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}`;
+    image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}?time=${image.dataset.iso}`;
   });
 </script>
 <style>

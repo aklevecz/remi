@@ -7,7 +7,7 @@ export function generateUUID(): string {
 }
 
 
-export function genImgResizeUrl({width, height, quality, url}: {width: number, height: number, quality: number, url: string}) {
+export function genImgResizeUrl({width, height, quality, url}: {width: number |string, height: number|string, quality: number, url: string}) {
     const baseUrl = 'https://baos.haus/cdn-cgi/image/'
     const params = `width=${width},height=${height},quality=${quality}/`
     return `${baseUrl}${params}${url}`
