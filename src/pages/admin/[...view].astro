@@ -8,7 +8,7 @@ import dbInstance from "../../lib/db";
 const { view } = Astro.params;
 
 const R2 = Astro.locals.runtime.env.R2;
-
+const DEPLOY_HOOK = "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6";
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const type = form.get("type") as string;
@@ -67,8 +67,7 @@ if (Astro.request.method === "POST") {
       key: fileName,
       updatedAt: new Date()
     });
-    await fetch('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6', {method:"POST"})
-
+    await fetch(DEPLOY_HOOK, {method:"POST"})
     return Astro.redirect("/admin/paintings");
   }
 }
@@ -80,6 +79,7 @@ const action = url.get("action");
 if (action == "del") {
   await R2.delete(key);
   await dbInstance.deletePainting(key);
+  await fetch(DEPLOY_HOOK, {method:"POST"})
   return Astro.redirect("/admin");
 }
 
