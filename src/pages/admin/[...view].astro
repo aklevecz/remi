@@ -12,6 +12,8 @@ const R2 = Astro.locals.runtime.env.R2;
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const type = form.get("type") as string;
+  console.log(form)
+  console.log("TYPE", type)
   if (type === "tattoo") {
     const name = form.get("name") as string;
     let image = form.get("image") as File;
@@ -32,6 +34,7 @@ if (Astro.request.method === "POST") {
     return Astro.redirect("/admin/tattoos");
   }
   if (type === "painting") {
+    console.log("UPLOADING PAINTING")
     const title = form.get("title") as string;
     const material = form.get("material") as string;
     const dimensions = form.get("dimensions") as string;

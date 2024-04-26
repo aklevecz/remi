@@ -1,32 +1,34 @@
 ---
 import PaintingItem from "./PaintingItem.astro";
+import dbInstance from "../../lib/db"
+// const R2 = Astro.locals.runtime.env.R2;
+// let paintings = [];
+// if (process.env.NODE_ENV === "production") {
+//   paintings = await R2.list();
+// } else {
+//   paintings = await fetch("http://localhost:8787/remi").then((res) => res.json());
+// }
 
-const R2 = Astro.locals.runtime.env.R2;
-let paintings = [];
-if (process.env.NODE_ENV === "production") {
-  paintings = await R2.list();
-} else {
-  paintings = await fetch("http://localhost:8787/remi").then((res) => res.json());
-}
+// const metas:any = [];
+// for (const object of paintings.objects) {
+//   let painting: any = null;
+//   if (process.env.NODE_ENV === "production") {
+//     painting = await R2.get(object.key);
+//   } else {
+//     painting = await fetch("http://localhost:8787/remi/" + encodeURIComponent(object.key)).then((res) => res.json());
+//   }
+//   if (painting.customMetadata.rank === undefined) {
+//     painting.customMetadata.rank = 99999999;
+//   }
+//   metas.push(painting)
+// }
 
-const metas:any = [];
-for (const object of paintings.objects) {
-  let painting: any = null;
-  if (process.env.NODE_ENV === "production") {
-    painting = await R2.get(object.key);
-  } else {
-    painting = await fetch("http://localhost:8787/remi/" + encodeURIComponent(object.key)).then((res) => res.json());
-  }
-  if (painting.customMetadata.rank === undefined) {
-    painting.customMetadata.rank = 99999999;
-  }
-  metas.push(painting)
-}
+const paintings = await dbInstance.getAllPaintings()
 ---
 
 <div class="paintings">
   {
-    metas.sort((a:any,b:any) => a.customMetadata.rank - b.customMetadata.rank).map((painting: any, i: number) => {
+    paintings.sort((a:any,b:any) => a.rank - b.rank).map((painting: any, i: number) => {
       return <PaintingItem rank={i} key={painting.key} />;
     })
   }

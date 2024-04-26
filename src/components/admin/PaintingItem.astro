@@ -36,6 +36,7 @@ const metaData = painting.customMetadata;
     <button id="edit-button">EDIT</button>
   </div>
   <form method="POST" class="hidden" enctype="multipart/form-data">
+    <input type="hidden" name="type" value="painting" />
     <input type="hidden" name="key" value={key} />
     <input type="text" name="title" value={metaData.title} />
     <input type="text" name="material" value={metaData.material} />
