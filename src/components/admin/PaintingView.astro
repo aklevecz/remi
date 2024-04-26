@@ -3,6 +3,8 @@ import PaintingList from "./PaintingList.astro";
 
 
 ---
+<div class="new-painting">
+    <h3>upload new painting</h3>
 <form method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="painting" />
     <label for="title">Title:</label>
@@ -16,17 +18,37 @@ import PaintingList from "./PaintingList.astro";
 
     <label for="year">Year:</label>
     <input type="text" id="year" name="year" required />
-
+    <img data-image-preview>
     <label for="image">Image:</label>
     <input type="file" id="image" name="image" accept="image/*" required />
 
     <button type="submit">Upload</button>
   </form>
-  <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">Drop here</div>
+</div>
+  <!-- <div id="drop-zone" style="width: 200px; height: 200px; border: 1px solid black;">Drop here</div> -->
   <div class="container">
     <PaintingList />
   </div>
   <script>
+    const form = document.querySelector("form") as HTMLFormElement;
+    form.addEventListener("submit", async (e) => {
+      const loadingOverlay = document.querySelector("[data-overlay-loading") as HTMLElement
+      loadingOverlay.style.display = "block";
+    });
+
+    const imageInput = document.getElementById('image') as HTMLInputElement;
+  const imagePreview = document.querySelector('[data-image-preview]') as HTMLImageElement;
+
+  imageInput.addEventListener('change', (event :any) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        imagePreview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
     // const buttons = document.querySelectorAll("button");
     // console.log(buttons)
     // buttons.forEach((button) => {
@@ -36,23 +58,27 @@ import PaintingList from "./PaintingList.astro";
     //   });
     // });
   
-    const dropZone = document.getElementById("drop-zone") as HTMLElement;
-    dropZone.addEventListener("dragover", (event) => {
-      event.preventDefault(); // This is necessary to allow the drop
-    });
-    dropZone.addEventListener("drop", (event: any) => {
-      event.preventDefault(); // This is necessary to prevent the browser's default handling of the data
-      console.log(event);
-      const id = event.dataTransfer.getData("text/plain");
-      const draggableElement = document.getElementById(id) as HTMLElement;
-      dropZone.appendChild(draggableElement);
-    });
+    // const dropZone = document.getElementById("drop-zone") as HTMLElement;
+    // dropZone.addEventListener("dragover", (event) => {
+    //   event.preventDefault(); // This is necessary to allow the drop
+    // });
+    // dropZone.addEventListener("drop", (event: any) => {
+    //   event.preventDefault(); // This is necessary to prevent the browser's default handling of the data
+    //   console.log(event);
+    //   const id = event.dataTransfer.getData("text/plain");
+    //   const draggableElement = document.getElementById(id) as HTMLElement;
+    //   dropZone.appendChild(draggableElement);
+    // });
   </script>
   <style>
     .container {
       display: flex;
     }
-  
+    .new-painting {
+        border: 1px solid black;
+        padding:1rem;
+        width:400px;
+    }
     form {
       display: flex;
       flex-direction: column;

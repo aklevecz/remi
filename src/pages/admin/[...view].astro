@@ -12,8 +12,6 @@ const R2 = Astro.locals.runtime.env.R2;
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const type = form.get("type") as string;
-  console.log(form)
-  console.log("TYPE", type)
   if (type === "tattoo") {
     const name = form.get("name") as string;
     let image = form.get("image") as File;
@@ -59,7 +57,7 @@ if (Astro.request.method === "POST") {
       material,
       dimensions,
       year: parseInt(year),
-      rank: parseInt(rank),
+      rank: parseInt(rank || "999"),
       key: fileName,
     });
     return Astro.redirect("/admin/paintings");
@@ -94,7 +92,43 @@ if (action == "del") {
     <li>
       <a href="/admin/tattoos">Tattoos</a>
     </li>
+  </ul>
     {view === "paintings" && <PaintingView />}
     {view === "tattoos" && <TattooView />}
-  </ul>
+    <div data-overlay-loading>
+      <div>Uploading...</div>
+    </div>
 </Layout>
+<style>
+  ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+  li {
+    margin-bottom: 1rem;
+  }
+  a {
+    text-decoration: none;
+    color: var(--text-color);
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  [data-loading-overlay] {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size:4rem;
+  }
+</style>

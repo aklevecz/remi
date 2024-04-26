@@ -2,7 +2,7 @@
 import PaintingItem from "./PaintingItem.astro";
 import dbInstance from "../../lib/db"
 // const R2 = Astro.locals.runtime.env.R2;
-// let paintings = [];
+let paintings = [];
 // if (process.env.NODE_ENV === "production") {
 //   paintings = await R2.list();
 // } else {
@@ -23,13 +23,13 @@ import dbInstance from "../../lib/db"
 //   metas.push(painting)
 // }
 
-const paintings = await dbInstance.getAllPaintings()
+ paintings = await dbInstance.getAllPaintings()
 ---
 
 <div class="paintings">
   {
     paintings.sort((a:any,b:any) => a.rank - b.rank).map((painting: any, i: number) => {
-      return <PaintingItem rank={i} key={painting.key} />;
+      return <PaintingItem rank={i} painting={painting} />;
     })
   }
 </div>
