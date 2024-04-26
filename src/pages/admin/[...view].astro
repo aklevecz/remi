@@ -42,9 +42,16 @@ if (Astro.request.method === "POST") {
     const dateTime = new Date().getTime();
     // key comes from the edit form that is embedded in the painting item
     const fileName = (form.get("key") as string) || `paintings/${title.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
-    if (!image.size) {
+
+    const isUpdate = !image.size
+    // not a new painting
+    if (isUpdate) {
       const object = await R2.get(fileName);
       image = object.body;
+    }
+
+    if (!isUpdate) {
+      await fetch('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6', {method:"POST"})
     }
     // delay
     await R2.put(`${fileName}`, image, {
