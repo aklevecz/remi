@@ -4,8 +4,33 @@ import PaintingView from "../../components/admin/PaintingView.astro";
 import TattooView from "../../components/admin/TattooView.astro";
 import Layout from "../../layouts/Layout.astro";
 import dbInstance from "../../lib/db";
+import crypto from 'crypto';
 
 const { view } = Astro.params;
+const auth = Astro.cookies.get('auth')
+if (!auth) {
+  return Astro.redirect("/admin/login");
+}
+
+if (auth) {
+  const username = 'bao'
+  const password = 'frog'
+
+  const encoder = new TextEncoder();
+  const secret = encoder.encode('BAOBAOPIZZASURPRISE'); // Replace with your actual secret key
+  const data = encoder.encode(username + password);
+
+  const key = await crypto.subtle.importKey(
+    'raw', secret, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+
+  const signature = await crypto.subtle.sign('HMAC', key, data);
+  const signatureHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+console.log(signatureHex, auth)
+  if (auth.value !== signatureHex) {
+    return Astro.redirect("/admin/login");
+  }
+}
 
 const R2 = Astro.locals.runtime.env.R2;
 const DEPLOY_HOOK = "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6";
@@ -102,7 +127,7 @@ if (action == "del") {
       <a href="/admin/tattoos">Tattoos</a>
     </li>
   </ul>
-    {view === "paintings" && <PaintingView />}
+    {view === "paintings" || !view && <PaintingView />}
     {view === "tattoos" && <TattooView />}
     <div data-overlay-loading>
       <div>Uploading...</div>

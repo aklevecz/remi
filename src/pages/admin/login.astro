@@ -1,0 +1,54 @@
+---
+import crypto from "crypto";
+import Layout from "../../layouts/Layout.astro";
+let error = ""
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  const username = form.get("username") as string;
+  const password = form.get("password") as string;
+  if (username == "bao" && password == "frog") {
+    const encoder = new TextEncoder();
+    const secret = encoder.encode("BAOBAOPIZZASURPRISE"); // Replace with your actual secret key
+    const data = encoder.encode(username + password);
+
+    const key = await crypto.subtle.importKey("raw", secret, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+
+    const signature = await crypto.subtle.sign("HMAC", key, data);
+    const signatureHex = Array.from(new Uint8Array(signature))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    Astro.cookies.set("auth", signatureHex);
+    return Astro.redirect("/admin");
+  } else {
+    error = "huh?"
+  }
+}
+---
+
+<Layout title="log">
+  <div>
+    <h1>WAT</h1>
+    <h2 style="color:red;">{error}</h2>
+    <form action="/admin/login" method="post">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</Layout>
+<style>
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 400px;
+    padding: 4rem;
+  }
+  input {
+    font-size: 18px;
+  }
+</style>
