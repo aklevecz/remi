@@ -58,6 +58,7 @@ if (Astro.request.method === "POST") {
       year: parseInt(year),
       rank: parseInt(rank || "999"),
       key: fileName,
+      updatedAt: new Date()
     });
     return Astro.redirect("/admin/paintings");
   }

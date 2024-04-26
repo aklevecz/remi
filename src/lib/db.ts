@@ -85,6 +85,7 @@ const dbInstance = () => {
     dimensions: string;
     rank: number;
     year: number;
+    updatedAt:Date;
   };
 
   const getPainting = async (key:string) => {
@@ -96,10 +97,10 @@ const dbInstance = () => {
   };
 
   const addOrUpdatePainting = async (painting: Painting) => {
-    const { key, title, material, dimensions, rank, year } = painting;
+    const { key, title, material, dimensions, rank, year, updatedAt } = painting;
     return db.insert(Painting).values([{ key, title, material, dimensions, rank, year }]).onConflictDoUpdate({
       target: Painting.key,
-      set: { title, material, dimensions, rank, year },
+      set: { title, material, dimensions, rank, year, updatedAt },
     });
   };
 
