@@ -1,20 +1,12 @@
 ---
-import ArtPiece from "../../components/ArtPiece.astro";
 import ArtPieceR2 from "../../components/ArtPieceR2.astro";
 import ArtPieceTitles from "../../components/ArtPieceTitles.astro";
-import LoadingSpinner from "../../components/LoadingSpinner.astro";
 import PageHeading from "../../components/PageHeading.astro";
 import Layout from "../../layouts/Layout.astro";
 import dbInstance from "../../lib/db";
 
-// const R2 = Astro.locals.runtime.env.R2;
+export const prerender = true
 
-// let paintings = [];
-// if (process.env.NODE_ENV === "production") {
-//   paintings = await R2.list();
-// } else {
-//   paintings = await fetch("http://localhost:8787/remi").then((r) => r.json());
-// }
 const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
 ---
 

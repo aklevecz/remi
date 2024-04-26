@@ -51,8 +51,8 @@ if (Astro.request.method === "POST") {
     }
 
     if (!isUpdate) {
-      await fetch('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6', {method:"POST"})
     }
+
     // delay
     await R2.put(`${fileName}`, image, {
       contentType: image.type,
@@ -67,6 +67,8 @@ if (Astro.request.method === "POST") {
       key: fileName,
       updatedAt: new Date()
     });
+    await fetch('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6', {method:"POST"})
+
     return Astro.redirect("/admin/paintings");
   }
 }
