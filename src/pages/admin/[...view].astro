@@ -4,7 +4,6 @@ import PaintingView from "../../components/admin/PaintingView.astro";
 import TattooView from "../../components/admin/TattooView.astro";
 import Layout from "../../layouts/Layout.astro";
 import dbInstance from "../../lib/db";
-import crypto from 'crypto';
 
 const { view } = Astro.params;
 const auth = Astro.cookies.get('auth')
