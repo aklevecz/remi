@@ -32,7 +32,6 @@ if (Astro.request.method === "POST") {
     return Astro.redirect("/admin/tattoos");
   }
   if (type === "painting") {
-    console.log("UPLOADING PAINTING")
     const title = form.get("title") as string;
     const material = form.get("material") as string;
     const dimensions = form.get("dimensions") as string;
