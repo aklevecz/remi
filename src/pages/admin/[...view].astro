@@ -47,19 +47,20 @@ if (Astro.request.method === "POST") {
       const object = await R2.get(fileName);
       image = object.body;
     }
-
-    await R2.put(`${fileName}`, image, {
-      contentType: image.type,
-      customMetadata: { title, material, dimensions, rank, year },
-    });
-    await dbInstance.addOrUpdatePainting({
-      title,
-      material,
-      dimensions,
-      year: parseInt(year),
-      rank: parseInt(rank || "999"),
-      key: fileName,
-    });
+    // delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // await R2.put(`${fileName}`, image, {
+    //   contentType: image.type,
+    //   customMetadata: { title, material, dimensions, rank, year },
+    // });
+    // await dbInstance.addOrUpdatePainting({
+    //   title,
+    //   material,
+    //   dimensions,
+    //   year: parseInt(year),
+    //   rank: parseInt(rank || "999"),
+    //   key: fileName,
+    // });
     return Astro.redirect("/admin/paintings");
   }
 }

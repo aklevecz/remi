@@ -21,7 +21,7 @@ let { key, painting } = Astro.props;
 // const metaData = painting.customMetadata;
 // console.log(metaData);
 // console.log(metaData)
-console.log(painting);
+// console.log(painting);
 const { title, material, dimensions, year } = painting;
 
 const isProd = process.env.NODE_ENV;
@@ -41,7 +41,7 @@ let src = imgHost + "/" + key;
         loading="lazy"
         data-src={src}
         data-key={key}
-        src={"https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src}
+        src={"https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${Date.now()}`}
         alt={title}
       />
       <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
