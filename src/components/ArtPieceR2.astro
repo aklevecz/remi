@@ -26,7 +26,7 @@ let src = imgHost + "/" + key;
 // if (process.env.NODE_ENV === "development") {
 //     src = "https://storage.remifrogo.art/paintings/lamb-city-1713209386638";
 // }
-const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${updatedAt.getTime()}`;
+const imgUrl = "https://baos.haus/cdn-cgi/image/width=400,quality=100/" + src + `?time=${updatedAt.getTime()}`;
 ---
 
 <div id={key} class="art-piece">
@@ -55,7 +55,7 @@ const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/"
   images.forEach((image: any) => {
     const isMobile = window.innerWidth < 768;
     image.onload = () => {
-      image.onload = null; 
+      // image.onload = null; 
       const aspect = image.naturalWidth / image.naturalHeight;
       let width;
       let height;
@@ -68,7 +68,7 @@ const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/"
       }
       image.style.height = height + "px";
       image.style.width = width + "px";
-      image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}?time=${image.dataset.iso}`;
+      // image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}?time=${image.dataset.iso}`;
     };
   });
 </script>
