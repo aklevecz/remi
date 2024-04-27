@@ -40,13 +40,13 @@ paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank)
           // Scroll the sidebar to the art link
           if (artLink && sidebar) {
             console.log(artLink.offsetTop, window.innerHeight);
-            sidebar.scrollTop = artLink.offsetTop - window.innerHeight + 150;
+            // sidebar.scrollTop = artLink.offsetTop - window.innerHeight + 150;
           }
           console.log(artLink);
           // Perform any desired actions with the current art piece
         }
       },
-      { threshold: 1.9 }
+      { threshold: 1.0 }
     );
   });
 
