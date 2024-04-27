@@ -1,8 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import LoadingSpinner from "./LoadingSpinner.astro";
-import type { ImageMetadata } from "astro";
-import placeHolder from "../assets/paintings/lambcityoil.jpg";
 
 interface Props {
   key: string;
@@ -30,60 +26,65 @@ let src = imgHost + "/" + key;
 // if (process.env.NODE_ENV === "development") {
 //     src = "https://storage.remifrogo.art/paintings/lamb-city-1713209386638";
 // }
-const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${updatedAt.getTime()}`
+const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/" + src + `?time=${updatedAt.getTime()}`;
 ---
 
-<!-- <div id={key} class="art-piece"> -->
-  <!-- <div id={key + "-marker"} class="marker"></div> -->
-  <div id={key} class="art-piece-wrapper">
-    {/*<h1 class="title">{d.name}</h1> */}
-    <a id={key} class="art-piece-wrapper" href={`/art/${key}`} class="img-wrapper">
-      <img
-        loading="lazy"
-        data-src={src}
-        data-iso={updatedAt.getTime().toString()}
-        data-key={key}
-        src={imgUrl}
-        alt={title + ' new?'}
-      />
-      <!-- <Image width="300" src={images[src]()} alt={title} class="mobile" /> -->
-    </a>
-    <!-- <LoadingSpinner visibility="show" /> -->
-    <div class="description-section">
-      <div class="art-piece-title description">{title}</div>
-      <div class="description">{material}</div>
-      <div class="description">{dimensions !== "null" ? dimensions : ""}</div>
-      <div class="description">{year}</div>
-    </div>
+<div id={key} class="art-piece">
+  <a id={key} class="art-piece-wrapper" href={`/art/${key}`}>
+    <img
+      loading="lazy"
+      data-src={src}
+      data-iso={updatedAt.getTime().toString()}
+      data-key={key}
+      src={imgUrl}
+      alt={title + " new?"}
+    />
+  </a>
+  <!-- <LoadingSpinner visibility="show" /> -->
+  <div class="description-section">
+    <div class="art-piece-title description">{title}</div>
+    <div class="description">{material}</div>
+    <div class="description">{dimensions !== "null" ? dimensions : ""}</div>
+    <div class="description">{year}</div>
   </div>
+</div>
 <!-- </div> -->
 <script>
   const images = document.querySelectorAll("img");
-  const LAPTOP_WIDTH = 400
+  const LAPTOP_WIDTH = 400;
   images.forEach((image: any) => {
     const isMobile = window.innerWidth < 768;
-    const aspect = image.naturalWidth / image.naturalHeight;
-    let width;
-    let height;
-    if (isMobile) {
-      width = window.innerWidth - window.innerWidth * 0.2;
-      height = width / aspect;
-    } else {
-      width = LAPTOP_WIDTH;
-      height = width / aspect;
-    }
-    image.style.height = height + "px";
-    image.style.width = width + "px";
-    image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}?time=${image.dataset.iso}`;
+    image.onload = () => {
+      image.onload = null; 
+      const aspect = image.naturalWidth / image.naturalHeight;
+      let width;
+      let height;
+      if (isMobile) {
+        width = window.innerWidth - window.innerWidth * 0.2;
+        height = width / aspect;
+      } else {
+        width = LAPTOP_WIDTH;
+        height = width / aspect;
+      }
+      image.style.height = height + "px";
+      image.style.width = width + "px";
+      image.src = `https://baos.haus/cdn-cgi/image/width=${width},height=${height},quality=100/${image.dataset.src}?time=${image.dataset.iso}`;
+    };
   });
 </script>
 <style>
   .art-piece {
-    position: relative;
-    z-index: -1;
-    min-height: 80vh;
+    height: 90vh;
     display: flex;
     padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+  }
+
+  .art-piece-wrapper {
+    width: 300px;
+    height: 300px;
   }
 
   .marker {
@@ -96,11 +97,7 @@ const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/"
     opacity: 0;
   }
 
-  .art-piece-wrapper {
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 auto;
-  }
+
   .img-wrapper {
     display: block;
     margin: 40px auto;
@@ -149,9 +146,12 @@ const imgUrl = "https://baos.haus/cdn-cgi/image/width=50,height=50,quality=100/"
       display: none;
     }
     .art-piece {
+      flex-direction: row;
+      /* flex: 1 0 auto */
       margin-left: 100px;
       padding: 2rem 0rem;
     }
+
     .art-piece-wrapper {
       flex: 0 1 70%;
       flex-direction: row;

@@ -4,10 +4,14 @@ import ArtPieceTitles from "../../components/ArtPieceTitles.astro";
 import PageHeading from "../../components/PageHeading.astro";
 import Layout from "../../layouts/Layout.astro";
 import dbInstance from "../../lib/db";
+import {paintings as mockPaintings} from "../../lib/mockdb";
 
 export const prerender = true
 
-const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
+let paintings:any = mockPaintings.sort((a, b) => a.rank - b.rank);
+if (process.env.NODE_ENV === 'production')
+paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
+
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
@@ -42,7 +46,7 @@ const paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b
           // Perform any desired actions with the current art piece
         }
       },
-      { threshold: 0.8 }
+      { threshold: 1.9 }
     );
   });
 
