@@ -4,24 +4,24 @@ import PageHeading from "../components/PageHeading.astro";
 import InstagramIcon from "../components/icons/instagramIcon.astro";
 import Layout from "../layouts/Layout.astro";
 const aboutBlurb = [
-  `Remi Frogo (b. 2001, Orange County, CA) is a University of Southern California graduate and an LA-based artist working in the mediums of oil paint, graphite, and commercial digital design. Presented in an environment of digital distortion, Frogo’s practice translates associated feelings of disconnection and misrepresentation, byproducts of existing in a heavily virtual world. Her work discusses meditative visual processing, and uses multimedia techniques to reference online spaces while portraying her personal relationship with the hyper contemporary world. She will often provide her own body as the content of her pieces, further representing the self-ruminative nature of her ideas. Each work presents a specific context of time, a physicality of memory.`,
+  // `Remi Frogo (b. 2001, Orange County, CA) is a University of Southern California graduate and an LA-based artist working in the mediums of oil paint, graphite, and commercial digital design. Presented in an environment of digital distortion, Frogo’s practice translates associated feelings of disconnection and misrepresentation, byproducts of existing in a heavily virtual world. Her work discusses meditative visual processing, and uses multimedia techniques to reference online spaces while portraying her personal relationship with the hyper contemporary world. She will often provide her own body as the content of her pieces, further representing the self-ruminative nature of her ideas. Each work presents a specific context of time, a physicality of memory.`,
   `Contact for purchases/commissions/inquiries.`,
   `Pricing for existing work available upon request.`,
 ];
-// console.log(Astro.request.method)
-// if (Astro.request.method === "POST") {
-//   const data = await Astro.request.formData()
-//   const KV = Astro.locals.runtime.env.KV
-//   await KV.put("about", data.get("about"))
-// }
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData()
+  const KV = Astro.locals.runtime.env.KV
+  await KV.put("about", data.get("about"))
+}
 
-// const about = await Astro.locals.runtime.env.KV.get("about")
+const about = await Astro.locals.runtime.env.KV.get("about")
 ---
 
 <Layout title="About Remi Frogo" seo={{ title: "Remi Frogo | About" }}>
   <PageHeading>ABOUT</PageHeading>
   <div class="container">
-    {aboutBlurb.map((blurb, index) => <div class="blurb-line">{blurb}</div>)}
+    <div contenteditable="true" class="blurb-line">{about}</div>
+    {aboutBlurb.map((blurb, index) => <div contenteditable="true" class="blurb-line">{blurb}</div>)}
     <div class="blurb-line">
     <a href={config.remiInstagram}>
       <InstagramIcon className="inline-variant" />
@@ -36,7 +36,27 @@ const aboutBlurb = [
     <img src="/images/remis/face1.png" alt="Remi Frogo" />
 
   </div>
+  <button id="update-about">Submit</button>
 </Layout>
+<script>
+  const updateAbout = document.getElementById("update-about")
+  updateAbout.addEventListener("click", async () => {
+    const about = document.querySelectorAll(".blurb-line")
+    const formData = new FormData()
+    about.forEach((line) => {
+      formData.append("about", line.innerText)
+    })
+    const response = await fetch("/about", {
+      method: "POST",
+      body: formData
+    })
+    if (response.ok) {
+      alert("About updated")
+    } else {
+      alert("Error updating about")
+    }
+  })
+</script>
 <style>
   .container {
     margin: 1rem;
@@ -44,7 +64,16 @@ const aboutBlurb = [
   h1 {
     padding-left: 1rem;
   }
-  div.blurb-line {
+  textarea {
+  display: block; /* Make it behave like a block-level element */
+  width: 100%; /* Make it take up the full width of its parent */
+  border: none; /* Remove the border */
+  overflow: auto; /* Add scrollbars if the content overflows */
+  outline: none; /* Remove the outline */
+  resize: none; /* Prevent resizing */
+  background-color: none;
+}
+  .blurb-line {
     margin: auto;
     padding: 0rem 1rem;
     max-width: 786px;
