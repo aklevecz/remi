@@ -8,6 +8,14 @@ const aboutBlurb = [
   `Contact for purchases/commissions/inquiries.`,
   `Pricing for existing work available upon request.`,
 ];
+// console.log(Astro.request.method)
+// if (Astro.request.method === "POST") {
+//   const data = await Astro.request.formData()
+//   const KV = Astro.locals.runtime.env.KV
+//   await KV.put("about", data.get("about"))
+// }
+
+// const about = await Astro.locals.runtime.env.KV.get("about")
 ---
 
 <Layout title="About Remi Frogo" seo={{ title: "Remi Frogo | About" }}>

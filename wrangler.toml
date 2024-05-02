@@ -9,3 +9,9 @@ preview_database_id = "DB"
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "remi"
+
+# Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
+# Docs: https://developers.cloudflare.com/pages/functions/bindings/#kv-namespaces
+[[kv_namespaces]]
+binding = "KV"
+id = "remi"
