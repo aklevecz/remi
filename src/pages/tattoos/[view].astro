@@ -146,13 +146,13 @@ if (Astro.request.method === "POST") {
       const { sendEmail } = emailClient({ apiKey, from });
       await sendEmail({
         email,
-        subject: "Your appointment has been scheduled!",
-        message: `Your appointment has been scheduled! Please reach out to me if you have any questions or need to reschedule.<a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
+        subject: "Your tattoo request confirmation",
+        message: `I have received your tattoo request and I will get back to you as soon as possible to schedule it! Please reach out if you have any questions. <a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
       });
       await sendEmail({
         email: config.email,
         subject: "New Appointment Request",
-        message: `New appointment request from ${name} at ${email}`,
+        message: `New appointment request from ${name} at ${email}. <a href=${baseUrl}/success/${id}>their info</a>`,
       });
       await Astro.cookies.delete("timestamp");
       await Astro.cookies.delete("clientId");
