@@ -39,9 +39,9 @@ const about = await Astro.locals.runtime.env.KV.get("about")
   <button id="update-about">Submit</button>
 </Layout>
 <script>
-  const updateAbout = document.getElementById("update-about")
+  const updateAbout = document.getElementById("update-about") as HTMLButtonElement
   updateAbout.addEventListener("click", async () => {
-    const about = document.querySelectorAll(".blurb-line")
+    const about = document.querySelectorAll(".blurb-line") as NodeListOf<HTMLDivElement>
     const formData = new FormData()
     about.forEach((line) => {
       formData.append("about", line.innerText)
