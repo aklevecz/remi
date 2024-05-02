@@ -9,57 +9,71 @@ const aboutBlurb = [
   `Pricing for existing work available upon request.`,
 ];
 if (Astro.request.method === "POST") {
-  const data = await Astro.request.formData()
-  const KV = Astro.locals.runtime.env.KV
-  await KV.put("about", data.get("about"))
+  const data = await Astro.request.formData();
+  const KV = Astro.locals.runtime.env.KV;
+  await KV.put("about", data.get("about"));
 }
 
-const about = JSON.parse(await Astro.locals.runtime.env.KV.get("about"))
-console.log(about)
+const about = JSON.parse(await Astro.locals.runtime.env.KV.get("about"));
+console.log(about);
 ---
 
 <Layout title="About Remi Frogo" seo={{ title: "Remi Frogo | About" }}>
   <PageHeading>ABOUT</PageHeading>
   <div class="container">
-    {about.map((blurb:string, index:number) => <div contenteditable="true" class="blurb-line text">{blurb}</div>)}
+    {about.map((blurb: string, index: number) => <div class="blurb-line text">{blurb}</div>)}
     <div class="blurb-line">
-    <a href={config.remiInstagram}>
-      <InstagramIcon className="inline-variant" />
-      remifrogo
-    </a></div>
-    <div class="blurb-line">
-    <a class="" href={config.remboInstagram}>
-      <InstagramIcon className="inline-variant" />
-      remb0tron
-    </a>
+      <a href={config.remiInstagram}>
+        <InstagramIcon className="inline-variant" />
+        remifrogo
+      </a>
     </div>
-    <img src="/images/remis/face1.png" alt="Remi Frogo" />
-
+    <div class="blurb-line">
+      <a class="" href={config.remboInstagram}>
+        <InstagramIcon className="inline-variant" />
+        remb0tron
+      </a>
+    </div>
+    <img id="remi-face" src="/images/remis/face1.png" alt="Remi Frogo" />
   </div>
-  <button id="update-about">Submit</button>
+  <button class="hidden" id="update-about">Submit</button>
 </Layout>
 <script>
-  const updateAbout = document.getElementById("update-about") as HTMLButtonElement
-  updateAbout.addEventListener("click", async () => {
-    const about = document.querySelectorAll(".blurb-line.text") as NodeListOf<HTMLDivElement>
-    const formData = new FormData()
+  let counter = 0;
+  const updateAbout = document.getElementById("update-about") as HTMLButtonElement;
 
-    const blurbs:string[] = []
+  const remiFace = document.getElementById("remi-face") as HTMLImageElement;
+  remiFace.addEventListener("click", () => {
+    counter++;
+    if (counter > 5) {
+      const about = document.querySelectorAll(".blurb-line.text") as NodeListOf<HTMLDivElement>;
+      about.forEach((line) => {
+        line.contentEditable = "true";
+        line.style.border = "1px solid red";
+        updateAbout.classList.remove("hidden");
+      });
+    }
+  });
+
+  updateAbout.addEventListener("click", async () => {
+    const about = document.querySelectorAll(".blurb-line.text") as NodeListOf<HTMLDivElement>;
+    const formData = new FormData();
+
+    const blurbs: string[] = [];
     about.forEach((line) => {
-      if (line.innerText.length > 0)
-      blurbs.push(line.innerText)
-    })
-    formData.append("about", JSON.stringify(blurbs))
+      if (line.innerText.length > 0) blurbs.push(line.innerText);
+    });
+    formData.append("about", JSON.stringify(blurbs));
     const response = await fetch("/about", {
       method: "POST",
-      body: formData
-    })
+      body: formData,
+    });
     if (response.ok) {
-      alert("About updated")
+      alert("About updated");
     } else {
-      alert("Error updating about")
+      alert("Error updating about");
     }
-  })
+  });
 </script>
 <style>
   .container {
@@ -69,14 +83,14 @@ console.log(about)
     padding-left: 1rem;
   }
   textarea {
-  display: block; /* Make it behave like a block-level element */
-  width: 100%; /* Make it take up the full width of its parent */
-  border: none; /* Remove the border */
-  overflow: auto; /* Add scrollbars if the content overflows */
-  outline: none; /* Remove the outline */
-  resize: none; /* Prevent resizing */
-  background-color: none;
-}
+    display: block; /* Make it behave like a block-level element */
+    width: 100%; /* Make it take up the full width of its parent */
+    border: none; /* Remove the border */
+    overflow: auto; /* Add scrollbars if the content overflows */
+    outline: none; /* Remove the outline */
+    resize: none; /* Prevent resizing */
+    background-color: none;
+  }
   .blurb-line {
     margin: auto;
     padding: 0rem 1rem;
@@ -95,10 +109,17 @@ console.log(about)
     display: block;
     margin: auto;
   }
-  /* a {
-    display: block;
+  .hidden {
+    display: none;
+  }
+  #update-about {
     margin: auto;
-    /* text-align: center; */
+    display: block;
+    background: red;
+    color: white;
     font-size: 2rem;
-  } */
+  }
+  #update-about.hidden {
+    display: none;
+  }
 </style>
