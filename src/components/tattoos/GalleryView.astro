@@ -7,14 +7,14 @@ const images = import.meta.glob<{ default: ImageMetadata }>("/src/assets/tattoos
 const tattoos = await dbInstance.getAllTattoos()
 const storageBaseUrl = 'https://storage.remifrogo.art'
 ---
-
 <div class="gallery-container">
   {
     // Object.keys(images).map((image, index) => (
       tattoos.map(tat => (
       <div>
         {/* <Image src={images[image]()} alt="tattoo"/> */}
-        <img loading="lazy" src={genImgResizeUrl({width:300, height:300, quality:100, url:`${storageBaseUrl}/${tat.key}`})}/>
+        {/* <img loading="lazy" src={genImgResizeUrl({width:300, height:300, quality:100, url:`${storageBaseUrl}/${tat.key}`})}/> */}
+        <img loading="lazy" src={tat.key}/>
       </div>
     ))
   }
