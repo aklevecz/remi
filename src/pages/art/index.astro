@@ -12,7 +12,6 @@ let paintings: any = mockPaintings.sort((a, b) => a.rank - b.rank);
 if (process.env.NODE_ENV !== "development") {
   paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
 }
-console.log(paintings);
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>
