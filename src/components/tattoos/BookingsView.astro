@@ -25,6 +25,7 @@ const { config, values, errors } = Astro.props;
       </div>
     </div> -->
     <p>to view my flash designs or ask me any questions directly please visit my instagram!</p>
+    <p>This page is being worked on at the moment, please contact me directly on insta for an appointment</p>
     <p>
       <a class="" href={config.remboInstagram}>
         <InstagramIcon className="inline-variant" />
@@ -33,7 +34,7 @@ const { config, values, errors } = Astro.props;
       {"<3"}
     </p>
   </div>
-  <div>
+  <div style="opacity:0.5;">
     <h2>BOOK AN APPOINTMENT</h2>
     {errors.map((e: string) => <p class="error-item">{e}</p>)}
     <TattooForm values={values} />
