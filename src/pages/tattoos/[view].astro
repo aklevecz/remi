@@ -114,7 +114,7 @@ if (Astro.request.method === "POST") {
       // const R2 = Astro.locals.runtime.env.R2;
       const now = new Date();
       // const imgFileName = String(now.getTime());
-      const imgFileName = clientId.value;
+      const imgFileName = clientId?.value;
       // await R2.put(imgFileName, image, { contentType: image.type });
       const user = await dbInstance.getUserByEmail(email);
       let userId = null;
@@ -125,39 +125,41 @@ if (Astro.request.method === "POST") {
         const user = await dbInstance.getUserByEmail(email);
         userId = user[0].id;
       }
-      const id = clientId.value;
-      await dbInstance.createAppointment({
-        id,
-        userId,
-        name,
-        email,
-        instagram,
-        pronouns,
-        tattooDescription,
-        tattooPlacement,
-        tattooSize,
-        availability,
-        miscellaneous,
-        imgFileName,
-        now,
-      });
-      const baseUrl = new URL(Astro.request.url).origin;
-      const from = Astro.locals.runtime.env.EMAIL_SENDER_ADDRESS;
-      const apiKey = Astro.locals.runtime.env.SENDGRID_API_KEY;
-      const { sendEmail } = emailClient({ apiKey, from });
-      await sendEmail({
-        email,
-        subject: "Your tattoo request confirmation",
-        message: `I have received your tattoo request and I will get back to you as soon as possible to schedule it! Please reach out if you have any questions. <a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
-      });
-      await sendEmail({
-        email: config.email,
-        subject: "New Appointment Request",
-        message: `New appointment request from ${name} at ${email}. <a href=${baseUrl}/success/${id}>their info</a>`,
-      });
-      await Astro.cookies.delete("timestamp");
-      await Astro.cookies.delete("clientId");
-      return Astro.redirect(`/success/${id}`);
+      const id = clientId?.value;
+      if (id) {
+        await dbInstance.createAppointment({
+          id: id as string,
+          userId,
+          name,
+          email,
+          instagram,
+          pronouns,
+          tattooDescription,
+          tattooPlacement,
+          tattooSize,
+          availability,
+          miscellaneous,
+          imgFileName: imgFileName || "",
+          now,
+        });
+        const baseUrl = new URL(Astro.request.url).origin;
+        const from = Astro.locals.runtime.env.EMAIL_SENDER_ADDRESS;
+        const apiKey = Astro.locals.runtime.env.SENDGRID_API_KEY;
+        const { sendEmail } = emailClient({ apiKey, from });
+        await sendEmail({
+          email,
+          subject: "Your tattoo request confirmation",
+          message: `I have received your tattoo request and I will get back to you as soon as possible to schedule it! Please reach out if you have any questions. <a href=${baseUrl}/success/${id}>View your appointment info here</a>`,
+        });
+        await sendEmail({
+          email: config.email,
+          subject: "New Appointment Request",
+          message: `New appointment request from ${name} at ${email}. <a href=${baseUrl}/success/${id}>their info</a>`,
+        });
+        await Astro.cookies.delete("timestamp");
+        await Astro.cookies.delete("clientId");
+        return Astro.redirect(`/success/${id}`);
+      }
     }
   } catch (e) {
     console.log(e);
@@ -201,7 +203,7 @@ const { view } = Astro.params;
   </nav>
   <div class="container">
     {view === "bookings" && <BookingsView config={config} values={values} errors={errors} />}
-    {view === 'gallery' && <GalleryView/>}
+    {view === "gallery" && <GalleryView />}
   </div>
 </Layout>
 
@@ -215,7 +217,7 @@ const { view } = Astro.params;
     margin-top: 1rem;
     display: flex;
     align-self: center;
-    justify-content:center;
+    justify-content: center;
     text-align: center;
   }
   nav ul {
