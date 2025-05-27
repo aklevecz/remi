@@ -11,7 +11,7 @@ import GalleryView from "../../components/tattoos/GalleryView.astro";
 
 const info = {
   dayOf:
-    "Please come hydated and well fed before the appointment. I would also prefer you not do drugs or drink heavily beforehand. The tattoo may take anywhere from 1-3 hours depending on the size and amount of detail. Plan your day accordingly <3",
+    "Please come hydrated and well fed before the appointment. I would also prefer you not do drugs or drink heavily beforehand. The tattoo may take anywhere from 1-3 hours depending on the size and amount of detail. Plan your day accordingly <3",
   designs:
     "I have flash posted that you can look through on my instagram. If you have a custom request, pls make sure we discuss the idea before your appointment",
   deposit:
@@ -50,6 +50,7 @@ const errors = [];
 
 if (Astro.request.method === "POST") {
   try {
+    throw new Error("This feature is currently disabled. Please contact me directly on Instagram for an appointment.");
     const data = await Astro.request.formData();
     values.name = data.get("name") as string;
     values.pronouns = (data.get("pronouns") as string) || "N/A";
