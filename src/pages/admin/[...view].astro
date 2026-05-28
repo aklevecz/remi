@@ -3,7 +3,7 @@ import PageHeading from "../../components/PageHeading.astro";
 import PaintingView from "../../components/admin/PaintingView.astro";
 import TattooView from "../../components/admin/TattooView.astro";
 import Layout from "../../layouts/Layout.astro";
-import dbInstance from "../../lib/db";
+import { getDb } from "../../lib/db";
 
 const { view } = Astro.params;
 const auth = Astro.cookies.get('auth')
@@ -32,24 +32,24 @@ console.log(signatureHex, auth)
 }
 
 const R2 = Astro.locals.runtime.env.R2;
-const DEPLOY_HOOK = "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/832572ce-b851-463b-a743-13786ac1ffd6";
+const db = getDb(Astro.locals.runtime.env.DB);
 if (Astro.request.method === "POST") {
   const form = await Astro.request.formData();
   const type = form.get("type") as string;
   if (type === "tattoo") {
     const name = form.get("name") as string;
-    let image = form.get("image") as File;
+    let image: any = form.get("image");
     const dateTime = new Date().getTime();
     const fileName = (form.get("key") as string) || `tattoos/${name.replace(/\s+/g, "-").toLowerCase()}-${dateTime}`;
     if (!image.size) {
       const object = await R2.get(fileName);
-      image = object.body;
+      image = object!.body;
     }
     await R2.put(`${fileName}`, image, {
       contentType: image.type,
       customMetadata: { name },
-    });
-    await dbInstance.addOrUpdateTattoo({
+    } as any);
+    await db.addOrUpdateTattoo({
       key: fileName,
       name,
     });
@@ -61,7 +61,7 @@ if (Astro.request.method === "POST") {
     const dimensions = form.get("dimensions") as string;
     const year = form.get("year") as string;
     const rank = form.get("rank") as string;
-    let image = form.get("image") as File;
+    let image: any = form.get("image");
 
     const dateTime = new Date().getTime();
     // key comes from the edit form that is embedded in the painting item
@@ -71,7 +71,7 @@ if (Astro.request.method === "POST") {
     // not a new painting
     if (isUpdate) {
       const object = await R2.get(fileName);
-      image = object.body;
+      image = object!.body;
     }
 
     if (!isUpdate) {
@@ -81,8 +81,8 @@ if (Astro.request.method === "POST") {
     await R2.put(`${fileName}`, image, {
       contentType: image.type,
       customMetadata: { title, material, dimensions, rank, year },
-    });
-    await dbInstance.addOrUpdatePainting({
+    } as any);
+    await db.addOrUpdatePainting({
       title,
       material,
       dimensions,
@@ -91,7 +91,6 @@ if (Astro.request.method === "POST") {
       key: fileName,
       updatedAt: new Date()
     });
-    await fetch(DEPLOY_HOOK, {method:"POST"})
     return Astro.redirect("/admin/paintings");
   }
 }
@@ -102,8 +101,7 @@ const key = url.get("key") as string;
 const action = url.get("action");
 if (action == "del") {
   await R2.delete(key);
-  await dbInstance.deletePainting(key);
-  await fetch(DEPLOY_HOOK, {method:"POST"})
+  await db.deletePainting(key);
   return Astro.redirect("/admin");
 }
 

@@ -1,6 +1,6 @@
 ---
 import config from "../../lib/config";
-import dbInstance from "../../lib/db";
+import { getDb } from "../../lib/db";
 import emailClient from "../../lib/email";
 
 import Layout from "../../layouts/Layout.astro";
@@ -47,6 +47,8 @@ let values: Values = {
 };
 
 const errors = [];
+
+const db = getDb(Astro.locals.runtime.env.DB);
 
 if (Astro.request.method === "POST") {
   try {
@@ -116,18 +118,18 @@ if (Astro.request.method === "POST") {
       // const imgFileName = String(now.getTime());
       const imgFileName = clientId?.value;
       // await R2.put(imgFileName, image, { contentType: image.type });
-      const user = await dbInstance.getUserByEmail(email);
+      const user = await db.getUserByEmail(email);
       let userId = null;
       if (user.length > 0) {
         userId = user[0].id;
       } else {
-        await dbInstance.createUser({ name, email, instagram });
-        const user = await dbInstance.getUserByEmail(email);
+        await db.createUser({ name, email, instagram });
+        const user = await db.getUserByEmail(email);
         userId = user[0].id;
       }
       const id = clientId?.value;
       if (id) {
-        await dbInstance.createAppointment({
+        await db.createAppointment({
           id: id as string,
           userId,
           name,

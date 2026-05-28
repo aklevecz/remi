@@ -4,6 +4,9 @@ export const GET: APIRoute = async ({ params, request, locals }) => {
   const urlSearchParams = new URLSearchParams(request.url);
   console.log(urlSearchParams);
   const img = await locals.runtime.env.R2.get("test.png");
+  if (!img) {
+    return new Response("Not found", { status: 404 });
+  }
   const readableStream = img.body;
   return new Response(readableStream);
 };
@@ -27,7 +30,7 @@ export const POST: APIRoute = async ({ params, request, locals, cookies }) => {
 
   const R2 = locals.runtime.env.R2;
   const imgFileName = clientId;
-  await R2.put(imgFileName, file, { contentType: file.type });
+  await R2.put(imgFileName, file as any, { contentType: file.type } as any);
 
   return new Response(JSON.stringify({ message: "success" }), {
     headers: { "Content-Type": "application/json" },

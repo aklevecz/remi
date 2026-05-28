@@ -1,6 +1,6 @@
 ---
 import PaintingItem from "./PaintingItem.astro";
-import dbInstance from "../../lib/db"
+import { getDb } from "../../lib/db"
 // const R2 = Astro.locals.runtime.env.R2;
 let paintings = [];
 // if (process.env.NODE_ENV === "production") {
@@ -23,7 +23,7 @@ let paintings = [];
 //   metas.push(painting)
 // }
 
- paintings = await dbInstance.getAllPaintings()
+ paintings = await getDb(Astro.locals.runtime.env.DB).getAllPaintings()
 ---
 
 <div class="paintings">

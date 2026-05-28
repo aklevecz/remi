@@ -3,15 +3,10 @@ import ArtPieceR2 from "../../components/ArtPieceR2.astro";
 import ArtPieceTitles from "../../components/ArtPieceTitles.astro";
 import PageHeading from "../../components/PageHeading.astro";
 import Layout from "../../layouts/Layout.astro";
-import dbInstance from "../../lib/db";
-import { paintings as mockPaintings } from "../../lib/mockdb";
+import { getDb } from "../../lib/db";
 
-export const prerender = true;
-
-let paintings: any = mockPaintings.sort((a, b) => a.rank - b.rank);
-if (process.env.NODE_ENV !== "development") {
-  paintings = (await dbInstance.getAllPaintings()).sort((a, b) => a.rank - b.rank);
-}
+const db = getDb(Astro.locals.runtime.env.DB);
+const paintings = (await db.getAllPaintings()).sort((a, b) => a.rank - b.rank);
 ---
 
 <Layout title="Art" seo={{ title: "Remi Frogo | Art" }}>

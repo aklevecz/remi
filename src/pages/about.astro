@@ -11,10 +11,10 @@ const aboutBlurb = [
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
   const KV = Astro.locals.runtime.env.KV;
-  await KV.put("about", data.get("about"));
+  await KV.put("about", data.get("about") as string);
 }
 
-const about = JSON.parse(await Astro.locals.runtime.env.KV.get("about"));
+const about = JSON.parse((await Astro.locals.runtime.env.KV.get("about")) ?? "[]");
 console.log(about);
 ---
 

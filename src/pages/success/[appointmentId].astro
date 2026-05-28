@@ -1,12 +1,12 @@
 ---
-import dbInstance from "../../lib/db";
+import { getDb } from "../../lib/db";
 import Layout from "../../layouts/Layout.astro";
 
 const { appointmentId } = Astro.params;
 if (!appointmentId) {
   return Astro.redirect("/404");
 }
-const appointments = await dbInstance.getAppointmentById(appointmentId);
+const appointments = await getDb(Astro.locals.runtime.env.DB).getAppointmentById(appointmentId);
 const appointment = appointments[0] as any;
 console.log(appointment);
 ---

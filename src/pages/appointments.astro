@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import dbInstance from "../lib/db";
+import { getDb } from "../lib/db";
 
-const appointments = await dbInstance.getAllAppointments();
+const appointments = await getDb(Astro.locals.runtime.env.DB).getAllAppointments();
 const isDev = process.env.NODE_ENV === "development";
 ---
 

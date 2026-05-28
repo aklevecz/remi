@@ -1,6 +1,6 @@
 ---
-import dbInstance from "../../lib/db";
-const tattoos = await dbInstance.getAllTattoos();
+import { getDb } from "../../lib/db";
+const tattoos = await getDb(Astro.locals.runtime.env.DB).getAllTattoos();
 const imgHost = "https://storage.remifrogo.art";
 console.log(tattoos)
 ---

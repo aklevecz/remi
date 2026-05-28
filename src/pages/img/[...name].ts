@@ -2,6 +2,9 @@ import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ params, request, locals }) => {
   let { name } = params;
+  if (!name) {
+    return new Response("Not found", { status: 404 });
+  }
   const img = await locals.runtime.env.R2.get(name);
   if (!img) {
     return new Response("Not found", { status: 404 });

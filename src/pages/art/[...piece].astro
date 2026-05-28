@@ -1,24 +1,15 @@
 ---
-import type { GetStaticPaths } from "astro";
-import dbInstance from "../../lib/db";
-
-import testImg from "../../assets/paintings/collage.jpg";
-
-export const prerender = true;
-export const getStaticPaths = (async () => {
-  const paintings = await dbInstance.getAllPaintings();
-  return paintings.map((painting) => ({
-    params: {
-      piece: painting.key,
-    },
-    props: {
-      painting,
-    },
-  }));
-}) satisfies GetStaticPaths;
+import { getDb } from "../../lib/db";
 import Layout from "../../layouts/Layout.astro";
 
-const { painting } = Astro.props;
+const { piece } = Astro.params;
+const db = getDb(Astro.locals.runtime.env.DB);
+const paintings = piece ? await db.getPainting(piece) : [];
+const painting = paintings[0];
+if (!painting) {
+  return Astro.redirect("/404");
+}
+
 const description = `${painting.title}
 ${painting.material}
 ${painting.year}`;
